@@ -46,6 +46,10 @@ jobs:
         unzip commandlinetools.zip -d $HOME/android-sdk/cmdline-tools/latest
         echo "sdk.dir=$HOME/android-sdk" > android/local.properties
 
+    - name: Verify Android SDK Installation
+      run: |
+        ls -la $HOME/android-sdk/cmdline-tools/latest/bin
+
     - name: Install Android SDK Packages
       run: |
         yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
