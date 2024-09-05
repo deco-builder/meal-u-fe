@@ -38,5 +38,4 @@ jobs:
       run: ionic build --prod
 
     - name: Build Android APK
-      run: ionic cap add android
-           ionic cap build android
+      run: ionic cap build android
