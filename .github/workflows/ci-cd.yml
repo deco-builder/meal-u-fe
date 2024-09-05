@@ -37,5 +37,22 @@ jobs:
     - name: Build Ionic App
       run: ionic build --prod
 
+    - name: Install Android SDK
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y wget unzip
+        wget https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip
+        unzip commandlinetools-linux-8512546_latest.zip -d $HOME/android-sdk
+        echo "sdk.dir=$HOME/android-sdk" > android/local.properties
+
+    - name: Install Android SDK Packages
+      run: |
+        yes | $HOME/android-sdk/tools/bin/sdkmanager --licenses
+        $HOME/android-sdk/tools/bin/sdkmanager "platforms;android-30" "build-tools;30.0.3"
+
+
     - name: Build Android APK
-      run: ionic cap build android
+      run: |
+        ionic cap build android
+        cd android
+        ./gradlew assembleRelease
