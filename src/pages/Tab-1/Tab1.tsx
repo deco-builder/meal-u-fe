@@ -1,22 +1,34 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import ExploreContainer from '../../components/ExploreContainer';
-import './Tab1.css';
+import React from "react";
+import {
+  IonButton,
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  useIonRouter,
+} from "@ionic/react";
+import "./Tab1.css";
 
 const Tab1: React.FC = () => {
+  const router = useIonRouter();
+
+  const navigateToSubPage = () => {
+    router.push('/tab1/subpage');
+  };
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Tab 1</IonTitle>
+          <IonTitle>Page One</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Tab 1</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <ExploreContainer name="Tab 1 page" />
+      <IonContent className="ion-padding">
+        <h1>Home Page</h1>
+        <IonButton onClick={navigateToSubPage}>
+          Go to SubPage
+        </IonButton>
       </IonContent>
     </IonPage>
   );
