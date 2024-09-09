@@ -3,6 +3,7 @@ import {
   IonApp,
   IonButton,
   IonContent,
+  IonHeader,
   IonIcon,
   IonLabel,
   IonNav,
@@ -46,70 +47,77 @@ import "@ionic/react/css/display.css";
 
 /* import '@ionic/react/css/palettes/dark.always.css'; */
 /* import '@ionic/react/css/palettes/dark.class.css'; */
-import "@ionic/react/css/palettes/dark.system.css";
+// import "@ionic/react/css/palettes/dark.system.css";
 
 /* Theme variables */
 import "./theme/variables.css";
 import { useState } from "react";
 import SubPage from "./pages/Tab-1/Sub-Page-1/sub-page-1";
+import Navbar from "./components/NavigationBar/Navbar";
 
 setupIonicReact();
 
 const App: React.FC = () => {
   const [isSelected, setIsSelected] = useState(false);
+
   return (
     <IonApp>
       <IonReactRouter>
-        <IonTabs>
-          <IonRouterOutlet>
-            <Route exact path="/tab1">
-              <Tab1 />
-            </Route>
-            <Route exact path="/tab1/subpage">
-              <SubPage />
-            </Route>
-            <Route exact path="/tab2">
-              <Tab2 />
-            </Route>
-            <Route path="/tab3">
-              <Tab3 />
-            </Route>
-            <Route path="/tab4">
-              <Tab4 />
-            </Route>
-            <Route path="/tab5">
-              <Tab5 />
-            </Route>
-            <Route exact path="/">
-              <Redirect to="/tab1" />
-            </Route>
-          </IonRouterOutlet>
-          <IonTabBar slot="bottom">
-            <IonTabButton tab="tab1" href="/tab1" onClick={() => setIsSelected(!isSelected)}>
-              <RepeatIcon selected={isSelected} />
-              <IonLabel>Tab 1</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="tab2" href="/tab2">
-              <IonIcon aria-hidden="true" icon={ellipse} />
-              <IonLabel>Tab 2</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="tab3" href="/tab3">
-              <IonIcon aria-hidden="true" icon={square} />
-              <IonLabel>Tab 3</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="tab4" href="/tab4">
-              <IonIcon aria-hidden="true" icon={square} />
-              <IonLabel>Tab 4</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="tab5" href="/tab5">
-              <IonIcon aria-hidden="true" icon={square} />
-              <IonLabel>Tab 5</IonLabel>
-            </IonTabButton>
-          </IonTabBar>
-        </IonTabs>
+        <IonHeader className="ion-hide-sm-down">
+          <Navbar isSelected={isSelected} setIsSelected={setIsSelected} />
+        </IonHeader>
+        <IonContent>
+          <IonTabs>
+            <IonRouterOutlet>
+              <Route exact path="/tab1">
+                <Tab1 />
+              </Route>
+              <Route exact path="/tab1/subpage">
+                <SubPage />
+              </Route>
+              <Route exact path="/tab2">
+                <Tab2 />
+              </Route>
+              <Route path="/tab3">
+                <Tab3 />
+              </Route>
+              <Route path="/tab4">
+                <Tab4 />
+              </Route>
+              <Route path="/tab5">
+                <Tab5 />
+              </Route>
+              <Route exact path="/">
+                <Redirect to="/tab1" />
+              </Route>
+            </IonRouterOutlet>
+            <IonTabBar slot="bottom" className="ion-hide-sm-up">
+              <IonTabButton tab="tab1" href="/tab1" onClick={() => setIsSelected(!isSelected)}>
+                <RepeatIcon selected={isSelected} />
+                <IonLabel>Tab 1</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="tab2" href="/tab2">
+                <IonIcon aria-hidden="true" icon={ellipse} />
+                <IonLabel>Tab 2</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="tab3" href="/tab3">
+                <IonIcon aria-hidden="true" icon={square} />
+                <IonLabel>Tab 3</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="tab4" href="/tab4">
+                <IonIcon aria-hidden="true" icon={square} />
+                <IonLabel>Tab 4</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="tab5" href="/tab5">
+                <IonIcon aria-hidden="true" icon={square} />
+                <IonLabel>Tab 5</IonLabel>
+              </IonTabButton>
+            </IonTabBar>
+          </IonTabs>
+        </IonContent>
       </IonReactRouter>
     </IonApp>
-  )
-}
+  );
+};
 
 export default App;
