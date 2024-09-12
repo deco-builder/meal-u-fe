@@ -12,10 +12,9 @@ import {
   IonIcon,
 } from "@ionic/react";
 import LocationIcon from "../../../../public/icon/location-icon";
-import "./order.css";
 import { searchOutline } from "ionicons/icons";
-import OrderMobile from "./order-mobile";
-import OrderWeb from "./order-web";
+import OrderMobile from "./order-mobile/order-mobile";
+import OrderWeb from "./order-web/order-web";
 
 function Order() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 576);

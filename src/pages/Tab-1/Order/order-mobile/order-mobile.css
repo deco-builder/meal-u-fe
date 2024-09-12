@@ -5,6 +5,20 @@
   align-items: center;
 }
 
+.order-card {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.header-category {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
 .custom-input {
   --border-color: #e6ebf2;
   --border-radius: 50px;
