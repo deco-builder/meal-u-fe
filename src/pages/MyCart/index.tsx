@@ -2,8 +2,11 @@ import React, { useState, useEffect } from "react";
 import { IonBackButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import './MyCart.css';
 import Cart from "./cart";
+import Checkout from "./checkout";
 
 const MyCart = () => {
+    const [subTotal, setSubTotal] = useState(0);
+    const [total, setTotal] = useState(subTotal);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 576);
 
     useEffect(() => {
@@ -29,23 +32,8 @@ const MyCart = () => {
           </IonToolbar>
         </IonHeader>
         <IonContent className="ion-padding">
-          <Cart />
-          <div className="checkout">
-            <div className="section">
-              <div className="title">Delivery to</div>
-              <div className="row-card">
-                <div className="row">
-                  <div className="col">
-                    <p>University of Queensland</p>
-                    <p>Saint Lucia Campus</p>
-                  </div>
-                  <div className="col">
-                    <p>Change Address</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <Cart subTotal={subTotal} setSubTotal={setSubTotal}/>
+          <Checkout subTotal={subTotal} setSubTotal={setSubTotal} total={total} setTotal={setTotal}/>
         </IonContent>
     </IonPage>
     )

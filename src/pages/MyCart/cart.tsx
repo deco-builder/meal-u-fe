@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { Dispatch, useState, useEffect, SetStateAction } from "react";
 import { IonBackButton, IonButtons, IonCol, IonContent, IonHeader, IonPage, IonRow, IonTitle, IonToolbar } from '@ionic/react';
 import './MyCart.css';
 import RowCard from "./row-card";
 import IngredientRowCard from "./ingredient-row-card";
 
-const Cart = () => {
+const Cart = ({subTotal, setSubTotal}:{subTotal:number, setSubTotal:Dispatch<SetStateAction<number>>}) => {
 
     return (
         <>

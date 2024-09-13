@@ -33,9 +33,9 @@ const IngredientRowCard = ({title, price, quantity} : {title: string, price: str
                 </IonCol>
                 <div className="col">
                     <div className="ing-row">
-                        <Increment onClick={handleIncrement}/>
-                        {newQuantity}
                         <Decrement onClick={handleDecrement}/>
+                        {newQuantity}
+                        <Increment onClick={handleIncrement}/>
                     </div>
                 </div>
             </div>
