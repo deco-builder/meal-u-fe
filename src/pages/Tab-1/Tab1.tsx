@@ -21,6 +21,10 @@ const Tab1: React.FC = () => {
     router.push('/tab1/order');
   };
 
+  const navigateToLoginPage = () => {
+    router.push('/login');
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -35,6 +39,9 @@ const Tab1: React.FC = () => {
         </IonButton>
         <IonButton onClick={navigateToOrderPage}>
           Go to Order
+        </IonButton>
+        <IonButton onClick={navigateToLoginPage}>
+          Go to Login
         </IonButton>
       </IonContent>
     </IonPage>

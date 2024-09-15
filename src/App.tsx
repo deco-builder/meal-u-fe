@@ -55,6 +55,7 @@ import { useState } from "react";
 import SubPage from "./pages/Tab-1/Sub-Page-1/sub-page-1";
 import Order from "./pages/Tab-1/Order";
 import Navbar from "./components/NavigationBar/Navbar";
+import Login from "./pages/Login/login";
 
 setupIonicReact();
 
@@ -90,6 +91,9 @@ const App: React.FC = () => {
               </Route>
               <Route path="/tab5">
                 <Tab5 />
+              </Route>
+              <Route path="/login">
+                <Login />
               </Route>
               <Route exact path="/">
                 <Redirect to="/tab1" />

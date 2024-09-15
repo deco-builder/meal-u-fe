@@ -26,6 +26,7 @@ import {
   remove,
   optionsOutline,
 } from "ionicons/icons";
+import IconInput from "../../../../components/icon-input";
 
 function OrderMobile() {
   const [count, setCount] = useState(0);
@@ -36,6 +37,10 @@ function OrderMobile() {
 
   const decrement = () => {
     setCount((prevCount) => (prevCount > 0 ? prevCount - 1 : 0));
+  };
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(event.target.value);
   };
   return (
     <IonPage>
@@ -57,43 +62,17 @@ function OrderMobile() {
         </div>
 
         <div style={{ display: "flex", flexDirection: "row" }}>
-          <div
-            style={{
-              position: "relative",
-              width: "100%",
-              maxWidth: "300px",
-            }}
-          >
-            <input
-              type="text"
-              placeholder="Search"
-              style={{
-                width: "100%",
-                padding: "10px 10px 10px 40px",
-                fontSize: "16px",
-                border: "1px solid #ccc",
-                borderRadius: "8px",
-                outline: "none",
-                backgroundColor: "#fff",
-              }}
-            />
-            <div
-              style={{
-                position: "absolute",
-                top: "50%",
-                left: "10px",
-                transform: "translateY(-50%)",
-                pointerEvents: "none",
-              }}
-            >
-              <SearchIcon />
-            </div>
-          </div>
+          <IconInput
+            onInputHandleChange={handleSearchChange}
+            leftIcon={<SearchIcon />}
+            placeholder="Search"
+            width="300px"
+          />
           <IonIcon
-              icon={optionsOutline}
-              onClick={increment}
-              style={{ fontSize: "24px", cursor: "pointer", alignSelf: "center" }}
-            />
+            icon={optionsOutline}
+            onClick={increment}
+            style={{ fontSize: "24px", cursor: "pointer", alignSelf: "center" }}
+          />
         </div>
 
         <div style={{ display: "flex", flexDirection: "column" }}>
