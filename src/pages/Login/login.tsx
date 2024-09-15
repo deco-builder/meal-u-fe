@@ -105,7 +105,7 @@ const Login: React.FC = () => {
               <p style={{ marginBottom: "20px" }}>Hi, let's jump in! 👋</p>
             )}
 
-            <form style={{ width: "100%" }}>
+            <div style={{ width: "100%" }}>
               <div style={{ marginBottom: "20px" }}>
                 <IconInput
                   title="Email Address"
@@ -137,7 +137,7 @@ const Login: React.FC = () => {
                 onClick={handleGoogleLogin}
                 width="100%"
               />
-            </form>
+            </div>
 
             <p
               style={{
