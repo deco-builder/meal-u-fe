@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
+import Cart from "./Cart";
+import Checkout from "./Checkout";
 import { IonBackButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import './MyCart.css';
-import Cart from "./cart";
-import Checkout from "./checkout";
+import React, { useState, useEffect } from "react";
+import './MyCart.module.css';
 
-const MyCart = () => {
+const MyCart: React.FC = () => {
     const [subTotal, setSubTotal] = useState(0);
-    const [total, setTotal] = useState(subTotal);
+    const [total, setTotal] = useState(0);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 576);
 
     useEffect(() => {
@@ -33,7 +33,7 @@ const MyCart = () => {
         </IonHeader>
         <IonContent className="ion-padding">
           <Cart subTotal={subTotal} setSubTotal={setSubTotal}/>
-          <Checkout subTotal={subTotal} setSubTotal={setSubTotal} total={total} setTotal={setTotal}/>
+          <Checkout subTotal={subTotal} total={total} setTotal={setTotal}/>
         </IonContent>
     </IonPage>
     )
