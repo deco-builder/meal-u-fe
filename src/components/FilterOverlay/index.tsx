@@ -84,10 +84,15 @@ const FilterOverlay: React.FC = () => {
                   step={1}
                   pin={true} pinFormatter={(value: number) => `$${value}`}
                   value={{lower: priceRange.min, upper: priceRange.max}}
-                  onIonChange={e => setPriceRange({
-                    min: e.detail.value.lower,
-                    max: e.detail.value.upper
-                  })}
+                  onIonChange={(e) => {
+                    const rangeValue = e.detail.value;
+                    if (typeof rangeValue === 'object' && rangeValue !== null && 'lower' in rangeValue && 'upper' in rangeValue) {
+                      setPriceRange({
+                        min: rangeValue.lower,
+                        max: rangeValue.upper
+                      });
+                    }
+                  }}
                 >
                   <IonLabel className={styles.priceRangeLabel} slot="start">${priceRange.min}</IonLabel>
                   <IonLabel className={styles.priceRangeLabel} slot="end">${priceRange.max}</IonLabel>
