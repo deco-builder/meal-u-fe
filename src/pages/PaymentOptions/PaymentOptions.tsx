@@ -35,7 +35,7 @@ const PaymentOptions: React.FC = () => {
                         <IonCardContent>
                             <div className={styles.cardContent}>
                                 <IonText className={styles.cardName}>Oscar Isaac</IonText>
-                                <img src="/path-to-mastercard-logo.png" alt="Mastercard" className={styles.cardLogo} />
+                                <img src="/payment/mastercard-logo.svg" alt="Mastercard" className={styles.cardLogo} />
                             </div>
                             <IonText className={styles.cardNumber}>4241 9214 7219 3456</IonText>
                             <IonText className={styles.cardExpiry}>12/24</IonText>
@@ -49,17 +49,17 @@ const PaymentOptions: React.FC = () => {
 
                     <h2 className={styles.sectionTitle}>Other Payment Method</h2>
                     <PaymentMethodCard
-                        icon="/path-to-visa-mastercard-logo.png"
+                        icon="/payment/mastercard-visa.svg"
                         name="Mastercard/VISA"
                         details="1240 5231 **** ****"
                     />
                     <PaymentMethodCard
-                        icon="/path-to-paypal-logo.png"
+                        icon="/payment/paypal.svg"
                         name="PayPal"
                         details="Add PayPal"
                     />
                     <PaymentMethodCard
-                        icon="/path-to-cash-icon.png"
+                        icon="/payment/money.svg"
                         name="Cash on Delivery"
                         details="Pay in Cash"
                     />
