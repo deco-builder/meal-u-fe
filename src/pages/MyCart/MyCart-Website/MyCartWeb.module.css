@@ -1,0 +1,45 @@
+.pageContainer {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* Two columns: 2/3 for cart, 1/3 for checkout */
+    height: 100vh; /* Use 100vh for full viewport height */
+}
+
+.cartSection {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: flex-start; /* Align items at the top */
+    overflow-y: auto; /* Make the left column scrollable */
+    padding: 16px;
+    background-color: #ffffff;
+}
+
+.cartContainer {
+    width: 100%; /* Make sure the cart container takes full width */
+    max-width: 700px; /* Set a max width to avoid overly wide content */
+}
+
+.checkoutSection {
+    padding: 16px;
+    background-color: #ffffff;
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
+
+.checkoutContainer {
+    align-items: center;
+    border-radius: 32px;
+    bottom: 0;
+    box-shadow: 0px -10px 40px rgba(100.78, 122.98, 154.06, 0.10);
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    width: fit-content;
+}
+
+.checkoutContainer2 {
+    max-width: 90%;
+}

@@ -1,43 +1,27 @@
-import Cart from "./Cart";
-import Checkout from "./Checkout";
-import { IonBackButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import React, { useState, useEffect } from "react";
-import './MyCart.module.css';
+import { useEffect, useState } from 'react';
+import MyCartMobile from './MyCart-Mobile';
+import MyCartWebsite from './MyCart-Website';
 
-const MyCart: React.FC = () => {
-    const [subTotal, setSubTotal] = useState(0);
-    const [total, setTotal] = useState(0);
-    const [isMobile, setIsMobile] = useState(window.innerWidth < 576);
+function MyCart() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 576);
 
-    useEffect(() => {
-      const handleResize = () => {
-        setIsMobile(window.innerWidth < 576);
-      };
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 576);
+    };
 
-      window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize);
 
-      return () => {
-        window.removeEventListener('resize', handleResize);
-      };
-    }, []);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [window.innerWidth]);
 
-    return (
-        <IonPage>
-        <IonHeader>
-          <IonToolbar>
-          <IonButtons slot="start">
-            <IonBackButton defaultHref="/tab1"></IonBackButton>
-          </IonButtons>
-            <IonTitle>My Cart</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent className="ion-padding">
-          <Cart subTotal={subTotal} setSubTotal={setSubTotal}/>
-          <Checkout subTotal={subTotal} total={total} setTotal={setTotal}/>
-        </IonContent>
-    </IonPage>
-    )
-};
+  if (isMobile) {
+    return <MyCartMobile />;
+  }
 
-
+  return <MyCartWebsite />;
+}
+  
 export default MyCart;
