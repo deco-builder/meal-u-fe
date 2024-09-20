@@ -7,9 +7,18 @@ import EmailIcon from "../../../public/icon/email-icon";
 import LockIcon from "../../../public/icon/lock-icon";
 import EyeIcon from "../../../public/icon/eye-icon";
 import GoogleIcon from "../../../public/icon/google-icon";
+import { useAuth } from "../../contexts/authContext";
 
 const Login: React.FC = () => {
   const router = useIonRouter();
+  const { login } = useAuth();
+  console.log("///////////////////////////////")
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 576);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
 
   const navigateToSubPage = () => {
     router.push("/tab1/subpage");
@@ -18,8 +27,6 @@ const Login: React.FC = () => {
   const navigateToOrderPage = () => {
     router.push("/tab1/order");
   };
-
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 576);
 
   useEffect(() => {
     const handleResize = () => {
@@ -32,10 +39,6 @@ const Login: React.FC = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
 
   const handleEmailChange = (event: {
     target: { value: React.SetStateAction<string> };
@@ -52,11 +55,20 @@ const Login: React.FC = () => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-
-  const handleSubmit = (event: { preventDefault: () => void }) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    setError("");
 
-    console.log("Email:", email, "Password:", password);
+    console.log("data to send: ", email, "and", password);
+
+    try {
+      console.log("coba kirim");
+      await login(email, password);
+      router.push("/tab1");
+    } catch (error) {
+      setError("Login failed. Please check your credentials and try again.");
+      console.error("Login error:", error);
+    }
   };
 
   const handleGoogleLogin = () => {
@@ -105,7 +117,7 @@ const Login: React.FC = () => {
               <p style={{ marginBottom: "20px" }}>Hi, let's jump in! 👋</p>
             )}
 
-            <div style={{ width: "100%" }}>
+            <form onSubmit={handleSubmit} style={{ width: "100%" }}>
               <div style={{ marginBottom: "20px" }}>
                 <IconInput
                   title="Email Address"
@@ -128,16 +140,18 @@ const Login: React.FC = () => {
                   type={showPassword ? "text" : "password"}
                 />
               </div>
-
+              {error && (
+                <p style={{ color: "red", marginBottom: "10px" }}>{error}</p>
+              )}
               <IconButton
                 text="Login"
                 textColor="white"
                 backgroundColor="#042628"
                 hoverColor="#314647"
-                onClick={handleGoogleLogin}
+                onClick={handleSubmit}
                 width="100%"
               />
-            </div>
+            </form>
 
             <p
               style={{

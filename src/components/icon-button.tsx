@@ -6,7 +6,7 @@ interface IconButtonProps {
   textColor: string;
   backgroundColor: string;
   hoverColor?: string;
-  onClick: () => void;
+  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void | Promise<void>;
   width?: string;
 }
 
