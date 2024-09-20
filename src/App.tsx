@@ -11,8 +11,8 @@ import {
   IonTabBar,
   IonTabButton,
   IonTabs,
-  setupIonicReact,
-} from "@ionic/react";
+  setupIonicReact
+} from '@ionic/react';
 import { IonReactRouter } from "@ionic/react-router";
 import { ellipse, square, triangle } from "ionicons/icons";
 import Tab1 from "./pages/Tab-1/Tab1";
@@ -21,36 +21,7 @@ import Tab3 from "./pages/Tab-3/Tab3";
 import Tab4 from "./pages/Tab-4/Tab4";
 import Tab5 from "./pages/Tab-5/Tab5";
 import RepeatIcon from "../public/icon/repeat-icon";
-
-/* Core CSS required for Ionic components to work properly */
-import "@ionic/react/css/core.css";
-
-/* Basic CSS for apps built with Ionic */
-import "@ionic/react/css/normalize.css";
-import "@ionic/react/css/structure.css";
-import "@ionic/react/css/typography.css";
-
-/* Optional CSS utils that can be commented out */
-import "@ionic/react/css/padding.css";
-import "@ionic/react/css/float-elements.css";
-import "@ionic/react/css/text-alignment.css";
-import "@ionic/react/css/text-transformation.css";
-import "@ionic/react/css/flex-utils.css";
-import "@ionic/react/css/display.css";
-
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
-
-/* import '@ionic/react/css/palettes/dark.always.css'; */
-/* import '@ionic/react/css/palettes/dark.class.css'; */
-// import "@ionic/react/css/palettes/dark.system.css";
-
-/* Theme variables */
-import "./theme/variables.css";
+import MyCart from './pages/MyCart';
 import { useState } from "react";
 import SubPage from "./pages/Tab-1/Sub-Page-1/sub-page-1";
 import RecipeDetails from './pages/RecipeDetails/RecipeDetails';
@@ -60,8 +31,21 @@ import PaymentOptions from "./pages/PaymentOptions/PaymentOptions";
 import Order from "./pages/Tab-1/Order";
 import Login from "./pages/Login/login";
 
-setupIonicReact();
+import "@ionic/react/css/core.css";
+import "@ionic/react/css/normalize.css";
+import "@ionic/react/css/structure.css";
+import "@ionic/react/css/typography.css";
+import "@ionic/react/css/padding.css";
+import "@ionic/react/css/float-elements.css";
+import "@ionic/react/css/text-alignment.css";
+import "@ionic/react/css/text-transformation.css";
+import "@ionic/react/css/flex-utils.css";
+import "@ionic/react/css/display.css";
+import "./theme/variables.css";
 
+
+
+setupIonicReact();
 const App: React.FC = () => {
   const [isSelected, setIsSelected] = useState(false);
 
@@ -92,8 +76,8 @@ const App: React.FC = () => {
               <Route path="/tab4">
                 <Tab4 />
               </Route>
-              <Route path="/tab5">
-                <Tab5 />
+              <Route path="/mycart">
+                <MyCart />
               </Route>
               <Route path="/login">
                 <Login />
@@ -122,9 +106,9 @@ const App: React.FC = () => {
                 <IonIcon aria-hidden="true" icon={square} />
                 <IonLabel>Tab 4</IonLabel>
               </IonTabButton>
-              <IonTabButton tab="tab5" href="/tab5">
-                <IonIcon aria-hidden="true" icon={square} />
-                <IonLabel>Tab 5</IonLabel>
+              <IonTabButton tab="mycart" href="/mycart?">
+              <IonIcon aria-hidden="true" icon={square} />
+                <IonLabel>My Cart</IonLabel>
               </IonTabButton>
             </IonTabBar>
           </IonTabs>
