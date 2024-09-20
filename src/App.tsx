@@ -57,6 +57,8 @@ import RecipeDetails from './pages/RecipeDetails/RecipeDetails';
 import ProductDetails from './pages/ProductDetails/ProductDetails';
 import Navbar from "./components/NavigationBar/Navbar";
 import PaymentOptions from "./pages/PaymentOptions/PaymentOptions";
+import Order from "./pages/Tab-1/Order";
+import Login from "./pages/Login/login";
 
 setupIonicReact();
 
@@ -78,6 +80,9 @@ const App: React.FC = () => {
               <Route exact path="/tab1/subpage">
                 <SubPage />
               </Route>
+              <Route exact path="/tab1/order">
+                <Order />
+              </Route>
               <Route exact path="/tab2">
                 <Tab2 />
               </Route>
@@ -89,6 +94,9 @@ const App: React.FC = () => {
               </Route>
               <Route path="/tab5">
                 <Tab5 />
+              </Route>
+              <Route path="/login">
+                <Login />
               </Route>
               <Route exact path="/">
                 <Redirect to="/tab1" />
