@@ -1,0 +1,74 @@
+.card {
+    --background: #ffffff;
+    --border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin: 8px 16px;
+    font-family: "DM Sans", sans-serif;
+}
+
+.content {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+}
+
+.imageContainer {
+    width: 64px;
+    height: 64px;
+    overflow: hidden;
+    border-radius: 12px;
+    margin-right: 16px;
+}
+
+.image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.details {
+    flex-grow: 1;
+}
+
+.name {
+    font-family: "DM Sans", sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: #0A2533;
+    display: block;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px;
+}
+
+.quantity {
+    font-family: "DM Sans", sans-serif;
+    font-size: 14px;
+    color: #0A2533;
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 500;
+}
+
+.price {
+    font-family: "DM Sans", sans-serif;
+    font-size: 12px;
+    color: #97A2B0;
+}
+
+.arrowContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background-color: #0F2930;
+    border-radius: 8px;
+}
+
+.arrowIcon {
+    color: #ffffff;
+    font-size: 18px;
+}
