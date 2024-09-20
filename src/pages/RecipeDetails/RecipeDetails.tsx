@@ -19,22 +19,20 @@ import {
     IonRouterOutlet
 } from '@ionic/react';
 import {heart, share, bookmark, time, restaurant, flame, fastFood, pencil} from 'ionicons/icons';
-import styles from './ProductDetails.module.css';
-import RecipeCard from '../../components/RecipeCard/RecipeCard';
+import LongIngredientCard from '../../components/LongIngredientCard/LongIngredientCard';
+import styles from './RecipeDetails.module.css';
 
 const RecipeDetails: React.FC = () => {
-    const featuredRecipes = [
-        { imageSrc: '/food.png', title: 'Egg & Avo...' },
-        { imageSrc: '/food.png', title: 'Bowl of r...' },
-        { imageSrc: '/food.png', title: 'Chicken S...' },
+    const ingredients = [
+        { name: 'Parmigiano Reggiano', image: '/food.png', quantity: '100g', price: '$1.40 per 250g' },
+        { name: 'Eggs', image: '/food.png', quantity: '2 pieces', price: '$4.00 per pack' },
+        { name: 'GF Fettuccine', image: '/food.png', quantity: '400g', price: '$5.00 per pack' },
+        { name: 'Butter', image: '/food.png', quantity: '35g', price: '$3.00 per 500g' },
+        { name: 'Black Pepper', image: '/food.png', quantity: '1/4 tsp', price: '$3.00 per 100g' },
+        { name: 'Kosher Salt', image: '/food.png', quantity: '1 tbsp', price: '$1.00 per 500g' },
+        { name: 'Garlic', image: '/food.png', quantity: '1 clove', price: '$2.00 per 250g' },
+        { name: 'Parsley', image: '/food.png', quantity: '1 tbsp (chopped)', price: '$1.50 per 10g' },
     ];
-
-    const peopleAlsoPurchase = [
-        { imageSrc: '/food.png', title: 'Egg & Spi...' },
-        { imageSrc: '/food.png', title: 'Green Sal...' },
-        { imageSrc: '/food.png', title: 'Pasta Dis...' },
-    ];
-
 
     return (
         <IonPage>
@@ -43,11 +41,23 @@ const RecipeDetails: React.FC = () => {
                     <IonButtons slot="start">
                         <IonBackButton defaultHref="/recipes" />
                     </IonButtons>
-                    <IonTitle>Product Details</IonTitle>
+                    <IonTitle>Recipe</IonTitle>
                 </IonToolbar>
             </IonHeader>
             <IonContent fullscreen>
                 <div className={styles.contentContainer}>
+                    <div className={styles.authorContainer}>
+                        <div className={styles.avatarContainer}>
+                            <IonAvatar>
+                                <img src="/food.png" alt="Jane Doe"/>
+                            </IonAvatar>
+                            <div>
+                                <IonText className={styles.authorName}>Jane Doe</IonText>
+                                <IonText className={styles.followers}>18K Followers</IonText>
+                            </div>
+                        </div>
+                        <IonButton fill="outline" className={styles.followButton}>Follow</IonButton>
+                    </div>
                     <div className={styles.imageContainer}>
                         <IonImg src="/food.png" alt="Easy Fettuccine Carbonara"/>
                     </div>
@@ -73,8 +83,9 @@ const RecipeDetails: React.FC = () => {
                     <div className={styles.titleContainer}>
                         <h1>Easy Fettuccine Carbonara</h1>
                         <div className={styles.timeContainer}>
+                            <IonIcon icon={time}/>
                             <div className={styles.timeText}>
-                                <IonText>$1.00/each</IonText>
+                                <IonText>15 mins</IonText>
                             </div>
                         </div>
                     </div>
@@ -112,31 +123,31 @@ const RecipeDetails: React.FC = () => {
                         </div>
                     </div>
                     <div className={styles.sectionTitle}>
-                        <h2>Recipes featuring this product</h2>
+                        <h2>Steps</h2>
                     </div>
-                    <div className={styles.recipeCardContainer}>
-                        {featuredRecipes.map((recipe, index) => (
-                            <RecipeCard
-                                key={index}
-                                imageSrc={recipe.imageSrc}
-                                title={recipe.title}
-                                onClick={() => console.log(`Clicked on ${recipe.title}`)}
-                            />
-                        ))}
-                    </div>
-
+                    <IonList>
+                        <IonItem>
+                            <IonLabel className={styles.step}>
+                                1. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget
+                                ultricies aliquam, nunc nunc ultricies nisi.
+                            </IonLabel>
+                        </IonItem>
+                        {/* Add more steps here */}
+                    </IonList>
                     <div className={styles.sectionTitle}>
-                        <h2>People also Purchase</h2>
+                        <h2>Ingredients</h2>
                     </div>
-                    <div className={styles.recipeCardContainer}>
-                        {peopleAlsoPurchase.map((item, index) => (
-                            <RecipeCard
-                                key={index}
-                                imageSrc={item.imageSrc}
-                                title={item.title}
-                                onClick={() => console.log(`Clicked on ${item.title}`)}
-                            />
-                        ))}
+                    {ingredients.map((ingredient, index) => (
+                        <LongIngredientCard
+                            key={index}
+                            name={ingredient.name}
+                            image={ingredient.image}
+                            quantity={ingredient.quantity}
+                            price={ingredient.price}
+                        />
+                    ))}
+                    <div className={styles.sectionTitle}>
+                        <h2>Comments</h2>
                     </div>
                 </div>
 
