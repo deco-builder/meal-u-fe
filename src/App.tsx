@@ -53,7 +53,9 @@ import "@ionic/react/css/display.css";
 import "./theme/variables.css";
 import { useState } from "react";
 import SubPage from "./pages/Tab-1/Sub-Page-1/sub-page-1";
+import Order from "./pages/Tab-1/Order";
 import Navbar from "./components/NavigationBar/Navbar";
+import Login from "./pages/Login/login";
 
 setupIonicReact();
 
@@ -75,6 +77,9 @@ const App: React.FC = () => {
               <Route exact path="/tab1/subpage">
                 <SubPage />
               </Route>
+              <Route exact path="/tab1/order">
+                <Order />
+              </Route>
               <Route exact path="/tab2">
                 <Tab2 />
               </Route>
@@ -86,6 +91,9 @@ const App: React.FC = () => {
               </Route>
               <Route path="/tab5">
                 <Tab5 />
+              </Route>
+              <Route path="/login">
+                <Login />
               </Route>
               <Route exact path="/">
                 <Redirect to="/tab1" />
