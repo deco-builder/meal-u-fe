@@ -9,8 +9,10 @@ import {
   useIonRouter,
 } from "@ionic/react";
 import "./Tab1.css";
+import { useAuth } from "../../contexts/authContext";
 
 const Tab1: React.FC = () => {
+  const { logout } = useAuth();
   const router = useIonRouter();
 
   const navigateToSubPage = () => {
@@ -21,9 +23,6 @@ const Tab1: React.FC = () => {
     router.push('/tab1/order');
   };
 
-  const navigateToLoginPage = () => {
-    router.push('/login');
-  };
 
   return (
     <IonPage>
@@ -40,8 +39,8 @@ const Tab1: React.FC = () => {
         <IonButton onClick={navigateToOrderPage}>
           Go to Order
         </IonButton>
-        <IonButton onClick={navigateToLoginPage}>
-          Go to Login
+        <IonButton onClick={logout}>
+          Logout
         </IonButton>
       </IonContent>
     </IonPage>
