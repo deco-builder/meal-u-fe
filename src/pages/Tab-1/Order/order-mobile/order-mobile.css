@@ -1,0 +1,37 @@
+.header-location {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.order-card {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.header-category {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.custom-input {
+  --border-color: #e6ebf2;
+  --border-radius: 50px;
+  --border-width: 3px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+}
+
+.custom-input {
+  --color: #000000;
+  --placeholder-color: #888888;
+}
+
+.custom-input ion-icon {
+  color: #888888;
+}
