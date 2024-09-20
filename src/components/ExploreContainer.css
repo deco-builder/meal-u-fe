@@ -22,3 +22,11 @@
 .container a {
   text-decoration: none;
 }
+
+.filter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 1000000000000000;
+}

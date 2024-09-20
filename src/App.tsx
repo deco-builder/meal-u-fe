@@ -21,10 +21,14 @@ import Tab3 from "./pages/Tab-3/Tab3";
 import Tab4 from "./pages/Tab-4/Tab4";
 import Tab5 from "./pages/Tab-5/Tab5";
 import RepeatIcon from "../public/icon/repeat-icon";
+import MyCart from "./pages/MyCart";
 import { useState } from "react";
 import SubPage from "./pages/Tab-1/Sub-Page-1/sub-page-1";
-import Order from "./pages/Tab-1/Order";
+import RecipeDetails from "./pages/RecipeDetails/RecipeDetails";
+import ProductDetails from "./pages/ProductDetails/ProductDetails";
 import Navbar from "./components/NavigationBar/Navbar";
+import PaymentOptions from "./pages/PaymentOptions/PaymentOptions";
+import Order from "./pages/Tab-1/Order";
 import Login from "./pages/Login/login";
 import { useAuth } from "./contexts/authContext";
 
@@ -41,7 +45,6 @@ import "@ionic/react/css/display.css";
 import "./theme/variables.css";
 
 setupIonicReact();
-
 const App: React.FC = () => {
   const { isAuthenticated } = useAuth();
   const [isSelected, setIsSelected] = useState(false);
@@ -65,6 +68,10 @@ const App: React.FC = () => {
                 <Route path="/tab3" component={Tab3} />
                 <Route path="/tab4" component={Tab4} />
                 <Route path="/tab5" component={Tab5} />
+                <Route path="/mycart" component={MyCart} />
+                <Route path="/recipe-details/:id" component={RecipeDetails} />
+                <Route path="/product-details/:id" component={ProductDetails} />
+                <Route path="/payment-options" component={PaymentOptions} />
                 <Route exact path="/">
                   <Redirect to="/tab1" />
                 </Route>
@@ -90,9 +97,9 @@ const App: React.FC = () => {
                   <IonIcon aria-hidden="true" icon={square} />
                   <IonLabel>Tab 4</IonLabel>
                 </IonTabButton>
-                <IonTabButton tab="tab5" href="/tab5">
+                <IonTabButton tab="mycart" href="/mycart?">
                   <IonIcon aria-hidden="true" icon={square} />
-                  <IonLabel>Tab 5</IonLabel>
+                  <IonLabel>My Cart</IonLabel>
                 </IonTabButton>
               </IonTabBar>
             </IonTabs>
