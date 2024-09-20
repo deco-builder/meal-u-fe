@@ -53,8 +53,11 @@ import "@ionic/react/css/display.css";
 import "./theme/variables.css";
 import { useState } from "react";
 import SubPage from "./pages/Tab-1/Sub-Page-1/sub-page-1";
-import Order from "./pages/Tab-1/Order";
+import RecipeDetails from './pages/RecipeDetails/RecipeDetails';
+import ProductDetails from './pages/ProductDetails/ProductDetails';
 import Navbar from "./components/NavigationBar/Navbar";
+import PaymentOptions from "./pages/PaymentOptions/PaymentOptions";
+import Order from "./pages/Tab-1/Order";
 import Login from "./pages/Login/login";
 
 setupIonicReact();
@@ -98,6 +101,9 @@ const App: React.FC = () => {
               <Route exact path="/">
                 <Redirect to="/tab1" />
               </Route>
+              <Route path="/recipe-details/:id" component={RecipeDetails} />
+              <Route path="/product-details/:id" component={ProductDetails} />
+              <Route path="/payment-options" component={PaymentOptions} />
             </IonRouterOutlet>
             <IonTabBar slot="bottom" className="ion-hide-sm-up">
               <IonTabButton tab="tab1" href="/tab1" onClick={() => setIsSelected(!isSelected)}>
