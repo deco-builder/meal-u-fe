@@ -5,6 +5,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   user: any | null;
+  getToken: () => string | null;
 }
 
 interface AuthProviderProps {
@@ -57,8 +58,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setUser(null);
   };
 
+  const getToken = () => {
+    return localStorage.getItem('accessToken');
+  };
+
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, user }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, user, getToken }}>
       {children}
     </AuthContext.Provider>
   );
