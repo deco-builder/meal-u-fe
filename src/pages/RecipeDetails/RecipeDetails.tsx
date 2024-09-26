@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import {
     IonContent,
     IonHeader,
@@ -16,23 +17,64 @@ import {
     IonItem,
     IonLabel,
     IonAvatar,
-    IonRouterOutlet
+    IonSkeletonText,
 } from '@ionic/react';
-import {heart, share, bookmark, time, restaurant, flame, fastFood, pencil} from 'ionicons/icons';
+import { heart, share, bookmark, time, restaurant, flame, fastFood, pencil } from 'ionicons/icons';
 import LongIngredientCard from '../../components/LongIngredientCard/LongIngredientCard';
 import styles from './RecipeDetails.module.css';
+import { fetchRecipeDetails } from '../../api/recipeApi';
+import { RecipeData } from '../../api/recipeApi';
+import { useAuth } from '../../contexts/authContext';
 
 const RecipeDetails: React.FC = () => {
-    const ingredients = [
-        { name: 'Parmigiano Reggiano', image: '/food.png', quantity: '100g', price: '$1.40 per 250g' },
-        { name: 'Eggs', image: '/food.png', quantity: '2 pieces', price: '$4.00 per pack' },
-        { name: 'GF Fettuccine', image: '/food.png', quantity: '400g', price: '$5.00 per pack' },
-        { name: 'Butter', image: '/food.png', quantity: '35g', price: '$3.00 per 500g' },
-        { name: 'Black Pepper', image: '/food.png', quantity: '1/4 tsp', price: '$3.00 per 100g' },
-        { name: 'Kosher Salt', image: '/food.png', quantity: '1 tbsp', price: '$1.00 per 500g' },
-        { name: 'Garlic', image: '/food.png', quantity: '1 clove', price: '$2.00 per 250g' },
-        { name: 'Parsley', image: '/food.png', quantity: '1 tbsp (chopped)', price: '$1.50 per 10g' },
-    ];
+    const { id } = useParams<{ id: string }>();
+    const [recipe, setRecipe] = useState<RecipeData | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    const { getToken } = useAuth();
+    const token = getToken();
+
+    useEffect(() => {
+        const loadRecipe = async () => {
+            if (!token) {
+                setError('No authentication token available');
+                setLoading(false);
+                return;
+            }
+
+            try {
+                const data = await fetchRecipeDetails(parseInt(id), token);
+                setRecipe(data);
+            } catch (err) {
+                setError('Failed to load recipe details');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadRecipe();
+    }, [id, token]);
+
+    if (loading) {
+        return (
+            <IonPage>
+                <IonContent>
+                    <IonSkeletonText animated style={{ width: '100%', height: '100%' }} />
+                </IonContent>
+            </IonPage>
+        );
+    }
+
+    if (error || !recipe) {
+        return (
+            <IonPage>
+                <IonContent>
+                    <IonText color="danger">{error || 'Recipe not found'}</IonText>
+                </IonContent>
+            </IonPage>
+        );
+    }
 
     return (
         <IonPage>
@@ -41,7 +83,7 @@ const RecipeDetails: React.FC = () => {
                     <IonButtons slot="start">
                         <IonBackButton defaultHref="/recipes" />
                     </IonButtons>
-                    <IonTitle>Recipe</IonTitle>
+                    <IonTitle>{recipe.name || "Delicious Recipe"}</IonTitle>
                 </IonToolbar>
             </IonHeader>
             <IonContent fullscreen>
@@ -49,31 +91,27 @@ const RecipeDetails: React.FC = () => {
                     <div className={styles.authorContainer}>
                         <div className={styles.avatarContainer}>
                             <IonAvatar>
-                                <img src="/food.png" alt="Jane Doe"/>
+                                <img src={recipe.creator?.profile_picture || '/default-avatar.png'} alt={recipe.creator?.name || 'Author'} />
                             </IonAvatar>
                             <div>
-                                <IonText className={styles.authorName}>Jane Doe</IonText>
+                                <IonText className={styles.authorName}>{recipe.creator?.name || "Chef John Doe"}</IonText>
                                 <IonText className={styles.followers}>18K Followers</IonText>
                             </div>
                         </div>
                         <IonButton fill="outline" className={styles.followButton}>Follow</IonButton>
                     </div>
                     <div className={styles.imageContainer}>
-                        <IonImg src="/food.png" alt="Easy Fettuccine Carbonara"/>
+                        <IonImg src={recipe.image || '/food-placeholder.png'} alt={recipe.name || 'Recipe Image'} />
                     </div>
                     <div className={styles.statsContainer}>
                         <div className={styles.likeChatShare}>
                             <div className={styles.stat}>
                                 <IonIcon icon={heart} className={styles.statIcon}/>
-                                <IonText className={styles.statText}>121</IonText>
+                                <IonText className={styles.statText}>100</IonText>
                             </div>
                             <div className={styles.stat}>
                                 <IonIcon icon={share} className={styles.statIcon}/>
-                                <IonText>35</IonText>
-                            </div>
-                            <div className={styles.stat}>
-                                <IonIcon icon={share} className={styles.statIcon}/>
-                                <IonText>35</IonText>
+                                <IonText>25</IonText>
                             </div>
                         </div>
                         <div className={styles.stat}>
@@ -81,16 +119,18 @@ const RecipeDetails: React.FC = () => {
                         </div>
                     </div>
                     <div className={styles.titleContainer}>
-                        <h1>Easy Fettuccine Carbonara</h1>
+                        <h1>{recipe.name || "Amazing Recipe"}</h1>
                         <div className={styles.timeContainer}>
                             <IonIcon icon={time}/>
                             <div className={styles.timeText}>
-                                <IonText>15 mins</IonText>
+                                <IonText>30 mins</IonText>
                             </div>
                         </div>
                     </div>
                     <div className={styles.tags}>
-                        <IonChip className={styles.customChip} color="success">Gluten-Free</IonChip>
+                        {(recipe.dietary_details || ['Vegetarian']).map((detail, index) => (
+                            <IonChip key={index} className={styles.customChip} color="success">{detail}</IonChip>
+                        ))}
                     </div>
                     <div className={styles.nutritionInfo}>
                         <div className={styles.nutritionItem}>
@@ -99,61 +139,67 @@ const RecipeDetails: React.FC = () => {
                         </div>
                         <div className={styles.nutritionItem}>
                             <IonIcon icon={restaurant} className={styles.nutritionIcon}/>
-                            <IonText className={styles.nutritionText}>27g proteins</IonText>
+                            <IonText className={styles.nutritionText}>20g proteins</IonText>
                         </div>
                     </div>
                     <div className={styles.nutritionInfo}>
                         <div className={styles.nutritionItem}>
                             <IonIcon icon={flame} className={styles.nutritionIcon}/>
-                            <IonText className={styles.nutritionText}>120 Kcal</IonText>
+                            <IonText className={styles.nutritionText}>500 Kcal</IonText>
                         </div>
                         <div className={styles.nutritionItem}>
                             <IonIcon icon={fastFood} className={styles.nutritionIcon}/>
-                            <IonText className={styles.nutritionText}>9g fats</IonText>
+                            <IonText className={styles.nutritionText}>15g fats</IonText>
                         </div>
                     </div>
                     <div className={styles.descriptionContainer}>
                         <div className={styles.description}>
-                            <IonText>
-                                Need a quick gluten-free dinner? You're in the right place! This fettuccine carbonara
-                                just
-                                takes
-                                15 minutes to make and it's so delish!
-                            </IonText>
+                            <IonText>{recipe.description || "This recipe is quick, delicious, and perfect for a weeknight dinner!"}</IonText>
                         </div>
                     </div>
                     <div className={styles.sectionTitle}>
                         <h2>Steps</h2>
                     </div>
                     <IonList>
-                        <IonItem>
-                            <IonLabel className={styles.step}>
-                                1. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget
-                                ultricies aliquam, nunc nunc ultricies nisi.
-                            </IonLabel>
-                        </IonItem>
-                        {/* Add more steps here */}
+                        {recipe.instructions?.length ? recipe.instructions.map((step, index) => (
+                            <IonItem key={index}>
+                                <IonLabel className={styles.step}>{index + 1}. {step}</IonLabel>
+                            </IonItem>
+                        )) : (
+                            <IonItem>
+                                <IonLabel className={styles.step}>1. Heat the pan with oil, and cook the pasta.</IonLabel>
+                            </IonItem>
+                        )}
                     </IonList>
                     <div className={styles.sectionTitle}>
                         <h2>Ingredients</h2>
                     </div>
-                    {ingredients.map((ingredient, index) => (
+                    {recipe.ingredients?.length ? recipe.ingredients.map((ingredient, index) => (
                         <LongIngredientCard
                             key={index}
-                            name={ingredient.name}
-                            image={ingredient.image}
-                            quantity={ingredient.quantity}
-                            price={ingredient.price}
+                            name={ingredient.ingredient.name || "Ingredient"}
+                            image={ingredient.ingredient.image || '/food-placeholder.png'}
+                            quantity={`${ingredient.ingredient.unit_size || '100'} ${ingredient.ingredient.unit_id === 2 ? 'g' : 'ml'}`}
+                            price={`$${ingredient.price?.toFixed(2) || '0.00'}`}
                         />
-                    ))}
+                    )) : (
+                        <LongIngredientCard
+                            name="Sample Ingredient"
+                            image="/food-placeholder.png"
+                            quantity="100g"
+                            price="$1.00"
+                        />
+                    )}
                     <div className={styles.sectionTitle}>
                         <h2>Comments</h2>
                     </div>
+                    {/* Hardcoded comment section */}
+                    <IonText>No comments yet. Be the first to comment!</IonText>
                 </div>
 
                 <div className={styles.fixedButtonContainer}>
                     <IonButton expand="block" className={styles.addRecipeButton}>
-                        Add ingredients to cart
+                        Add ingredients to cart (${recipe.total_price?.toFixed(2) || '10.00'})
                     </IonButton>
                     <IonButton className={styles.editButton}>
                         <IonIcon icon={pencil} />

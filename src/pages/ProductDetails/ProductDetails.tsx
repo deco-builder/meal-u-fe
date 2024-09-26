@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     IonContent,
     IonHeader,
@@ -18,30 +18,75 @@ import {
     IonAvatar,
     IonRouterOutlet
 } from '@ionic/react';
-import {heart, share, bookmark, time, restaurant, flame, fastFood, pencil} from 'ionicons/icons';
+import { heart, share, bookmark, fastFood, flame, restaurant, pencil } from 'ionicons/icons';
 import styles from './ProductDetails.module.css';
+import { fetchProductDetails } from '../../api/productApi';
 import RecipeCard from '../../components/RecipeCard/RecipeCard';
+import { useParams } from 'react-router-dom';
+import { useAuth } from '../../contexts/authContext';
 
-const RecipeDetails: React.FC = () => {
+const ProductDetails: React.FC = () => {
+    const { id } = useParams<{ id: string }>();
+    const [product, setProduct] = useState<any | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    const { getToken } = useAuth();
+    const token = getToken() || "";
+
     const featuredRecipes = [
-        { imageSrc: '/food.png', title: 'Egg & Avo...' },
-        { imageSrc: '/food.png', title: 'Bowl of r...' },
-        { imageSrc: '/food.png', title: 'Chicken S...' },
+        { imageSrc: '/food.png', title: 'Egg & Avocado Toast' },
+        { imageSrc: '/food.png', title: 'Bowl of Rice' },
+        { imageSrc: '/food.png', title: 'Chicken Salad' },
     ];
 
     const peopleAlsoPurchase = [
-        { imageSrc: '/food.png', title: 'Egg & Spi...' },
-        { imageSrc: '/food.png', title: 'Green Sal...' },
-        { imageSrc: '/food.png', title: 'Pasta Dis...' },
+        { imageSrc: '/food.png', title: 'Egg & Spinach Wrap' },
+        { imageSrc: '/food.png', title: 'Green Salad' },
+        { imageSrc: '/food.png', title: 'Pasta Dish' },
     ];
 
+    useEffect(() => {
+        const loadProductDetails = async () => {
+            try {
+                const data = await fetchProductDetails(parseInt(id), token);
+                setProduct(data);
+            } catch (err) {
+                setError('Failed to load product details');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadProductDetails();
+    }, []);
+
+    if (loading) {
+        return (
+            <IonPage>
+                <IonContent>
+                    <IonText>Loading...</IonText>
+                </IonContent>
+            </IonPage>
+        );
+    }
+
+    if (error || !product) {
+        return (
+            <IonPage>
+                <IonContent>
+                    <IonText color="danger">{error || 'Product not found'}</IonText>
+                </IonContent>
+            </IonPage>
+        );
+    }
 
     return (
         <IonPage>
             <IonHeader>
                 <IonToolbar>
                     <IonButtons slot="start">
-                        <IonBackButton defaultHref="/recipes" />
+                        <IonBackButton defaultHref="/products" />
                     </IonButtons>
                     <IonTitle>Product Details</IonTitle>
                 </IonToolbar>
@@ -49,68 +94,44 @@ const RecipeDetails: React.FC = () => {
             <IonContent fullscreen>
                 <div className={styles.contentContainer}>
                     <div className={styles.imageContainer}>
-                        <IonImg src="/food.png" alt="Easy Fettuccine Carbonara"/>
-                    </div>
-                    <div className={styles.statsContainer}>
-                        <div className={styles.likeChatShare}>
-                            <div className={styles.stat}>
-                                <IonIcon icon={heart} className={styles.statIcon}/>
-                                <IonText className={styles.statText}>121</IonText>
-                            </div>
-                            <div className={styles.stat}>
-                                <IonIcon icon={share} className={styles.statIcon}/>
-                                <IonText>35</IonText>
-                            </div>
-                            <div className={styles.stat}>
-                                <IonIcon icon={share} className={styles.statIcon}/>
-                                <IonText>35</IonText>
-                            </div>
-                        </div>
-                        <div className={styles.stat}>
-                            <IonIcon icon={bookmark} className={styles.statIcon}/>
-                        </div>
+                        <IonImg src={product.image || '/default-product-image.png'} alt={product.name} />
                     </div>
                     <div className={styles.titleContainer}>
-                        <h1>Easy Fettuccine Carbonara</h1>
+                        <h1>{product.name}</h1>
                         <div className={styles.timeContainer}>
-                            <div className={styles.timeText}>
-                                <IonText>$1.00/each</IonText>
-                            </div>
+                            <IonText>{product.price_per_unit}/unit</IonText>
                         </div>
                     </div>
                     <div className={styles.tags}>
-                        <IonChip className={styles.customChip} color="success">Gluten-Free</IonChip>
+                        {product.dietary_details.map((detail: string, index: number) => (
+                            <IonChip key={index} className={styles.customChip} color="success">{detail}</IonChip>
+                        ))}
                     </div>
                     <div className={styles.nutritionInfo}>
                         <div className={styles.nutritionItem}>
-                            <IonIcon icon={fastFood} className={styles.nutritionIcon}/>
-                            <IonText className={styles.nutritionText}>65g carbs</IonText>
+                            <IonIcon icon={fastFood} className={styles.nutritionIcon} />
+                            <IonText className={styles.nutritionText}>{product.product_nutrition.carbohydrate_per_100g}g carbs</IonText>
                         </div>
                         <div className={styles.nutritionItem}>
-                            <IonIcon icon={restaurant} className={styles.nutritionIcon}/>
-                            <IonText className={styles.nutritionText}>27g proteins</IonText>
+                            <IonIcon icon={restaurant} className={styles.nutritionIcon} />
+                            <IonText className={styles.nutritionText}>{product.product_nutrition.protein_per_100g}g proteins</IonText>
                         </div>
                     </div>
                     <div className={styles.nutritionInfo}>
                         <div className={styles.nutritionItem}>
-                            <IonIcon icon={flame} className={styles.nutritionIcon}/>
-                            <IonText className={styles.nutritionText}>120 Kcal</IonText>
+                            <IonIcon icon={flame} className={styles.nutritionIcon} />
+                            <IonText className={styles.nutritionText}>{product.product_nutrition.energy_per_100g} Kcal</IonText>
                         </div>
                         <div className={styles.nutritionItem}>
-                            <IonIcon icon={fastFood} className={styles.nutritionIcon}/>
-                            <IonText className={styles.nutritionText}>9g fats</IonText>
+                            <IonIcon icon={flame} className={styles.nutritionIcon} />
+                            <IonText className={styles.nutritionText}>{product.product_nutrition.fat_total_per_100g} fats</IonText>
                         </div>
                     </div>
                     <div className={styles.descriptionContainer}>
-                        <div className={styles.description}>
-                            <IonText>
-                                Need a quick gluten-free dinner? You're in the right place! This fettuccine carbonara
-                                just
-                                takes
-                                15 minutes to make and it's so delish!
-                            </IonText>
-                        </div>
+                        <IonText>{product.description}</IonText>
                     </div>
+
+                    {/* Recipes featuring this product */}
                     <div className={styles.sectionTitle}>
                         <h2>Recipes featuring this product</h2>
                     </div>
@@ -125,6 +146,7 @@ const RecipeDetails: React.FC = () => {
                         ))}
                     </div>
 
+                    {/* People also purchase */}
                     <div className={styles.sectionTitle}>
                         <h2>People also Purchase</h2>
                     </div>
@@ -153,4 +175,4 @@ const RecipeDetails: React.FC = () => {
     );
 };
 
-export default RecipeDetails;
+export default ProductDetails;
