@@ -31,6 +31,8 @@ import IconInput from "../../../../components/icon-input";
 function OrderMobile() {
   const [count, setCount] = useState(0);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
+  const [isInputFilled, setInputFilled] = useState(false)
+  const [searchValue, setSearchValue] = useState("");
 
   const handleFilter = () => {
     setIsFilterVisible(!isFilterVisible);
@@ -45,8 +47,22 @@ function OrderMobile() {
   };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.value);
+    const value = event.target.value;
+    setSearchValue(value);
+    setInputFilled(true);
   };
+
+  const handleCategoryClick = (categoryName: string) => {
+    setSearchValue(categoryName);
+    setInputFilled(true);
+  };
+
+  const categories = [
+    { id: 1, name: "Chicken", image: "/img/food-image.png" },
+    { id: 2, name: "Beef", image: "/img/food-image.png" },
+    { id: 3, name: "Fish", image: "/img/food-image.png" },
+    { id: 4, name: "Vegetarian", image: "/img/food-image.png" },
+  ];
   return (
     <IonPage>
       <IonHeader>
@@ -59,7 +75,7 @@ function OrderMobile() {
       </IonHeader>
       <IonContent className="ion-padding">
         <div>
-          <p style={{marginBottom: '0px'}}>Delivery Location</p>
+          <p style={{ marginBottom: "0px" }}>Delivery Location</p>
         </div>
         <div className="header-location">
           <LocationIcon />
@@ -72,14 +88,70 @@ function OrderMobile() {
             leftIcon={<SearchIcon />}
             placeholder="Search"
             width="300px"
+            value={searchValue}
           />
           <IonButton size="small" onClick={handleFilter}>
             <FilterIcon />
           </IonButton>
         </div>
         {isFilterVisible ? (
+          <div className="filter">
+            <FilterOverlay />
+          </div>
+        ) : (
           <>
+          {!isInputFilled ? (
             <div style={{ display: "flex", flexDirection: "column" }}>
+            <h3>Categories</h3>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fill, minmax(100px, 1fr))",
+                gap: "10px",
+                width: "100%",
+              }}
+            >
+              {categories.map((category) => (
+                <IonCard
+                  key={category.id}
+                  style={{
+                    width: "100%",
+                    margin: "0",
+                  }}
+                  onClick={() => handleCategoryClick(category.name)}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      overflow: "hidden",
+                      paddingTop: "5px",
+                      height: "80px",
+                    }}
+                  >
+                    <img
+                      alt={`${category.name} category`}
+                      src={category.image}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </div>
+                  <IonCardHeader>
+                    <p style={{ margin: "0px", textAlign: "center" }}>
+                      {category.name}
+                    </p>
+                  </IonCardHeader>
+                </IonCard>
+              ))}
+            </div>
+          </div>
+          ) : (
+            <>
+<div style={{ display: "flex", flexDirection: "column" }}>
               <h3>Mealkits</h3>
               <div style={{ overflowX: "auto", width: "100%" }}>
                 <div
@@ -129,6 +201,7 @@ function OrderMobile() {
                 </div>
               </div>
             </div>
+
             <div style={{ display: "flex", flexDirection: "column" }}>
               <h3>Recipes</h3>
               <div style={{ overflowX: "auto", width: "100%" }}>
@@ -261,11 +334,9 @@ function OrderMobile() {
                 </div>
               </div>
             </div>
+            </>
+          )}
           </>
-        ) : (
-          <div className="filter">
-            <FilterOverlay />
-          </div>
         )}
       </IonContent>
     </IonPage>

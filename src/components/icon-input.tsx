@@ -8,7 +8,8 @@ interface IconInputProps {
   placeholder?: string;
   width?: string | number;
   onRightIconClick?: () => void;
-  type?: string;  // Add this line
+  type?: string;
+  value?: string; 
 }
 
 const IconInput: React.FC<IconInputProps> = ({ 
@@ -19,7 +20,8 @@ const IconInput: React.FC<IconInputProps> = ({
   placeholder = '', 
   width = '100%',
   onRightIconClick,
-  type = 'text'  // Add this line with default value
+  type = 'text',
+  value
 }) => {
   return (
     <div style={{ width: width }}>
@@ -31,7 +33,8 @@ const IconInput: React.FC<IconInputProps> = ({
         }}
       >
         <input
-          type={type}  // Use the type prop here
+          type={type}
+          value={value}
           placeholder={placeholder}
           onChange={onInputHandleChange}
           style={{
