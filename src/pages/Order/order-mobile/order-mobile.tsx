@@ -33,6 +33,7 @@ import { RecipeData, useRecipesList } from "../../../api/recipeApi";
 import { ProductData, useProductList } from "../../../api/productApi";
 import { useCategoriesList, CategoryData } from "../../../api/categoryApi";
 import { useParams } from "react-router-dom";
+import ItemCard from "../../../components/ItemCard";
 
 function OrderMobile() {
   const { category } = useParams<{ category: string }>();
@@ -75,6 +76,10 @@ function OrderMobile() {
     }
   };
 
+  const handleMealkitClick = (mealkitId: number) => {
+    console.log(`Mealkit clicked: ${mealkitId}`);
+  };
+
   const handleSearchIconClick = useCallback(() => {
     setSearchValue(searchValue);
   }, [searchValue]);
@@ -93,7 +98,7 @@ function OrderMobile() {
   const filteredRecipes = filterItems(recipes, searchValue);
   const filteredProducts = filterItems(product, searchValue);
   console.log("FILTERED MEAL KIST: ", filteredMealkits);
-  console.log("Filtered Recipes: ", filteredRecipes)
+  console.log("Filtered Recipes: ", filteredRecipes);
   return (
     <IonPage>
       <IonHeader>
@@ -133,7 +138,7 @@ function OrderMobile() {
           </div>
         ) : (
           <>
-            <div style={{ display: "flex", flexDirection: "column" }}>
+<div style={{ display: "flex", flexDirection: "column" }}>
               <h3>Mealkits</h3>
               {isMealkitsFetching ? (
                 <p>Loading mealkits...</p>
@@ -147,86 +152,7 @@ function OrderMobile() {
                     }}
                   >
                     {filteredMealkits.map((mealkit: MealkitData) => (
-                      <IonCard
-                        key={mealkit.id}
-                        style={{
-                          minWidth: "120px",
-                          width: "125px",
-                          flex: "0 0 auto",
-                          margin: "10px",
-                        }}
-                      >
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            overflow: "hidden",
-                            padding: "5px",
-                          }}
-                        >
-                          <img
-                            alt={mealkit.name}
-                            src={mealkit.image}
-                            style={{
-                              width: "100%",
-                              height: "auto",
-                              objectFit: "cover",
-                              maxWidth: "130px",
-                              maxHeight: "120px",
-                              borderRadius: "15px",
-                            }}
-                          />
-                        </div>
-                        <IonCardHeader style={{ padding: "10px" }}>
-                          <div
-                            style={{ display: "flex", flexDirection: "column", gap: 5 }}
-                          >
-                            <div
-                              style={{
-                                display: "flex",
-                                justifyContent: "center",
-                                textAlign: "center",
-                              }}
-                            >
-                              <p
-                                style={{
-                                  margin: "0px",
-                                  fontWeight: "700",
-                                  color: "#000000",
-                                }}
-                              >
-                                {mealkit.name}
-                              </p>
-                            </div>
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                gap: 2,
-                              }}
-                            >
-                              <img
-                                alt={mealkit.name}
-                                src={mealkit.creator.profile_picture}
-                                style={{
-                                  width: "10px",
-                                  height: "10px",
-                                  objectFit: "cover",
-                                  borderRadius: "15px",
-                                }}
-                              />
-
-                              <p style={{ margin: "0px", fontSize: "8px" }}>
-                                {mealkit.creator.name} -
-                              </p>
-                              <p style={{ margin: "0px", fontSize: "8px" }}>
-                                ${mealkit.price.toFixed(2)}
-                              </p>
-                            </div>
-                          </div>
-                        </IonCardHeader>
-                      </IonCard>
+                      <ItemCard key={mealkit.id} item={mealkit} onClick={handleMealkitClick} />
                     ))}
                   </div>
                 </div>
@@ -249,44 +175,7 @@ function OrderMobile() {
                     }}
                   >
                     {filteredRecipes.map((recipe: RecipeData) => (
-                      <IonCard
-                        key={recipe.id}
-                        style={{
-                          minWidth: "120px",
-                          width: "125px",
-                          flex: "0 0 auto",
-                          margin: "10px",
-                        }}
-                        onClick={() => handleRecipeClick(recipe.id)}
-                      >
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            overflow: "hidden",
-                            paddingTop: "5px",
-                          }}
-                        >
-                          <img
-                            alt={recipe.name}
-                            src={recipe.image}
-                            style={{
-                              width: "100%",
-                              height: "auto",
-                              objectFit: "cover",
-                              maxWidth: "120px",
-                              maxHeight: "120px",
-                              borderRadius: "15px",
-                            }}
-                          />
-                        </div>
-                        <IonCardHeader>
-                          <div>
-                            <p style={{ margin: "0px" }}>{recipe.name}</p>
-                          </div>
-                        </IonCardHeader>
-                      </IonCard>
+                      <ItemCard key={recipe.id} item={recipe} onClick={handleRecipeClick} />
                     ))}
                   </div>
                 </div>
