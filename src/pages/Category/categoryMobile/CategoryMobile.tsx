@@ -16,7 +16,8 @@ import LocationIcon from "../../../../public/icon/location-icon";
 
 const CategoryMobile: React.FC = () => {
   const history = useHistory();
-  const { data: categories = [], isFetching: isCategoriesFetching } = useCategoriesList();
+  const { data: categories = [], isFetching: isCategoriesFetching } =
+    useCategoriesList();
 
   const handleCategoryClick = (categoryName: string) => {
     history.push(`/order/${categoryName}`);
@@ -30,8 +31,10 @@ const CategoryMobile: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        <div style={{display: "flex", justifyContent:"center"}}>
-          <p style={{ fontSize: "16px", fontWeight: "600" }}>Please select category</p>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <p style={{ fontSize: "16px", fontWeight: "600" }}>
+            Please select category
+          </p>
         </div>
 
         {isCategoriesFetching ? (
@@ -60,8 +63,9 @@ const CategoryMobile: React.FC = () => {
                     justifyContent: "center",
                     alignItems: "center",
                     overflow: "hidden",
-                    paddingTop: "5px",
+                    padding: "5px",
                     height: "80px",
+                    borderRadius: "15px",
                   }}
                 >
                   <img
@@ -71,13 +75,16 @@ const CategoryMobile: React.FC = () => {
                       width: "100%",
                       height: "100%",
                       objectFit: "cover",
+                      borderRadius: "10px",
                     }}
                   />
                 </div>
-                <IonCardHeader>
-                  <p style={{ margin: "0px", textAlign: "center" }}>
-                    {category.name}
-                  </p>
+                <IonCardHeader style={{padding: "5px"}}>
+                  <div>
+                    <p style={{ margin: "0px", textAlign: "center", fontWeight: "600", color: "#000000" }}>
+                      {category.name}
+                    </p>
+                  </div>
                 </IonCardHeader>
               </IonCard>
             ))}

@@ -92,6 +92,8 @@ function OrderMobile() {
   const filteredMealkits = filterItems(mealkits, searchValue);
   const filteredRecipes = filterItems(recipes, searchValue);
   const filteredProducts = filterItems(product, searchValue);
+  console.log("FILTERED MEAL KIST: ", filteredMealkits);
+  console.log("Filtered Recipes: ", filteredRecipes)
   return (
     <IonPage>
       <IonHeader>
@@ -160,7 +162,7 @@ function OrderMobile() {
                             justifyContent: "center",
                             alignItems: "center",
                             overflow: "hidden",
-                            paddingTop: "5px",
+                            padding: "5px",
                           }}
                         >
                           <img
@@ -170,18 +172,58 @@ function OrderMobile() {
                               width: "100%",
                               height: "auto",
                               objectFit: "cover",
-                              maxWidth: "120px",
+                              maxWidth: "130px",
                               maxHeight: "120px",
                               borderRadius: "15px",
                             }}
                           />
                         </div>
-                        <IonCardHeader>
-                          <div>
-                            <p style={{ margin: "0px" }}>{mealkit.name}</p>
-                            <p style={{ margin: "0px" }}>
-                              ${mealkit.price.toFixed(2)}
-                            </p>
+                        <IonCardHeader style={{ padding: "10px" }}>
+                          <div
+                            style={{ display: "flex", flexDirection: "column", gap: 5 }}
+                          >
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                textAlign: "center",
+                              }}
+                            >
+                              <p
+                                style={{
+                                  margin: "0px",
+                                  fontWeight: "700",
+                                  color: "#000000",
+                                }}
+                              >
+                                {mealkit.name}
+                              </p>
+                            </div>
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                gap: 2,
+                              }}
+                            >
+                              <img
+                                alt={mealkit.name}
+                                src={mealkit.creator.profile_picture}
+                                style={{
+                                  width: "10px",
+                                  height: "10px",
+                                  objectFit: "cover",
+                                  borderRadius: "15px",
+                                }}
+                              />
+
+                              <p style={{ margin: "0px", fontSize: "8px" }}>
+                                {mealkit.creator.name} -
+                              </p>
+                              <p style={{ margin: "0px", fontSize: "8px" }}>
+                                ${mealkit.price.toFixed(2)}
+                              </p>
+                            </div>
                           </div>
                         </IonCardHeader>
                       </IonCard>
