@@ -1,3 +1,4 @@
+import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { useAuth } from '../contexts/authContext';
 
 interface ProductNutrition {
@@ -21,7 +22,7 @@ interface ProductNutrition {
   sodium_per_100g: string;
 }
 
-interface ProductData {
+export interface ProductData {
   id: number;
   name: string;
   unit_id: string;
@@ -35,6 +36,46 @@ interface ProductData {
   dietary_details: string[];
   product_nutrition: ProductNutrition;
 }
+
+interface ProductListParams {
+  search: string;
+}
+
+export const useProductList = (params: ProductListParams): UseQueryResult<ProductData[], Error> => {
+  const { getToken } = useAuth();
+  const token = getToken() || '';
+
+  const fetchProduct = async (): Promise<ProductData[]> => {
+    const url = params.search.trim() 
+      ? `http://meal-u-api.nafisazizi.com:8001/api/v1/groceries/products/?search=${encodeURIComponent(params.search)}`
+      : 'http://meal-u-api.nafisazizi.com:8001/api/v1/groceries/products/';
+
+    const response = await fetch(url, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch mealkits');
+    }
+
+    const data = await response.json();
+
+    if (!data.success) {
+      throw new Error(data.message || 'Failed to fetch product');
+    }
+
+    return data.data;
+  };
+
+  return useQuery<ProductData[], Error, ProductData[], [string, ProductListParams]>({
+    queryKey: ['product.list', params],
+    queryFn: fetchProduct,
+    initialData: [],
+    enabled: !!token,
+  });
+};
 
 export const fetchProductDetails = async (productId: number, token: string): Promise<ProductData> => {
   if (!token) {

@@ -29,6 +29,7 @@ import {
 import IconInput from "../../../../components/icon-input";
 import { useMealkitList, MealkitData } from "../../../../api/mealkitApi";
 import { RecipeData, useRecipesList } from "../../../../api/recipeApi";
+import { ProductData, useProductList } from "../../../../api/productApi";
 
 function OrderMobile() {
   const [count, setCount] = useState(0);
@@ -41,6 +42,9 @@ function OrderMobile() {
       search: searchTrigger,
     });
   const { data: recipes = [], isFetching: isRecipesFetching } = useRecipesList({
+    search: searchTrigger,
+  });
+  const { data: product = [], isFetching: isProductFetching } = useProductList({
     search: searchTrigger,
   });
 
@@ -284,9 +288,7 @@ function OrderMobile() {
                             </div>
                             <IonCardHeader>
                               <div>
-                                <p style={{ margin: "0px" }}>
-                                  {recipe.name}
-                                </p>
+                                <p style={{ margin: "0px" }}>{recipe.name}</p>
                               </div>
                             </IonCardHeader>
                           </IonCard>
@@ -300,85 +302,97 @@ function OrderMobile() {
 
                 <div style={{ display: "flex", flexDirection: "column" }}>
                   <h3>Groceries</h3>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      backgroundColor: "#ffffff",
-                      borderRadius: 15,
-                      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                      padding: "10px",
-                    }}
-                  >
-                    <img
-                      alt="Silhouette of mountains"
-                      src="/img/avocado.png"
-                      style={{
-                        width: "100%",
-                        height: "auto",
-                        objectFit: "cover",
-                        maxWidth: "50px",
-                      }}
-                    />
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "flex-start",
-                        height: "100%",
-                      }}
-                    >
-                      <h5
-                        style={{
-                          margin: 0,
-                          marginBottom: "4px",
-                          fontSize: "16px",
-                          fontWeight: "normal",
-                        }}
-                      >
-                        Tortilla Chips
-                      </h5>
-                      <h3
-                        style={{
-                          margin: 0,
-                          fontSize: "18px",
-                          fontWeight: "bold",
-                        }}
-                      >
-                        $13
-                      </h3>
-                    </div>
-
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                      }}
-                    >
-                      <IonIcon
-                        icon={removeCircleOutline}
-                        onClick={decrement}
-                        style={{ fontSize: "24px", cursor: "pointer" }}
-                      />
+                  {isProductFetching ? (
+                    <p>Loading groceries...</p>
+                  ) : product.length > 0 ? (
+                    product.map((product: ProductData) => (
                       <div
+                        key={product.id}
                         style={{
-                          width: "30px",
-                          textAlign: "center",
-                          margin: "0 5px", // Adjust spacing
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          backgroundColor: "#ffffff",
+                          borderRadius: 15,
+                          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                          padding: "10px",
+                          marginBottom: "10px",
                         }}
                       >
-                        {count}
+                        <img
+                          alt={product.name}
+                          src={product.image || "/img/no-photo.png"}
+                          style={{
+                            width: "100%",
+                            height: "auto",
+                            objectFit: "cover",
+                            maxWidth: "50px",
+                            maxHeight: "50px",
+                            borderRadius: "10px"
+                          }}
+                        />
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "center",
+                            alignItems: "flex-start",
+                            height: "100%",
+                          }}
+                        >
+                          <p
+                            style={{
+                              margin: 0,
+                              marginBottom: "4px",
+                              fontSize: "12px",
+                              fontWeight: "normal",
+                            }}
+                          >
+                            {product.name}
+                          </p>
+                          <h3
+                            style={{
+                              margin: 0,
+                              fontSize: "14px",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            ${product.price_per_unit}
+                          </h3>
+                        </div>
+
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                          }}
+                        >
+                          <IonIcon
+                            icon={removeCircleOutline}
+                            onClick={() => decrement()}
+                            style={{ fontSize: "24px", cursor: "pointer" }}
+                          />
+                          <div
+                            style={{
+                              width: "30px",
+                              textAlign: "center",
+                              margin: "0 5px",
+                            }}
+                          >
+                            {count}{" "}
+                          </div>
+                          <IonIcon
+                            icon={addCircleOutline}
+                            onClick={() => increment()}
+                            style={{ fontSize: "24px", cursor: "pointer" }}
+                          />
+                        </div>
                       </div>
-                      <IonIcon
-                        icon={addCircleOutline}
-                        onClick={increment}
-                        style={{ fontSize: "24px", cursor: "pointer" }}
-                      />
-                    </div>
-                  </div>
+                    ))
+                  ) : (
+                    <p>No Groceries found.</p>
+                  )}
                 </div>
               </>
             )}
