@@ -30,6 +30,7 @@ import Navbar from "./components/NavigationBar/Navbar";
 import PaymentOptions from "./pages/PaymentOptions/PaymentOptions";
 import Order from "./pages/Tab-1/Order";
 import Login from "./pages/Login/login";
+import Category from "./pages/Tab-1/Category";
 import { useAuth } from "./contexts/authContext";
 
 import "@ionic/react/css/core.css";
@@ -63,7 +64,8 @@ const App: React.FC = () => {
               <IonRouterOutlet>
                 <Route exact path="/tab1" component={Tab1} />
                 <Route exact path="/tab1/subpage" component={SubPage} />
-                <Route exact path="/tab1/order" component={Order} />
+                <Route exact path="/order/:category" component={Order} />
+                <Route exact path="/categories" component={Category} />
                 <Route exact path="/tab2" component={Tab2} />
                 <Route path="/tab3" component={Tab3} />
                 <Route path="/tab4" component={Tab4} />

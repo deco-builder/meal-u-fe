@@ -47,7 +47,7 @@ export const useProductList = (params: ProductListParams): UseQueryResult<Produc
 
   const fetchProduct = async (): Promise<ProductData[]> => {
     const url = params.search.trim() 
-      ? `http://meal-u-api.nafisazizi.com:8001/api/v1/groceries/products/?search=${encodeURIComponent(params.search)}`
+      ? `http://meal-u-api.nafisazizi.com:8001/api/v1/groceries/products/?categories=${encodeURIComponent(params.search)}`
       : 'http://meal-u-api.nafisazizi.com:8001/api/v1/groceries/products/';
 
     const response = await fetch(url, {

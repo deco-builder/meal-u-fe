@@ -27,7 +27,7 @@ export const useMealkitList = (params: MealkitListParams): UseQueryResult<Mealki
 
   const fetchMealkits = async (): Promise<MealkitData[]> => {
     const url = params.search.trim() 
-      ? `http://meal-u-api.nafisazizi.com:8001/api/v1/community/mealkits/?search=${encodeURIComponent(params.search)}`
+      ? `http://meal-u-api.nafisazizi.com:8001/api/v1/community/mealkits/?categories=${encodeURIComponent(params.search)}`
       : 'http://meal-u-api.nafisazizi.com:8001/api/v1/community/mealkits/';
 
     const response = await fetch(url, {

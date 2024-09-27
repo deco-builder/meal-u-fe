@@ -20,7 +20,7 @@ const Tab1: React.FC = () => {
   };
 
   const navigateToOrderPage = () => {
-    router.push('/tab1/order');
+    router.push('/categories');
   };
 
 
