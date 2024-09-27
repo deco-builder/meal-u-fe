@@ -1,3 +1,5 @@
+import { useQuery, UseQueryResult } from '@tanstack/react-query';
+import { useAuth } from '../contexts/authContext';
 interface Ingredient {
   ingredient: {
     name: string;
@@ -34,6 +36,46 @@ export interface RecipeData {
   ingredients: Ingredient[];
   total_price: number;
 }
+
+interface RecipeListParams {
+  search: string;
+}
+
+export const useRecipesList = (params: RecipeListParams): UseQueryResult<RecipeData[], Error> => {
+  const { getToken } = useAuth();
+  const token = getToken() || '';
+
+  const fetchRecipe = async (): Promise<RecipeData[]> => {
+    const url = params.search.trim() 
+      ? `http://meal-u-api.nafisazizi.com:8001/api/v1/community/recipes/?search=${encodeURIComponent(params.search)}`
+      : 'http://meal-u-api.nafisazizi.com:8001/api/v1/community/recipes/';
+
+    const response = await fetch(url, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch mealkits');
+    }
+
+    const data = await response.json();
+
+    if (!data.success) {
+      throw new Error(data.message || 'Failed to fetch recipes');
+    }
+
+    return data.data;
+  };
+
+  return useQuery<RecipeData[], Error, RecipeData[], [string, RecipeListParams]>({
+    queryKey: ['recipe.list', params],
+    queryFn: fetchRecipe,
+    initialData: [],
+    enabled: !!token,
+  });
+};
 
 export const fetchRecipeDetails = async (recipeId: number, token: string): Promise<RecipeData> => {
     if (!token) {

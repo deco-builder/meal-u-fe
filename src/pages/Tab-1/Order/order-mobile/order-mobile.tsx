@@ -28,6 +28,7 @@ import {
 } from "ionicons/icons";
 import IconInput from "../../../../components/icon-input";
 import { useMealkitList, MealkitData } from "../../../../api/mealkitApi";
+import { RecipeData, useRecipesList } from "../../../../api/recipeApi";
 
 function OrderMobile() {
   const [count, setCount] = useState(0);
@@ -39,6 +40,9 @@ function OrderMobile() {
     useMealkitList({
       search: searchTrigger,
     });
+  const { data: recipes = [], isFetching: isRecipesFetching } = useRecipesList({
+    search: searchTrigger,
+  });
 
   const handleFilter = () => {
     setIsFilterVisible(!isFilterVisible);
@@ -59,14 +63,14 @@ function OrderMobile() {
   };
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       setSearchTrigger(searchValue);
     }
   };
 
   const handleCategoryClick = (categoryName: string) => {
     setSearchValue(categoryName);
-    setSearchTrigger(categoryName)
+    setSearchTrigger(categoryName);
     setInputFilled(true);
   };
 
@@ -171,116 +175,129 @@ function OrderMobile() {
               </div>
             ) : (
               <>
-                {isInputFilled && (
-                  <div style={{ display: "flex", flexDirection: "column" }}>
-                    <h3>Mealkits</h3>
-                    {isMealkitsFetching ? (
-                      <p>Loading mealkits...</p>
-                    ) : mealkits.length > 0 ? (
-                      <div style={{ overflowX: "auto", width: "100%" }}>
-                        <div
-                          style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            minWidth: "min-content",
-                          }}
-                        >
-                          {mealkits.map((mealkit: MealkitData) => (
-                            <IonCard
-                              key={mealkit.id}
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  <h3>Mealkits</h3>
+                  {isMealkitsFetching ? (
+                    <p>Loading mealkits...</p>
+                  ) : mealkits.length > 0 ? (
+                    <div style={{ overflowX: "auto", width: "100%" }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          minWidth: "min-content",
+                        }}
+                      >
+                        {mealkits.map((mealkit: MealkitData) => (
+                          <IonCard
+                            key={mealkit.id}
+                            style={{
+                              minWidth: "120px",
+                              width: "125px",
+                              flex: "0 0 auto",
+                              margin: "10px",
+                            }}
+                          >
+                            <div
                               style={{
-                                minWidth: "120px",
-                                width: "125px",
-                                flex: "0 0 auto",
-                                margin: "10px",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                overflow: "hidden",
+                                paddingTop: "5px",
                               }}
                             >
-                              <div
+                              <img
+                                alt={mealkit.name}
+                                src={mealkit.image}
                                 style={{
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  alignItems: "center",
-                                  overflow: "hidden",
-                                  paddingTop: "5px",
+                                  width: "100%",
+                                  height: "auto",
+                                  objectFit: "cover",
+                                  maxWidth: "120px",
+                                  maxHeight: "120px",
+                                  borderRadius: "15px",
                                 }}
-                              >
-                                <img
-                                  alt={mealkit.name}
-                                  src={mealkit.image}
-                                  style={{
-                                    width: "100%",
-                                    height: "auto",
-                                    objectFit: "cover",
-                                    maxWidth: "120px",
-                                  }}
-                                />
+                              />
+                            </div>
+                            <IonCardHeader>
+                              <div>
+                                <p style={{ margin: "0px" }}>{mealkit.name}</p>
+                                <p style={{ margin: "0px" }}>
+                                  ${mealkit.price.toFixed(2)}
+                                </p>
                               </div>
-                              <IonCardHeader>
-                                <IonCardSubtitle>
-                                  {mealkit.name}
-                                </IonCardSubtitle>
-                                <p>${mealkit.price.toFixed(2)}</p>
-                              </IonCardHeader>
-                            </IonCard>
-                          ))}
-                        </div>
+                            </IonCardHeader>
+                          </IonCard>
+                        ))}
                       </div>
-                    ) : (
-                      <p>No mealkits found.</p>
-                    )}
-                  </div>
-                )}
+                    </div>
+                  ) : (
+                    <p>No mealkits found.</p>
+                  )}
+                </div>
 
                 <div style={{ display: "flex", flexDirection: "column" }}>
                   <h3>Recipes</h3>
-                  <div style={{ overflowX: "auto", width: "100%" }}>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        minWidth: "min-content",
-                      }}
-                    >
-                      {[1, 2, 3, 4].map((index) => (
-                        <IonCard
-                          key={index}
-                          style={{
-                            minWidth: "120px",
-                            width: "125px",
-                            flex: "0 0 auto",
-                            margin: "10px",
-                          }}
-                        >
-                          <div
+                  {isRecipesFetching ? (
+                    <p>Loading recipes...</p>
+                  ) : recipes.length > 0 ? (
+                    <div style={{ overflowX: "auto", width: "100%" }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          minWidth: "min-content",
+                        }}
+                      >
+                        {recipes.map((recipe: RecipeData) => (
+                          <IonCard
+                            key={recipe.id}
                             style={{
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              overflow: "hidden",
-                              paddingTop: "5px",
+                              minWidth: "120px",
+                              width: "125px",
+                              flex: "0 0 auto",
+                              margin: "10px",
                             }}
                           >
-                            <img
-                              alt="Silhouette of mountains"
-                              src="/img/food-image.png"
+                            <div
                               style={{
-                                width: "100%",
-                                height: "auto",
-                                objectFit: "cover",
-                                maxWidth: "120px",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                overflow: "hidden",
+                                paddingTop: "5px",
                               }}
-                            />
-                          </div>
-                          <IonCardHeader>
-                            <IonCardSubtitle>
-                              Healthy Taco Salad with fresh vegetable
-                            </IonCardSubtitle>
-                          </IonCardHeader>
-                        </IonCard>
-                      ))}
+                            >
+                              <img
+                                alt={recipe.name}
+                                src={recipe.image}
+                                style={{
+                                  width: "100%",
+                                  height: "auto",
+                                  objectFit: "cover",
+                                  maxWidth: "120px",
+                                  maxHeight: "120px",
+                                  borderRadius: "15px",
+                                }}
+                              />
+                            </div>
+                            <IonCardHeader>
+                              <div>
+                                <p style={{ margin: "0px" }}>
+                                  {recipe.name}
+                                </p>
+                              </div>
+                            </IonCardHeader>
+                          </IonCard>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  ) : (
+                    <p>No recipes found.</p>
+                  )}
                 </div>
+
                 <div style={{ display: "flex", flexDirection: "column" }}>
                   <h3>Groceries</h3>
                   <div
