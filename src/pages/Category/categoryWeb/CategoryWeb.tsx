@@ -15,7 +15,7 @@ import {
   IonCardSubtitle,
   IonCardContent,
 } from "@ionic/react";
-import LocationIcon from "../../../../../public/icon/location-icon";
+import LocationIcon from "../../../../public/icon/location-icon";
 import { heart } from "ionicons/icons";
 
 function CategoryWeb() {

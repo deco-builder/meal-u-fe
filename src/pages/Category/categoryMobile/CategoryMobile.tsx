@@ -11,8 +11,8 @@ import {
   IonButton,
 } from "@ionic/react";
 import { useHistory } from "react-router-dom";
-import { CategoryData, useCategoriesList } from "../../../../api/categoryApi";
-import LocationIcon from "../../../../../public/icon/location-icon";
+import { CategoryData, useCategoriesList } from "../../../api/categoryApi";
+import LocationIcon from "../../../../public/icon/location-icon";
 
 const CategoryMobile: React.FC = () => {
   const history = useHistory();

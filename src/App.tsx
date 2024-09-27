@@ -14,13 +14,13 @@ import {
   setupIonicReact,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import { ellipse, square, triangle } from "ionicons/icons";
+import { ellipse, square, } from "ionicons/icons";
 import Tab1 from "./pages/Tab-1/Tab1";
 import Tab2 from "./pages/Tab-2/Tab2";
-import Tab3 from "./pages/Tab-3/Tab3";
 import Tab4 from "./pages/Tab-4/Tab4";
 import Tab5 from "./pages/Tab-5/Tab5";
 import RepeatIcon from "../public/icon/repeat-icon";
+import OrderIcon from "../public/icon/order-icon"
 import MyCart from "./pages/MyCart";
 import { useState } from "react";
 import SubPage from "./pages/Tab-1/Sub-Page-1/sub-page-1";
@@ -28,9 +28,9 @@ import RecipeDetails from "./pages/RecipeDetails/RecipeDetails";
 import ProductDetails from "./pages/ProductDetails/ProductDetails";
 import Navbar from "./components/NavigationBar/Navbar";
 import PaymentOptions from "./pages/PaymentOptions/PaymentOptions";
-import Order from "./pages/Tab-1/Order";
+import Order from "./pages/Order";
 import Login from "./pages/Login/login";
-import Category from "./pages/Tab-1/Category";
+import Category from "./pages/Category";
 import { useAuth } from "./contexts/authContext";
 
 import "@ionic/react/css/core.css";
@@ -67,7 +67,6 @@ const App: React.FC = () => {
                 <Route exact path="/order/:category" component={Order} />
                 <Route exact path="/categories" component={Category} />
                 <Route exact path="/tab2" component={Tab2} />
-                <Route path="/tab3" component={Tab3} />
                 <Route path="/tab4" component={Tab4} />
                 <Route path="/tab5" component={Tab5} />
                 <Route path="/mycart" component={MyCart} />
@@ -84,16 +83,14 @@ const App: React.FC = () => {
                   href="/tab1"
                   onClick={() => setIsSelected(!isSelected)}
                 >
-                  <RepeatIcon selected={isSelected} />
-                  <IonLabel>Tab 1</IonLabel>
+                  <RepeatIcon />
                 </IonTabButton>
                 <IonTabButton tab="tab2" href="/tab2">
                   <IonIcon aria-hidden="true" icon={ellipse} />
                   <IonLabel>Tab 2</IonLabel>
                 </IonTabButton>
-                <IonTabButton tab="tab3" href="/tab3">
-                  <IonIcon aria-hidden="true" icon={square} />
-                  <IonLabel>Tab 3</IonLabel>
+                <IonTabButton tab="tab3" href="/categories">
+                  <OrderIcon/>
                 </IonTabButton>
                 <IonTabButton tab="tab4" href="/tab4">
                   <IonIcon aria-hidden="true" icon={square} />

@@ -11,7 +11,7 @@ import {
   IonInput,
   IonIcon,
 } from "@ionic/react";
-import LocationIcon from "../../../../public/icon/location-icon";
+import LocationIcon from "../../../public/icon/location-icon";
 import { searchOutline } from "ionicons/icons";
 import OrderMobile from "./order-mobile/order-mobile";
 import OrderWeb from "./order-web/order-web";

@@ -12,11 +12,12 @@ import {
   IonCardHeader,
   IonCardSubtitle,
   IonButton,
+  useIonRouter,
 } from "@ionic/react";
-import LocationIcon from "../../../../../public/icon/location-icon";
-import SearchIcon from "../../../../../public/icon/search-icon";
-import FilterIcon from "../../../../../public/icon/filter";
-import FilterOverlay from "../../../../components/FilterOverlay";
+import LocationIcon from "../../../../public/icon/location-icon";
+import SearchIcon from "../../../../public/icon/search-icon";
+import FilterIcon from "../../../../public/icon/filter";
+import FilterOverlay from "../../../components/FilterOverlay";
 import "./order-mobile.css";
 import {
   heart,
@@ -26,15 +27,16 @@ import {
   remove,
   optionsOutline,
 } from "ionicons/icons";
-import IconInput from "../../../../components/icon-input";
-import { useMealkitList, MealkitData } from "../../../../api/mealkitApi";
-import { RecipeData, useRecipesList } from "../../../../api/recipeApi";
-import { ProductData, useProductList } from "../../../../api/productApi";
-import { useCategoriesList, CategoryData } from "../../../../api/categoryApi";
+import IconInput from "../../../components/icon-input";
+import { useMealkitList, MealkitData } from "../../../api/mealkitApi";
+import { RecipeData, useRecipesList } from "../../../api/recipeApi";
+import { ProductData, useProductList } from "../../../api/productApi";
+import { useCategoriesList, CategoryData } from "../../../api/categoryApi";
 import { useParams } from "react-router-dom";
 
 function OrderMobile() {
   const { category } = useParams<{ category: string }>();
+  const router = useIonRouter();
   const [count, setCount] = useState(0);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
   const [searchValue, setSearchValue] = useState("");
@@ -81,6 +83,10 @@ function OrderMobile() {
     return items.filter((item) =>
       item.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
+  };
+
+  const handleRecipeClick = (recipeId: number) => {
+    router.push(`/recipe-details/${recipeId}`);
   };
 
   const filteredMealkits = filterItems(mealkits, searchValue);
@@ -209,6 +215,7 @@ function OrderMobile() {
                           flex: "0 0 auto",
                           margin: "10px",
                         }}
+                        onClick={() => handleRecipeClick(recipe.id)}
                       >
                         <div
                           style={{
