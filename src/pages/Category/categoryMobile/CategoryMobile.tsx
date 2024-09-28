@@ -1,5 +1,5 @@
 // CategoryMobile.tsx
-import React from "react";
+import React, { useEffect } from "react";
 import {
   IonPage,
   IonHeader,
@@ -9,6 +9,8 @@ import {
   IonCard,
   IonCardHeader,
   IonButton,
+  IonButtons,
+  IonBackButton,
 } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 import { CategoryData, useCategoriesList } from "../../../api/categoryApi";
@@ -27,6 +29,9 @@ const CategoryMobile: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
+          <IonButtons slot="start">
+            <IonBackButton defaultHref="/tab1" />
+          </IonButtons>
           <IonTitle>Categories</IonTitle>
         </IonToolbar>
       </IonHeader>
@@ -54,6 +59,7 @@ const CategoryMobile: React.FC = () => {
                 style={{
                   width: "100%",
                   margin: "0",
+                  borderRadius: "10px",
                 }}
                 onClick={() => handleCategoryClick(category.name)}
               >
@@ -79,9 +85,16 @@ const CategoryMobile: React.FC = () => {
                     }}
                   />
                 </div>
-                <IonCardHeader style={{padding: "5px"}}>
+                <IonCardHeader style={{ padding: "5px" }}>
                   <div>
-                    <p style={{ margin: "0px", textAlign: "center", fontWeight: "600", color: "#000000" }}>
+                    <p
+                      style={{
+                        margin: "0px",
+                        textAlign: "center",
+                        fontWeight: "600",
+                        color: "#000000",
+                      }}
+                    >
                       {category.name}
                     </p>
                   </div>

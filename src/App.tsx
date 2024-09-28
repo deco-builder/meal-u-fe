@@ -1,4 +1,4 @@
-import { Redirect, Route } from "react-router-dom";
+import { Redirect, Route, useLocation } from "react-router-dom";
 import {
   IonApp,
   IonButton,
@@ -32,6 +32,8 @@ import Order from "./pages/Order";
 import Login from "./pages/Login/login";
 import Category from "./pages/Category";
 import { useAuth } from "./contexts/authContext";
+import { useTab } from "./contexts/TabContext";
+import AppContent from "./AppContent";
 
 import "@ionic/react/css/core.css";
 import "@ionic/react/css/normalize.css";
@@ -47,70 +49,10 @@ import "./theme/variables.css";
 
 setupIonicReact();
 const App: React.FC = () => {
-  const { isAuthenticated } = useAuth();
-  const [isSelected, setIsSelected] = useState(false);
-
   return (
     <IonApp>
       <IonReactRouter>
-        {isAuthenticated && (
-          <IonHeader className="ion-hide-sm-down">
-            <Navbar isSelected={isSelected} setIsSelected={setIsSelected} />
-          </IonHeader>
-        )}
-        <IonContent>
-          {isAuthenticated ? (
-            <IonTabs>
-              <IonRouterOutlet>
-                <Route exact path="/tab1" component={Tab1} />
-                <Route exact path="/tab1/subpage" component={SubPage} />
-                <Route exact path="/order/:category" component={Order} />
-                <Route exact path="/categories" component={Category} />
-                <Route exact path="/tab2" component={Tab2} />
-                <Route path="/tab4" component={Tab4} />
-                <Route path="/tab5" component={Tab5} />
-                <Route path="/mycart" component={MyCart} />
-                <Route path="/recipe-details/:id" component={RecipeDetails} />
-                <Route path="/product-details/:id" component={ProductDetails} />
-                <Route path="/payment-options" component={PaymentOptions} />
-                <Route exact path="/">
-                  <Redirect to="/tab1" />
-                </Route>
-              </IonRouterOutlet>
-              <IonTabBar slot="bottom" className="ion-hide-sm-up">
-                <IonTabButton
-                  tab="tab1"
-                  href="/tab1"
-                  onClick={() => setIsSelected(!isSelected)}
-                >
-                  <RepeatIcon />
-                </IonTabButton>
-                <IonTabButton tab="tab2" href="/tab2">
-                  <IonIcon aria-hidden="true" icon={ellipse} />
-                  <IonLabel>Tab 2</IonLabel>
-                </IonTabButton>
-                <IonTabButton tab="tab3" href="/categories">
-                  <OrderIcon/>
-                </IonTabButton>
-                <IonTabButton tab="tab4" href="/tab4">
-                  <IonIcon aria-hidden="true" icon={square} />
-                  <IonLabel>Tab 4</IonLabel>
-                </IonTabButton>
-                <IonTabButton tab="mycart" href="/mycart?">
-                  <IonIcon aria-hidden="true" icon={square} />
-                  <IonLabel>My Cart</IonLabel>
-                </IonTabButton>
-              </IonTabBar>
-            </IonTabs>
-          ) : (
-            <IonRouterOutlet>
-              <Route path="/login" component={Login} />
-              <Route exact path="/">
-                <Redirect to="/login" />
-              </Route>
-            </IonRouterOutlet>
-          )}
-        </IonContent>
+        <AppContent />
       </IonReactRouter>
     </IonApp>
   );
