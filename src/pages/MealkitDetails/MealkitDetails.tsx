@@ -11,13 +11,12 @@ import {
     IonImg,
     IonText,
     IonIcon,
-    IonButton,
     IonChip,
     IonAvatar,
     IonSkeletonText,
 } from '@ionic/react';
-import { heartOutline, chatbubbleOutline, shareOutline, bookmarkOutline, time, pencil } from 'ionicons/icons';
-import styles from './MealkitDetails.module.css';
+import { heartOutline, chatbubbleOutline, shareOutline, bookmarkOutline } from 'ionicons/icons';
+import { BsPencilSquare } from 'react-icons/bs';
 import LongRecipeCard from '../../components/LongRecipeCard/LongRecipeCard';
 import { fetchMealkitDetails, MealkitDetailsData } from '../../api/mealkitApi';
 import { useAuth } from '../../contexts/authContext';
@@ -56,7 +55,7 @@ const MealkitDetails: React.FC = () => {
         return (
             <IonPage>
                 <IonContent>
-                    <IonSkeletonText animated style={{ width: '100%', height: '100%' }} />
+                    <IonSkeletonText animated className="w-full h-full" />
                 </IonContent>
             </IonPage>
         );
@@ -66,7 +65,7 @@ const MealkitDetails: React.FC = () => {
         return (
             <IonPage>
                 <IonContent>
-                    <IonText color="danger">{error || 'Mealkit not found'}</IonText>
+                    <IonText color="danger" className="p-4">{error || 'Mealkit not found'}</IonText>
                 </IonContent>
             </IonPage>
         );
@@ -83,52 +82,52 @@ const MealkitDetails: React.FC = () => {
                 </IonToolbar>
             </IonHeader>
             <IonContent fullscreen>
-                <div className={styles.contentContainer}>
-                    <div className={styles.authorContainer}>
-                        <div className={styles.avatarContainer}>
+                <div className="pb-24 font-sans">
+                    <div className="flex items-center p-4 justify-between">
+                        <div className="flex items-center gap-3">
                             <IonAvatar>
                                 <img src={mealkit.creator.profile_picture} alt={mealkit.creator.name} />
                             </IonAvatar>
                             <div>
-                                <IonText className={styles.authorName}>{mealkit.creator.name}</IonText>
-                                <IonText className={styles.followers}>Followers: N/A</IonText>
+                                <IonText className="font-bold text-base text-[#0A2533] block">{mealkit.creator.name}</IonText>
+                                <IonText className="text-sm text-gray-600">Followers: N/A</IonText>
                             </div>
                         </div>
                     </div>
-                    <div className={styles.imageContainer}>
-                        <IonImg src={mealkit.image} alt={mealkit.name} />
+                    <div className="w-full h-64 overflow-hidden">
+                        <IonImg src={mealkit.image} alt={mealkit.name} className="w-full h-full object-cover" />
                     </div>
-                    <div className={styles.statsContainer}>
-                        <div className={styles.likeChatShare}>
-                            <div className={styles.stat}>
-                                <IonIcon icon={heartOutline} className={styles.statIcon}/>
-                                <IonText className={styles.statText}>N/A</IonText>
+                    <div className="flex justify-between items-center p-4 border-b border-gray-200">
+                        <div className="flex items-center gap-5">
+                            <div className="flex items-center gap-2">
+                                <IonIcon icon={heartOutline} className="w-6 h-6"></IonIcon>
+                                <IonText className="text-sm text-[#0A2533]">N/A</IonText>
                             </div>
-                            <div className={styles.stat}>
-                                <IonIcon icon={chatbubbleOutline} className={styles.statIcon}/>
-                                <IonText>N/A</IonText>
+                            <div className="flex items-center gap-2">
+                                <IonIcon icon={chatbubbleOutline} className="w-6 h-6"></IonIcon>
+                                <IonText className="text-sm text-[#0A2533]">N/A</IonText>
                             </div>
-                            <div className={styles.stat}>
-                                <IonIcon icon={shareOutline} className={styles.statIcon}/>
+                            <div className="flex items-center gap-2">
+                                <IonIcon icon={shareOutline} className="w-6 h-6"></IonIcon>
                             </div>
                         </div>
-                        <div className={styles.stat}>
-                            <IonIcon icon={bookmarkOutline} className={styles.statIcon}/>
+                        <div>
+                            <IonIcon icon={bookmarkOutline} className="w-6 h-6"></IonIcon>
                         </div>
                     </div>
-                    <div className={styles.titleContainer}>
-                        <h1>{mealkit.name}</h1>
+                    <div className="p-4">
+                        <h1 className="text-2xl font-bold text-[#0A2533] m-0">{mealkit.name}</h1>
                     </div>
-                    <div className={styles.tags}>
+                    <div className="flex flex-wrap px-4 gap-2">
                         {mealkit.dietary_details.map((detail, index) => (
-                            <IonChip key={index} className={styles.customChip}>{detail}</IonChip>
+                            <IonChip key={index} className="text-[#7862FC] border border-[#7862FC] bg-transparent rounded-full px-2.5 py-1 text-sm">{detail}</IonChip>
                         ))}
                     </div>
-                    <div className={styles.descriptionContainer}>
-                        <IonText>{mealkit.description}</IonText>
+                    <div className="p-4">
+                        <IonText className="text-base text-[#0A2533] leading-relaxed">{mealkit.description}</IonText>
                     </div>
-                    <div className={styles.sectionTitle}>
-                        <h2>Recipes</h2>
+                    <div className="px-4 mt-4">
+                        <h2 className="text-lg font-bold text-[#0A2533]">Recipes</h2>
                     </div>
                     {mealkit.recipes.map((recipe) => (
                         <LongRecipeCard
@@ -140,18 +139,18 @@ const MealkitDetails: React.FC = () => {
                             price={recipe.total_price}
                         />
                     ))}
-                    <div className={styles.sectionTitle}>
-                        <h2>Comments</h2>
+                    <div className="px-4 mt-4">
+                        <h2 className="text-lg font-bold text-[#0A2533]">Comments</h2>
                     </div>
-                    <IonText>No comments available.</IonText>
+                    <IonText className="px-4">No comments available.</IonText>
                 </div>
-                <div className={styles.fixedButtonContainer}>
-                    <IonButton expand="block" className={styles.addMealkitButton}>
+                <div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-md z-10 flex items-center gap-3 rounded-t-3xl">
+                    <button className="flex-grow bg-[#7862FC] text-white py-3 px-4 rounded-2xl font-semibold text-base font-sans">
                         Add Mealkit to cart (${mealkit.total_price.toFixed(2)})
-                    </IonButton>
-                    <IonButton className={styles.editButton}>
-                        <IonIcon icon={pencil} />
-                    </IonButton>
+                    </button>
+                    <div className="w-12 h-12 flex items-center justify-center font-sans">
+                        <BsPencilSquare className="w-8 h-8 text-[#7862FC]" />
+                    </div>
                 </div>
             </IonContent>
         </IonPage>

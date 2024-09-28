@@ -9,12 +9,9 @@ import {
     IonTitle,
     IonImg,
     IonText,
-    IonIcon,
-    IonButton,
     IonChip,
 } from '@ionic/react';
-import { pencil } from 'ionicons/icons';
-import styles from './ProductDetails.module.css';
+import { BsPencilSquare } from 'react-icons/bs';
 import { fetchProductDetails, ProductData } from '../../api/productApi';
 import RecipeCard from '../../components/RecipeCard/RecipeCard';
 import { useParams, useHistory } from 'react-router-dom';
@@ -49,7 +46,9 @@ const ProductDetails: React.FC = () => {
         return (
             <IonPage>
                 <IonContent>
-                    <IonText>Loading...</IonText>
+                    <div className="flex items-center justify-center h-full">
+                        <IonText className="text-gray-500">Loading...</IonText>
+                    </div>
                 </IonContent>
             </IonPage>
         );
@@ -59,7 +58,9 @@ const ProductDetails: React.FC = () => {
         return (
             <IonPage>
                 <IonContent>
-                    <IonText color="danger">{error || 'Product not found'}</IonText>
+                    <div className="flex items-center justify-center h-full">
+                        <IonText color="danger" className="text-red-500">{error || 'Product not found'}</IonText>
+                    </div>
                 </IonContent>
             </IonPage>
         );
@@ -80,31 +81,30 @@ const ProductDetails: React.FC = () => {
                 </IonToolbar>
             </IonHeader>
             <IonContent fullscreen>
-                <div className={styles.contentContainer}>
-                    <div className={styles.imageContainer}>
-                        <IonImg src={product.image || '/default-product-image.png'} alt={product.name} />
+                <div className="pb-20">
+                    <div className="w-full h-64 overflow-hidden">
+                        <IonImg src={product.image || '/default-product-image.png'} alt={product.name} className="w-full h-full object-cover" />
                     </div>
-                    <div className={styles.titleContainer}>
-                        <h1>{product.name}</h1>
-                        <div className={styles.timeContainer}>
-                            <IonText>${product.price_per_unit}/{product.unit_id}</IonText>
+                    <div className="flex justify-between items-start p-4">
+                        <h1 className="text-2xl font-bold text-[#0A2533] m-0">{product.name}</h1>
+                        <div className="pt-2">
+                            <IonText className="text-base text-[#48525F]">${product.price_per_unit}/{product.unit_id}</IonText>
                         </div>
                     </div>
-                    <div className={styles.tags}>
+                    <div className="flex flex-wrap px-4 gap-2">
                         {product.dietary_details.map((detail: string, index: number) => (
-                            <IonChip key={index} className={styles.customChip} color="success">{detail}</IonChip>
+                            <IonChip key={index} className="text-[#7862FC] border border-[#7862FC] bg-transparent rounded-full px-2.5 py-1 text-sm">{detail}</IonChip>
                         ))}
                     </div>
                     
-                    <div className={styles.descriptionContainer}>
-                        <IonText>{product.description}</IonText>
+                    <div className="p-4">
+                        <IonText className="text-base text-[#0A2533] leading-relaxed">{product.description}</IonText>
                     </div>
 
-                    {/* Recipes featuring this product */}
-                    <div className={styles.sectionTitle}>
-                        <h2>Recipes featuring this product</h2>
+                    <div className="px-4 mt-4">
+                        <h2 className="text-lg font-bold text-[#0A2533]">Recipes featuring this product</h2>
                     </div>
-                    <div className={styles.recipeCardContainer}>
+                    <div className="flex overflow-x-auto gap-4 px-4 pb-4 scrollbar-hide">
                         {product.recipes.map((recipe) => (
                             <RecipeCard
                                 key={recipe.id}
@@ -117,13 +117,13 @@ const ProductDetails: React.FC = () => {
                     </div>
                 </div>
 
-                <div className={styles.fixedButtonContainer}>
-                    <IonButton expand="block" className={styles.addRecipeButton}>
+                <div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-md z-10 flex items-center gap-3 rounded-t-3xl">
+                    <button className="flex-grow bg-[#7862FC] text-white py-3 px-4 rounded-2xl font-semibold text-base font-sans">
                         Add to cart
-                    </IonButton>
-                    <IonButton className={styles.editButton}>
-                        <IonIcon icon={pencil} />
-                    </IonButton>
+                    </button>
+                    <div className="w-12 h-12 flex items-center justify-center font-sans">
+                        <BsPencilSquare className="w-8 h-8 text-[#7862FC]" />
+                    </div>
                 </div>
             </IonContent>
         </IonPage>
