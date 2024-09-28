@@ -2,14 +2,21 @@ import React from 'react';
 import styles from './RecipeCard.module.css';
 
 type RecipeCardProps = {
+  id: number;
   imageSrc: string;
   title: string;
-  onClick?: () => void;
+  onClick?: (id: number) => void;
 };
 
-const RecipeCard: React.FC<RecipeCardProps> = ({ imageSrc, title, onClick }) => {
+const RecipeCard: React.FC<RecipeCardProps> = ({ id, imageSrc, title, onClick }) => {
+  const handleClick = () => {
+    if (onClick) {
+      onClick(id);
+    }
+  };
+
   return (
-    <div className={styles.recipeCard} onClick={onClick}>
+    <div className={styles.recipeCard} onClick={handleClick}>
       <img
         src={imageSrc}
         alt={title}

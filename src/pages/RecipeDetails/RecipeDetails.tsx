@@ -22,8 +22,7 @@ import {
 import { heart, share, bookmark, time, restaurant, flame, fastFood, pencil } from 'ionicons/icons';
 import LongIngredientCard from '../../components/LongIngredientCard/LongIngredientCard';
 import styles from './RecipeDetails.module.css';
-import { fetchRecipeDetails } from '../../api/recipeApi';
-import { RecipeData } from '../../api/recipeApi';
+import { fetchRecipeDetails, RecipeData } from '../../api/recipeApi';
 import { useAuth } from '../../contexts/authContext';
 
 const RecipeDetails: React.FC = () => {
@@ -83,7 +82,7 @@ const RecipeDetails: React.FC = () => {
                     <IonButtons slot="start">
                         <IonBackButton defaultHref="/recipes" />
                     </IonButtons>
-                    <IonTitle>{recipe.name || "Delicious Recipe"}</IonTitle>
+                    <IonTitle>{recipe.name}</IonTitle>
                 </IonToolbar>
             </IonHeader>
             <IonContent fullscreen>
@@ -91,27 +90,27 @@ const RecipeDetails: React.FC = () => {
                     <div className={styles.authorContainer}>
                         <div className={styles.avatarContainer}>
                             <IonAvatar>
-                                <img src={recipe.creator?.profile_picture || '/default-avatar.png'} alt={recipe.creator?.name || 'Author'} />
+                                <img src={recipe.creator.profile_picture || '/default-avatar.png'} alt={recipe.creator.name} />
                             </IonAvatar>
                             <div>
-                                <IonText className={styles.authorName}>{recipe.creator?.name || "Chef John Doe"}</IonText>
-                                <IonText className={styles.followers}>18K Followers</IonText>
+                                <IonText className={styles.authorName}>{recipe.creator.name}</IonText>
+                                <IonText className={styles.followers}>Followers: N/A</IonText>
                             </div>
                         </div>
                         <IonButton fill="outline" className={styles.followButton}>Follow</IonButton>
                     </div>
                     <div className={styles.imageContainer}>
-                        <IonImg src={recipe.image || '/food-placeholder.png'} alt={recipe.name || 'Recipe Image'} />
+                        <IonImg src={recipe.image || '/food-placeholder.png'} alt={recipe.name} />
                     </div>
                     <div className={styles.statsContainer}>
                         <div className={styles.likeChatShare}>
                             <div className={styles.stat}>
                                 <IonIcon icon={heart} className={styles.statIcon}/>
-                                <IonText className={styles.statText}>100</IonText>
+                                <IonText className={styles.statText}>N/A</IonText>
                             </div>
                             <div className={styles.stat}>
                                 <IonIcon icon={share} className={styles.statIcon}/>
-                                <IonText>25</IonText>
+                                <IonText>N/A</IonText>
                             </div>
                         </div>
                         <div className={styles.stat}>
@@ -119,87 +118,76 @@ const RecipeDetails: React.FC = () => {
                         </div>
                     </div>
                     <div className={styles.titleContainer}>
-                        <h1>{recipe.name || "Amazing Recipe"}</h1>
+                        <h1>{recipe.name}</h1>
                         <div className={styles.timeContainer}>
                             <IonIcon icon={time}/>
                             <div className={styles.timeText}>
-                                <IonText>30 mins</IonText>
+                                <IonText>{recipe.cooking_time} mins</IonText>
                             </div>
                         </div>
                     </div>
                     <div className={styles.tags}>
-                        {(recipe.dietary_details || ['Vegetarian']).map((detail, index) => (
+                        {recipe.dietary_details.map((detail, index) => (
                             <IonChip key={index} className={styles.customChip} color="success">{detail}</IonChip>
                         ))}
                     </div>
                     <div className={styles.nutritionInfo}>
                         <div className={styles.nutritionItem}>
                             <IonIcon icon={fastFood} className={styles.nutritionIcon}/>
-                            <IonText className={styles.nutritionText}>65g carbs</IonText>
+                            <IonText className={styles.nutritionText}>{recipe.nutrition_details.carbohydrate_per_serving}g carbs</IonText>
                         </div>
                         <div className={styles.nutritionItem}>
                             <IonIcon icon={restaurant} className={styles.nutritionIcon}/>
-                            <IonText className={styles.nutritionText}>20g proteins</IonText>
+                            <IonText className={styles.nutritionText}>{recipe.nutrition_details.protein_per_serving}g proteins</IonText>
                         </div>
                     </div>
                     <div className={styles.nutritionInfo}>
                         <div className={styles.nutritionItem}>
                             <IonIcon icon={flame} className={styles.nutritionIcon}/>
-                            <IonText className={styles.nutritionText}>500 Kcal</IonText>
+                            <IonText className={styles.nutritionText}>{recipe.nutrition_details.energy_per_serving} Kcal</IonText>
                         </div>
                         <div className={styles.nutritionItem}>
                             <IonIcon icon={fastFood} className={styles.nutritionIcon}/>
-                            <IonText className={styles.nutritionText}>15g fats</IonText>
+                            <IonText className={styles.nutritionText}>{recipe.nutrition_details.fat_total_per_serving}g fats</IonText>
                         </div>
                     </div>
                     <div className={styles.descriptionContainer}>
                         <div className={styles.description}>
-                            <IonText>{recipe.description || "This recipe is quick, delicious, and perfect for a weeknight dinner!"}</IonText>
+                            <IonText>{recipe.description}</IonText>
                         </div>
                     </div>
                     <div className={styles.sectionTitle}>
                         <h2>Steps</h2>
                     </div>
                     <IonList>
-                        {recipe.instructions?.length ? recipe.instructions.map((step, index) => (
+                        {recipe.instructions.map((step, index) => (
                             <IonItem key={index}>
                                 <IonLabel className={styles.step}>{index + 1}. {step}</IonLabel>
                             </IonItem>
-                        )) : (
-                            <IonItem>
-                                <IonLabel className={styles.step}>1. Heat the pan with oil, and cook the pasta.</IonLabel>
-                            </IonItem>
-                        )}
+                        ))}
                     </IonList>
                     <div className={styles.sectionTitle}>
                         <h2>Ingredients</h2>
                     </div>
-                    {recipe.ingredients?.length ? recipe.ingredients.map((ingredient, index) => (
+                    {recipe.ingredients.map((ingredient, index) => (
                         <LongIngredientCard
                             key={index}
-                            name={ingredient.ingredient.name || "Ingredient"}
+                            id={ingredient.ingredient.id}
+                            name={ingredient.ingredient.name}
                             image={ingredient.ingredient.image || '/food-placeholder.png'}
-                            quantity={`${ingredient.ingredient.unit_size || '100'} ${ingredient.ingredient.unit_id === 2 ? 'g' : 'ml'}`}
-                            price={`$${ingredient.price?.toFixed(2) || '0.00'}`}
+                            quantity={`${ingredient.ingredient.unit_size} ${ingredient.ingredient.unit_id === 2 ? 'g' : 'ml'}`}
+                            price={`$${ingredient.price.toFixed(2)}`}
                         />
-                    )) : (
-                        <LongIngredientCard
-                            name="Sample Ingredient"
-                            image="/food-placeholder.png"
-                            quantity="100g"
-                            price="$1.00"
-                        />
-                    )}
+                    ))}
                     <div className={styles.sectionTitle}>
                         <h2>Comments</h2>
                     </div>
-                    {/* Hardcoded comment section */}
                     <IonText>No comments yet. Be the first to comment!</IonText>
                 </div>
 
                 <div className={styles.fixedButtonContainer}>
                     <IonButton expand="block" className={styles.addRecipeButton}>
-                        Add ingredients to cart (${recipe.total_price?.toFixed(2) || '10.00'})
+                        Add ingredients to cart (${recipe.total_price.toFixed(2)})
                     </IonButton>
                     <IonButton className={styles.editButton}>
                         <IonIcon icon={pencil} />

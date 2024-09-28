@@ -1,6 +1,40 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { useAuth } from '../contexts/authContext';
 
+interface Creator {
+  name: string;
+  profile_picture: string;
+}
+
+interface RecipePreview {
+  id: number;
+  creator: Creator;
+  name: string;
+  serving_size: number;
+  meal_type: string;
+  cooking_time: number;
+  created_at: string;
+  image: string;
+  dietary_details: string[];
+  total_price: number;
+}
+
+export interface ProductData {
+  id: number;
+  name: string;
+  unit_id: string;
+  unit_size: string;
+  price_per_unit: string;
+  measurement_size: string;
+  price_per_measurement: string;
+  image: string | null;
+  description: string;
+  stock: number;
+  dietary_details: string[];
+  product_nutrition: ProductNutrition | null;
+  recipes: RecipePreview[];
+}
+
 interface ProductNutrition {
   servings_per_package: number;
   serving_size: string;
@@ -20,21 +54,6 @@ interface ProductNutrition {
   sugars_per_100g: string;
   dietary_fibre_per_100g: string;
   sodium_per_100g: string;
-}
-
-export interface ProductData {
-  id: number;
-  name: string;
-  unit_id: string;
-  unit_size: string;
-  price_per_unit: string;
-  measurement_size: string;
-  price_per_measurement: string;
-  image: string | null;
-  description: string;
-  stock: number;
-  dietary_details: string[];
-  product_nutrition: ProductNutrition;
 }
 
 interface ProductListParams {

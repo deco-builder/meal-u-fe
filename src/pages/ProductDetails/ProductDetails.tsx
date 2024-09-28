@@ -12,39 +12,23 @@ import {
     IonIcon,
     IonButton,
     IonChip,
-    IonList,
-    IonItem,
-    IonLabel,
-    IonAvatar,
-    IonRouterOutlet
 } from '@ionic/react';
-import { heart, share, bookmark, fastFood, flame, restaurant, pencil } from 'ionicons/icons';
+import { pencil } from 'ionicons/icons';
 import styles from './ProductDetails.module.css';
-import { fetchProductDetails } from '../../api/productApi';
+import { fetchProductDetails, ProductData } from '../../api/productApi';
 import RecipeCard from '../../components/RecipeCard/RecipeCard';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { useAuth } from '../../contexts/authContext';
 
 const ProductDetails: React.FC = () => {
     const { id } = useParams<{ id: string }>();
-    const [product, setProduct] = useState<any | null>(null);
+    const [product, setProduct] = useState<ProductData | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const history = useHistory();
 
     const { getToken } = useAuth();
     const token = getToken() || "";
-
-    const featuredRecipes = [
-        { imageSrc: '/food.png', title: 'Egg & Avocado Toast' },
-        { imageSrc: '/food.png', title: 'Bowl of Rice' },
-        { imageSrc: '/food.png', title: 'Chicken Salad' },
-    ];
-
-    const peopleAlsoPurchase = [
-        { imageSrc: '/food.png', title: 'Egg & Spinach Wrap' },
-        { imageSrc: '/food.png', title: 'Green Salad' },
-        { imageSrc: '/food.png', title: 'Pasta Dish' },
-    ];
 
     useEffect(() => {
         const loadProductDetails = async () => {
@@ -59,7 +43,7 @@ const ProductDetails: React.FC = () => {
         };
 
         loadProductDetails();
-    }, []);
+    }, [id, token]);
 
     if (loading) {
         return (
@@ -81,6 +65,10 @@ const ProductDetails: React.FC = () => {
         );
     }
 
+    const handleRecipeClick = (recipeId: number) => {
+        history.push(`/recipe-details/${recipeId}`);
+    };
+
     return (
         <IonPage>
             <IonHeader>
@@ -99,7 +87,7 @@ const ProductDetails: React.FC = () => {
                     <div className={styles.titleContainer}>
                         <h1>{product.name}</h1>
                         <div className={styles.timeContainer}>
-                            <IonText>{product.price_per_unit}/unit</IonText>
+                            <IonText>${product.price_per_unit}/{product.unit_id}</IonText>
                         </div>
                     </div>
                     <div className={styles.tags}>
@@ -107,26 +95,7 @@ const ProductDetails: React.FC = () => {
                             <IonChip key={index} className={styles.customChip} color="success">{detail}</IonChip>
                         ))}
                     </div>
-                    <div className={styles.nutritionInfo}>
-                        <div className={styles.nutritionItem}>
-                            <IonIcon icon={fastFood} className={styles.nutritionIcon} />
-                            <IonText className={styles.nutritionText}>{product.product_nutrition.carbohydrate_per_100g}g carbs</IonText>
-                        </div>
-                        <div className={styles.nutritionItem}>
-                            <IonIcon icon={restaurant} className={styles.nutritionIcon} />
-                            <IonText className={styles.nutritionText}>{product.product_nutrition.protein_per_100g}g proteins</IonText>
-                        </div>
-                    </div>
-                    <div className={styles.nutritionInfo}>
-                        <div className={styles.nutritionItem}>
-                            <IonIcon icon={flame} className={styles.nutritionIcon} />
-                            <IonText className={styles.nutritionText}>{product.product_nutrition.energy_per_100g} Kcal</IonText>
-                        </div>
-                        <div className={styles.nutritionItem}>
-                            <IonIcon icon={flame} className={styles.nutritionIcon} />
-                            <IonText className={styles.nutritionText}>{product.product_nutrition.fat_total_per_100g} fats</IonText>
-                        </div>
-                    </div>
+                    
                     <div className={styles.descriptionContainer}>
                         <IonText>{product.description}</IonText>
                     </div>
@@ -136,27 +105,13 @@ const ProductDetails: React.FC = () => {
                         <h2>Recipes featuring this product</h2>
                     </div>
                     <div className={styles.recipeCardContainer}>
-                        {featuredRecipes.map((recipe, index) => (
+                        {product.recipes.map((recipe) => (
                             <RecipeCard
-                                key={index}
-                                imageSrc={recipe.imageSrc}
-                                title={recipe.title}
-                                onClick={() => console.log(`Clicked on ${recipe.title}`)}
-                            />
-                        ))}
-                    </div>
-
-                    {/* People also purchase */}
-                    <div className={styles.sectionTitle}>
-                        <h2>People also Purchase</h2>
-                    </div>
-                    <div className={styles.recipeCardContainer}>
-                        {peopleAlsoPurchase.map((item, index) => (
-                            <RecipeCard
-                                key={index}
-                                imageSrc={item.imageSrc}
-                                title={item.title}
-                                onClick={() => console.log(`Clicked on ${item.title}`)}
+                                key={recipe.id}
+                                id={recipe.id}
+                                imageSrc={recipe.image}
+                                title={recipe.name}
+                                onClick={() => handleRecipeClick(recipe.id)}
                             />
                         ))}
                     </div>
@@ -164,7 +119,7 @@ const ProductDetails: React.FC = () => {
 
                 <div className={styles.fixedButtonContainer}>
                     <IonButton expand="block" className={styles.addRecipeButton}>
-                        Add ingredients to cart
+                        Add to cart
                     </IonButton>
                     <IonButton className={styles.editButton}>
                         <IonIcon icon={pencil} />
