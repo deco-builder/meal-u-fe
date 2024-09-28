@@ -31,7 +31,7 @@ import IconInput from "../../../components/icon-input";
 import { useMealkitList, MealkitData } from "../../../api/mealkitApi";
 import { RecipeData, useRecipesList } from "../../../api/recipeApi";
 import { ProductData, useProductList } from "../../../api/productApi";
-import { useCategoriesList, CategoryData } from "../../../api/categoryApi";
+import { LocationData, useLocationList } from "../../../api/locationApi";
 import { useParams } from "react-router-dom";
 import ItemCard from "../../../components/ItemCard";
 
@@ -42,6 +42,8 @@ function OrderMobile() {
   const [isFilterVisible, setIsFilterVisible] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [currentLocation, setCurrentLocation] = useState("");
+  const [selectedProducts, setSelectedProducts] = useState<{[key: number]: number}>({});
   const { data: mealkits = [], isFetching: isMealkitsFetching } =
     useMealkitList({
       search: selectedCategory,
@@ -53,16 +55,37 @@ function OrderMobile() {
     search: category,
   });
 
+  const { data: location = [], isFetching: isLocationFetching } =
+    useLocationList();
+
+  if (!isLocationFetching && location && !currentLocation) {
+    const firstLocation = location[0].name;
+    setCurrentLocation(firstLocation);
+  }
+
   const handleFilter = () => {
     setIsFilterVisible(!isFilterVisible);
   };
 
-  const increment = () => {
-    setCount((prevCount) => prevCount + 1);
+  const increment = (productId: number) => {
+    setSelectedProducts(prev => {
+      const newCount = (prev[productId] || 0) + 1;
+      const newSelected = { ...prev, [productId]: newCount };
+      console.log("Selected products:", newSelected);
+      return newSelected;
+    });
   };
-
-  const decrement = () => {
-    setCount((prevCount) => (prevCount > 0 ? prevCount - 1 : 0));
+  
+  const decrement = (productId: number) => {
+    setSelectedProducts(prev => {
+      const newCount = Math.max((prev[productId] || 0) - 1, 0);
+      const newSelected = { ...prev, [productId]: newCount };
+      if (newCount === 0) {
+        delete newSelected[productId];
+      }
+      console.log("Selected products:", newSelected);
+      return newSelected;
+    });
   };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,8 +120,6 @@ function OrderMobile() {
   const filteredMealkits = filterItems(mealkits, searchValue);
   const filteredRecipes = filterItems(recipes, searchValue);
   const filteredProducts = filterItems(product, searchValue);
-  console.log("FILTERED MEAL KIST: ", filteredMealkits);
-  console.log("Filtered Recipes: ", filteredRecipes);
   return (
     <IonPage>
       <IonHeader>
@@ -115,7 +136,7 @@ function OrderMobile() {
         </div>
         <div className="header-location">
           <LocationIcon />
-          <p>University of Queensland</p>
+          <p>{currentLocation}</p>
         </div>
 
         <div style={{ display: "flex", flexDirection: "row", gap: "5px" }}>
@@ -138,7 +159,7 @@ function OrderMobile() {
           </div>
         ) : (
           <>
-<div style={{ display: "flex", flexDirection: "column" }}>
+            <div style={{ display: "flex", flexDirection: "column" }}>
               <h3>Mealkits</h3>
               {isMealkitsFetching ? (
                 <p>Loading mealkits...</p>
@@ -152,7 +173,11 @@ function OrderMobile() {
                     }}
                   >
                     {filteredMealkits.map((mealkit: MealkitData) => (
-                      <ItemCard key={mealkit.id} item={mealkit} onClick={handleMealkitClick} />
+                      <ItemCard
+                        key={mealkit.id}
+                        item={mealkit}
+                        onClick={handleMealkitClick}
+                      />
                     ))}
                   </div>
                 </div>
@@ -175,7 +200,11 @@ function OrderMobile() {
                     }}
                   >
                     {filteredRecipes.map((recipe: RecipeData) => (
-                      <ItemCard key={recipe.id} item={recipe} onClick={handleRecipeClick} />
+                      <ItemCard
+                        key={recipe.id}
+                        item={recipe}
+                        onClick={handleRecipeClick}
+                      />
                     ))}
                   </div>
                 </div>
@@ -204,46 +233,48 @@ function OrderMobile() {
                       marginBottom: "10px",
                     }}
                   >
-                    <img
-                      alt={product.name}
-                      src={product.image || "/img/no-photo.png"}
-                      style={{
-                        width: "100%",
-                        height: "auto",
-                        objectFit: "cover",
-                        maxWidth: "50px",
-                        maxHeight: "50px",
-                        borderRadius: "10px",
-                      }}
-                    />
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "flex-start",
-                        height: "100%",
-                      }}
-                    >
-                      <p
+                    <div style={{display: 'flex', flexDirection: 'row', gap: '5px'}}>
+                      <img
+                        alt={product.name}
+                        src={product.image || "/img/no-photo.png"}
                         style={{
-                          margin: 0,
-                          marginBottom: "4px",
-                          fontSize: "12px",
-                          fontWeight: "normal",
+                          width: "100%",
+                          height: "auto",
+                          objectFit: "cover",
+                          maxWidth: "50px",
+                          maxHeight: "50px",
+                          borderRadius: "10px",
+                        }}
+                      />
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "center",
+                          alignItems: "flex-start",
+                          height: "100%",
                         }}
                       >
-                        {product.name}
-                      </p>
-                      <h3
-                        style={{
-                          margin: 0,
-                          fontSize: "14px",
-                          fontWeight: "bold",
-                        }}
-                      >
-                        ${product.price_per_unit}
-                      </h3>
+                        <p
+                          style={{
+                            margin: 0,
+                            marginBottom: "4px",
+                            fontSize: "12px",
+                            fontWeight: "normal",
+                          }}
+                        >
+                          {product.name.length > 65 ? `${product.name.slice(0, 65)}...` : product.name}
+                        </p>
+                        <h3
+                          style={{
+                            margin: 0,
+                            fontSize: "14px",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          ${product.price_per_unit}
+                        </h3>
+                      </div>
                     </div>
 
                     <div
@@ -254,7 +285,7 @@ function OrderMobile() {
                     >
                       <IonIcon
                         icon={removeCircleOutline}
-                        onClick={() => decrement()}
+                        onClick={() => decrement(product.id)}
                         style={{ fontSize: "24px", cursor: "pointer" }}
                       />
                       <div
@@ -264,11 +295,11 @@ function OrderMobile() {
                           margin: "0 5px",
                         }}
                       >
-                        {count}{" "}
+                    {selectedProducts[product.id] || 0}
                       </div>
                       <IonIcon
                         icon={addCircleOutline}
-                        onClick={() => increment()}
+                        onClick={() => increment(product.id)}
                         style={{ fontSize: "24px", cursor: "pointer" }}
                       />
                     </div>
