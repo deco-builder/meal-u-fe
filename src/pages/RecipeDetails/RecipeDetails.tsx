@@ -97,7 +97,6 @@ const RecipeDetails: React.FC = () => {
                                 <IonText className={styles.followers}>Followers: N/A</IonText>
                             </div>
                         </div>
-                        <IonButton fill="outline" className={styles.followButton}>Follow</IonButton>
                     </div>
                     <div className={styles.imageContainer}>
                         <IonImg src={recipe.image || '/food-placeholder.png'} alt={recipe.name} />

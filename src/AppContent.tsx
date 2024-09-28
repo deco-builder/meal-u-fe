@@ -28,6 +28,7 @@ import Order from "./pages/Order";
 import Login from "./pages/Login/login";
 import Category from "./pages/Category";
 import { useAuth } from "./contexts/authContext";
+import MealkitDetails from "./pages/MealkitDetails/MealkitDetails";
 
 const AppContent: React.FC = () => {
   const { isAuthenticated } = useAuth();
@@ -36,7 +37,7 @@ const AppContent: React.FC = () => {
 
   const shouldShowTabs = () => {
     const noTabRoutes = ['/categories', '/mycart'];
-    const noTabPrefixes = ['/order/'];
+    const noTabPrefixes = ['/order/', '/product-details/', '/recipe-details/', '/mealkit-details/'];
 
     if (noTabRoutes.includes(location.pathname)) {
       return false;
@@ -70,6 +71,7 @@ const AppContent: React.FC = () => {
               <Route path="/tab4" component={Tab4} />
               <Route path="/tab5" component={Tab5} />
               <Route path="/mycart" component={MyCart} />
+              <Route path="/mealkit-details/:id" component={MealkitDetails} />
               <Route path="/recipe-details/:id" component={RecipeDetails} />
               <Route path="/product-details/:id" component={ProductDetails} />
               <Route path="/payment-options" component={PaymentOptions} />
