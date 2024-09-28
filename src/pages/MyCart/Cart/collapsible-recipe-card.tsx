@@ -1,20 +1,27 @@
 import ArrowDownIcon from "../../../../public/icon/arrow-down";
 import ArrowUpIcon from "../../../../public/icon/arrow-up";
 import styles from './cart.module.css';
-import { useState } from "react";
+import { Children, useState } from "react";
+import IngredientRowCard from "./ingredient-row-card";
+import { Recipe, RecipeIngredient } from '../../../api/cartApi';
 
-interface CollapsibleRowCardProps {
+interface CollapsibleRecipeCardProps {
     title: string;
-    dietaryDetails: { [key: string]: string };
+    dietaryDetails: string[];
     price: number;
+    quantity: number;
+    child: RecipeIngredient[];
 }
 
-const CollapsibleRowCard: React.FC<CollapsibleRowCardProps> = ({title, price, dietaryDetails}) => {
+const CollapsibleRecipeCard: React.FC<CollapsibleRecipeCardProps> = ({title, price, dietaryDetails, child, quantity}) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isChildExist, setIsChildExist] = useState(false);
 
 	const toggleExpand = () => {
 		setIsExpanded((prevState) => !prevState);
 	}
+  
+  const calculatedPrice = (price*quantity).toString();
 
   return (
     <div className={styles.card}>
@@ -29,18 +36,22 @@ const CollapsibleRowCard: React.FC<CollapsibleRowCardProps> = ({title, price, di
               <div key={index} className={styles.node}>{detail}</div>
             ))}
           </div>
-          <div className={styles.price}>${price}</div>
+          <div className={styles.price}>${calculatedPrice}</div>
         </div>
         <div className={styles.column} onClick={toggleExpand}>
-        {isExpanded ? <ArrowUpIcon /> : <ArrowDownIcon />}
+          {isChildExist ?  (isExpanded ? <ArrowUpIcon /> : <ArrowDownIcon /> ) : null}
         </div>
       </div>
 			{isExpanded ? (
-				<div className="expanded_content"></div>
+				<div className="expanded_content">
+          {child.map((data, index) => (
+            <IngredientRowCard key={index} title={data.ingredient.name} dietaryDetails={null} price={data.ingredient.price_per_unit} quantity={null} />
+          ))}
+        </div>
 			) : null
 			}
     </div>
   );
 };
 
-export default CollapsibleRowCard;
+export default CollapsibleRecipeCard;

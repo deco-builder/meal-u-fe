@@ -37,7 +37,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis; 
-    max-width: inherit;
+    max-width: 75vh;
 }
 
 .column {
@@ -61,6 +61,12 @@
     flex: 0 0 auto;
     gap: 3px;
     position: relative;
+}
+
+.expanded_content {
+    display: grid;
+    padding-top: 10px;
+    gap: 4px;
 }
 
 .node {

@@ -1,16 +1,16 @@
 import Increment from "../../../../public/icon/increment";
 import Decrement from "../../../../public/icon/decrement";
 import styles from './cart.module.css';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface IngredientRowCardProps {
   title: string;
-  price: number;
-  quantity: number;
+  dietaryDetails: string[] | null;
+  price: string;
+  quantity: number | null;
 }
 
-const IngredientRowCard: React.FC<IngredientRowCardProps> = ({title, price, quantity}) => {
-  const [isDetailAvailable, setIsDetailAvailable] = useState(false);
+const IngredientRowCard: React.FC<IngredientRowCardProps> = ({title, dietaryDetails, price, quantity}) => {
   const [newQuantity, setNewQuantity] = useState((quantity ? quantity : 0));
   
   const handleIncrement = () => {
@@ -29,13 +29,11 @@ const IngredientRowCard: React.FC<IngredientRowCardProps> = ({title, price, quan
         </div>
         <div className={styles.column_middle}>
           <div className={styles.card_title}>{title}</div>
-          {isDetailAvailable ? (
             <div className={styles.dietary_details}>
-              <div className={styles.node}>Gluten Free</div>
-              <div className={styles.node}>Halal</div>
-              <div className={styles.node}>Vegan</div>
+              {dietaryDetails?.map((data, index) => (
+                <div key={index} className={styles.node}>{data}</div>
+              ))}
             </div>
-          ) : null}
           <div className={styles.price}>${price}</div>
         </div>
         <div className={styles.column}>

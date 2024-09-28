@@ -1,8 +1,13 @@
-import CollapsibleRowCard from "./collapsible-row-card";
+import CollapsibleMealkitCard from "./collapsible-mealkit-card";
+import CollapsibleRecipeCard from "./collapsible-recipe-card";
 import IngredientRowCard from "./ingredient-row-card";
 import { mealKits, recipes, products } from '../dummyData';
 import React, { Dispatch, SetStateAction, useState, useEffect }from "react";
-import styles from './cart.module.css'
+import styles from './cart.module.css';
+import { useCart, CartData } from '../../../api/cartApi';
+import { useAuth } from '../../../contexts/authContext';
+import { fingerPrintSharp } from "ionicons/icons";
+import { RecipeIngredient } from '../../../api/cartApi';
 
 interface CartProps {
   subTotal: number;
@@ -10,55 +15,57 @@ interface CartProps {
 }
 
 const Cart: React.FC<CartProps> = ({subTotal, setSubTotal}) => {
-  const [mealKitData, setMealKitData] = useState(mealKits);
-  const [recipeData, setRecipeData] = useState(recipes);
-  const [productData, setProductData] = useState(products);
+  const { data: cartData } = useCart();
 
   useEffect(() => {
-      // TODO: change with API calls
-      const fetchData = async () => {
-          setMealKitData(mealKits);
-          setRecipeData(recipes);
-          setProductData(products);
-      };
-      fetchData();
-  }, []);
-
-  useEffect(() => {
+    if (cartData) {
       // Calculate the subtotal based on the prices of meal kits, recipes, and ingredients
+      console.log("Calculating subtotal:", cartData); 
       const calculateSubTotal = () => {
-          let mealKitTotal = mealKitData.reduce((acc, item) => acc + item.price, 0);
-          let recipeTotal = recipeData.reduce((acc, item) => acc + item.price, 0);
-          let productTotal = productData.reduce((acc, item) => acc + item.price * item.quantity, 0);
-          const newSubTotal = mealKitTotal + recipeTotal + productTotal;
-          setSubTotal(newSubTotal);
+        const mealkitTotal = cartData.cart_mealkits.reduce((acc, item) => acc + item.mealkit.total_price * item.quantity, 0);
+        console.log("mealkit total:", mealkitTotal)
+        const recipeTotal = cartData.cart_recipes.reduce((acc, item) => acc + item.recipe.total_price * item.quantity, 0);
+        console.log(recipeTotal);
+        const productTotal = cartData.cart_products.reduce((acc, item) => acc + parseFloat(item.product.price_per_unit) * item.quantity, 0);
+        console.log(productTotal);
+        
+        const newSubTotal = mealkitTotal + recipeTotal + productTotal;
+        setSubTotal(newSubTotal);
       };
       calculateSubTotal();
-  }, [mealKitData, recipeData, productData, setSubTotal]);
+      console.log("new subtotal:", subTotal);
+    } else {
+      console.log("No cartData available");  // Debugging line
+    }
+  }, [cartData, setSubTotal]);
+
+  if (!cartData) {
+    return <div>You have no items in your cart right now.</div>;
+  }
 
   return (
     <>
     	<div className={styles.subsection}>
 			<div className={styles.title}>Meal Kits</div>
     	  <div className={styles.cards}>
-    	    {mealKitData.map((mealkit, index) => (
-    	        <CollapsibleRowCard key={index} title={mealkit.title} dietaryDetails={mealkit.dietaryDetails} price={mealkit.price} />
+    	    {cartData.cart_mealkits.map((data, index) => (
+    	        <CollapsibleMealkitCard key={index} title={data.mealkit.name} dietaryDetails={data.mealkit.dietary_details} price={data.mealkit.total_price} child={data.recipes} />
     	    ))}
     	  </div>
     	</div>
     	<div className={styles.subsection}>
 			<div className={styles.title}>Recipe</div>
     	  <div className={styles.cards}>
-    	    {recipeData.map((recipe, index) => (
-    	        <CollapsibleRowCard key={index} title={recipe.title} dietaryDetails={recipe.dietaryDetails} price={recipe.price}/>
+    	    {cartData.cart_recipes.map((data, index) => (
+    	        <CollapsibleRecipeCard key={index} title={data.recipe.name} dietaryDetails={data.recipe.dietary_details} price={data.recipe.total_price} quantity={data.quantity} child={data.recipe.ingredients || []}/>
     	    ))}
     	  </div>
     	</div>
     	<div className={styles.subsection}>
 			<div className={styles.title}>Products</div>
     	  <div className={styles.cards}>
-    	    {productData.map((product, index) => (
-    	        <IngredientRowCard key={index} title={product.title} price={product.price} quantity={product.quantity}/>
+    	    {cartData.cart_products.map((data, index) => (
+    	        <IngredientRowCard key={index} title={data.product.name} dietaryDetails={data.product.dietary_details} price={data.product.price_per_unit} quantity={data.quantity}/>
     	    ))}
     	  </div>
     	</div>
