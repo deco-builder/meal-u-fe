@@ -1,21 +1,13 @@
 // AppContent.tsx
 import { Redirect, Route, useLocation } from "react-router-dom";
 import {
-  IonApp,
-  IonButton,
   IonContent,
   IonHeader,
-  IonIcon,
-  IonLabel,
-  IonNav,
   IonRouterOutlet,
   IonTabBar,
   IonTabButton,
   IonTabs,
-  setupIonicReact,
 } from "@ionic/react";
-import { IonReactRouter } from "@ionic/react-router";
-import { ellipse, square } from "ionicons/icons";
 import Tab1 from "./pages/Tab-1/Tab1";
 import Tab2 from "./pages/Tab-2/Tab2";
 import Tab4 from "./pages/Tab-4/Tab4";
@@ -36,7 +28,6 @@ import Order from "./pages/Order";
 import Login from "./pages/Login/login";
 import Category from "./pages/Category";
 import { useAuth } from "./contexts/authContext";
-import { useTab } from "./contexts/TabContext";
 
 const AppContent: React.FC = () => {
   const { isAuthenticated } = useAuth();
