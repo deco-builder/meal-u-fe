@@ -77,7 +77,7 @@ function OrderMobile() {
   };
 
   const handleMealkitClick = (mealkitId: number) => {
-    console.log(`Mealkit clicked: ${mealkitId}`);
+    router.push(`/mealkit-details/${mealkitId}`);
   };
 
   const handleSearchIconClick = useCallback(() => {
