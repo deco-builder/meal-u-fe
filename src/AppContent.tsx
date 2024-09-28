@@ -44,8 +44,20 @@ const AppContent: React.FC = () => {
   const location = useLocation();
 
   const shouldShowTabs = () => {
-    const noTabRoutes = ["/categories"];
-    return !noTabRoutes.includes(location.pathname);
+    const noTabRoutes = ['/categories', '/mycart'];
+    const noTabPrefixes = ['/order/'];
+
+    if (noTabRoutes.includes(location.pathname)) {
+      return false;
+    }
+
+    for (const prefix of noTabPrefixes) {
+      if (location.pathname.startsWith(prefix)) {
+        return false;
+      }
+    }
+
+    return true;
   };
 
   return (
