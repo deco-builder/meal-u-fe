@@ -99,10 +99,10 @@ const FilterOverlay: React.FC = () => {
                 </IonRange>
               </div>
               <div className={styles.bottomButtons}>
+                <IonButton expand="block" fill="clear" onClick={handleClearFilter}>Clear</IonButton>
                 <div className={styles.mainButton}>
-                  <IonButton expand="block" onClick={handleApplyFilter}>Apply Filter</IonButton>
+                  <IonButton expand="block" onClick={handleApplyFilter}>Apply</IonButton>
                 </div>
-                <IonButton expand="block" fill="clear" onClick={handleClearFilter}>Clear Filter</IonButton>
               </div>
             </div>
           </div>

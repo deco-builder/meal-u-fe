@@ -1,29 +1,35 @@
-import React from 'react';
+import React from "react";
 
 interface IconInputProps {
   title?: string;
   onInputHandleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  leftIcon: React.ReactNode;
+  leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   placeholder?: string;
   width?: string | number;
   onRightIconClick?: () => void;
-  type?: string;  // Add this line
+  onKeyPress?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+  type?: string;
+  value?: string;
 }
 
-const IconInput: React.FC<IconInputProps> = ({ 
-  title, 
-  onInputHandleChange, 
+const IconInput: React.FC<IconInputProps> = ({
+  title,
+  onInputHandleChange,
+  onKeyPress,
   leftIcon,
   rightIcon,
-  placeholder = '', 
-  width = '100%',
+  placeholder = "",
+  width = "100%",
   onRightIconClick,
-  type = 'text'  // Add this line with default value
+  type = "text",
+  value,
 }) => {
   return (
     <div style={{ width: width }}>
-      {title && <label style={{ display: 'block', marginBottom: '5px' }}>{title}</label>}
+      {title && (
+        <label style={{ display: "block", marginBottom: "5px" }}>{title}</label>
+      )}
       <div
         style={{
           position: "relative",
@@ -31,12 +37,14 @@ const IconInput: React.FC<IconInputProps> = ({
         }}
       >
         <input
-          type={type}  // Use the type prop here
+          type={type}
+          value={value}
           placeholder={placeholder}
           onChange={onInputHandleChange}
+          onKeyPress={onKeyPress}
           style={{
             width: "100%",
-            padding: "10px 10px 10px 40px",
+            padding: leftIcon ? "10px 10px 10px 40px" : "10px 10px 10px 10px",
             fontSize: "16px",
             border: "1px solid #ccc",
             borderRadius: "8px",
@@ -45,17 +53,19 @@ const IconInput: React.FC<IconInputProps> = ({
             paddingRight: rightIcon ? "40px" : "10px",
           }}
         />
-        <div
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "10px",
-            transform: "translateY(-50%)",
-            pointerEvents: "none",
-          }}
-        >
-          {leftIcon}
-        </div>
+        {leftIcon && (
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "10px",
+              transform: "translateY(-50%)",
+              pointerEvents: "none",
+            }}
+          >
+            {leftIcon}
+          </div>
+        )}
         {rightIcon && (
           <div
             style={{
