@@ -15,13 +15,16 @@ import {
   setupIonicReact,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import { ellipse, square, } from "ionicons/icons";
+import { ellipse, square } from "ionicons/icons";
 import Tab1 from "./pages/Tab-1/Tab1";
 import Tab2 from "./pages/Tab-2/Tab2";
 import Tab4 from "./pages/Tab-4/Tab4";
 import Tab5 from "./pages/Tab-5/Tab5";
 import RepeatIcon from "../public/icon/repeat-icon";
-import OrderIcon from "../public/icon/order-icon"
+import OrderIcon from "../public/icon/order-icon";
+import ReceiptIcon from "../public/icon/receipt-icon";
+import StoreIcon from "../public/icon/store-icon";
+import UserIcon from "../public/icon/user-icon";
 import MyCart from "./pages/MyCart";
 import { useState } from "react";
 import SubPage from "./pages/Tab-1/Sub-Page-1/sub-page-1";
@@ -35,14 +38,13 @@ import Category from "./pages/Category";
 import { useAuth } from "./contexts/authContext";
 import { useTab } from "./contexts/TabContext";
 
-
 const AppContent: React.FC = () => {
   const { isAuthenticated } = useAuth();
   const [isSelected, setIsSelected] = useState(false);
   const location = useLocation();
 
   const shouldShowTabs = () => {
-    const noTabRoutes = ['/categories', '/mycart'];
+    const noTabRoutes = ["/categories"];
     return !noTabRoutes.includes(location.pathname);
   };
 
@@ -72,7 +74,10 @@ const AppContent: React.FC = () => {
                 <Redirect to="/tab1" />
               </Route>
             </IonRouterOutlet>
-            <IonTabBar slot="bottom" className={`ion-hide-sm-up ${shouldShowTabs() ? '' : 'ion-hide'}`}>
+            <IonTabBar
+              slot="bottom"
+              className={`ion-hide-sm-up ${shouldShowTabs() ? "" : "ion-hide"}`}
+            >
               <IonTabButton
                 tab="tab1"
                 href="/tab1"
@@ -81,19 +86,16 @@ const AppContent: React.FC = () => {
                 <RepeatIcon />
               </IonTabButton>
               <IonTabButton tab="tab2" href="/tab2">
-                <IonIcon aria-hidden="true" icon={ellipse} />
-                <IonLabel>Tab 2</IonLabel>
+                <StoreIcon />
               </IonTabButton>
               <IonTabButton tab="tab3" href="/categories">
-                <OrderIcon/>
+                <OrderIcon />
               </IonTabButton>
               <IonTabButton tab="tab4" href="/tab4">
-                <IonIcon aria-hidden="true" icon={square} />
-                <IonLabel>Tab 4</IonLabel>
+                <ReceiptIcon />
               </IonTabButton>
               <IonTabButton tab="mycart" href="/mycart">
-                <IonIcon aria-hidden="true" icon={square} />
-                <IonLabel>My Cart</IonLabel>
+                <UserIcon />
               </IonTabButton>
             </IonTabBar>
           </IonTabs>
