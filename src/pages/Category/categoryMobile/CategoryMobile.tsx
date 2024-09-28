@@ -14,13 +14,19 @@ import {
 } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 import { CategoryData, useCategoriesList } from "../../../api/categoryApi";
-import LocationIcon from "../../../../public/icon/location-icon";
+
+const SHOW_ALL_CATEGORY = {
+  id: 0,
+  name: "Show All",
+  image: "/public/img/AllFood.png",
+};
 
 const CategoryMobile: React.FC = () => {
   const history = useHistory();
-  const { data: categories = [], isFetching: isCategoriesFetching } =
+  const { data: fetchedCategories = [], isFetching: isCategoriesFetching } =
     useCategoriesList();
 
+  const categories = [SHOW_ALL_CATEGORY, ...fetchedCategories];
   const handleCategoryClick = (categoryName: string) => {
     history.push(`/order/${categoryName}`);
   };

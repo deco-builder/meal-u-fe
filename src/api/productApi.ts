@@ -65,7 +65,7 @@ export const useProductList = (params: ProductListParams): UseQueryResult<Produc
   const token = getToken() || '';
 
   const fetchProduct = async (): Promise<ProductData[]> => {
-    const url = params.search.trim() 
+    const url = params.search && params.search !== "Show All"
       ? `http://meal-u-api.nafisazizi.com:8001/api/v1/groceries/products/?categories=${encodeURIComponent(params.search)}`
       : 'http://meal-u-api.nafisazizi.com:8001/api/v1/groceries/products/';
 
