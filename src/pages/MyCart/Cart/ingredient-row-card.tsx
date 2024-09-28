@@ -2,24 +2,45 @@ import Increment from "../../../../public/icon/increment";
 import Decrement from "../../../../public/icon/decrement";
 import styles from './cart.module.css';
 import { useEffect, useState } from "react";
+import { CartProduct, useDeleteCartItem, useUpdateCartItem } from "../../../api/cartApi";
 
 interface IngredientRowCardProps {
-  title: string;
-  dietaryDetails: string[] | null;
-  price: string;
-  quantity: number | null;
+  data: CartProduct;
 }
 
-const IngredientRowCard: React.FC<IngredientRowCardProps> = ({title, dietaryDetails, price, quantity}) => {
-  const [newQuantity, setNewQuantity] = useState((quantity ? quantity : 0));
+const IngredientRowCard: React.FC<IngredientRowCardProps> = ({data}) => {
+  const pricePerUnit = parseFloat(data.product.price_per_unit);
+  const [quantity, setQuantity] = useState(data.quantity);
+  const [price, setPrice] = useState(pricePerUnit);
+  const updateCartItem = useUpdateCartItem();
+  const deleteCartItem = useDeleteCartItem();
   
   const handleIncrement = () => {
-    setNewQuantity((qty) => qty + 1);
+    const newQuantity = quantity + 1;
+    setQuantity(newQuantity);
+    updateCartItem.mutate({ item_type: 'product', item_id: data.id, quantity: newQuantity });
   }
 
   const handleDecrement = () => {
-    setNewQuantity((qty) => qty - 1);
+    if (quantity > 1) {
+      const newQuantity = quantity - 1;
+      setQuantity(newQuantity);
+      updateCartItem.mutate({ item_type: 'product', item_id: data.id, quantity: newQuantity})
+    } else {
+      deleteCartItem.mutate({ 
+        item_type: 'product', 
+        item_id: data.id 
+      });
+    }
   }
+
+  useEffect(() => {
+    const calculatePrice = () => {
+      const newPrice = pricePerUnit * data.quantity;
+      setPrice(newPrice);
+    };
+    calculatePrice();
+  }, [quantity, data])
 
   return (
     <div className={styles.card}>
@@ -28,10 +49,10 @@ const IngredientRowCard: React.FC<IngredientRowCardProps> = ({title, dietaryDeta
           <div className={styles.card_image_default}></div>
         </div>
         <div className={styles.column_middle}>
-          <div className={styles.card_title}>{title}</div>
+          <div className={styles.card_title}>{data.product.name}</div>
             <div className={styles.dietary_details}>
-              {dietaryDetails?.map((data, index) => (
-                <div key={index} className={styles.node}>{data}</div>
+              {data.product.dietary_details?.map((item, index) => (
+                <div key={index} className={styles.node}>{item}</div>
               ))}
             </div>
           <div className={styles.price}>${price}</div>
@@ -39,7 +60,7 @@ const IngredientRowCard: React.FC<IngredientRowCardProps> = ({title, dietaryDeta
         <div className={styles.column}>
           <div className={styles.quantity}>
             <Decrement onClick={handleDecrement}/>
-            {newQuantity}
+            {quantity}
             <Increment onClick={handleIncrement}/>
           </div>
         </div>

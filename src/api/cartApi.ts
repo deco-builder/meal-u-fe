@@ -1,7 +1,8 @@
-import { useQuery, UseQueryResult } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient, UseQueryResult } from '@tanstack/react-query';
 import { useAuth } from '../contexts/authContext';
 
 // Interfaces for the API response structure
+
 interface Creator {
   name: string;
   profile_picture: string;
@@ -34,7 +35,7 @@ interface CartIngredient {
   quantity: number;
 }
 
-interface Product {
+export interface Product {
   id: number;
   category_id: string;
   unit_id: string;
@@ -49,7 +50,7 @@ interface Product {
   image: string | null;
 }
 
-interface CartProduct {
+export interface CartProduct {
   id: number;
   product: Product;
   quantity: number;
@@ -146,5 +147,85 @@ export const useCart = (): UseQueryResult<CartData, Error> => {
     queryKey: ['cart'],
     queryFn: fetchCart,
     enabled: !!token,
+  });
+};
+
+// Update cart
+interface UpdateCartItemPayload {
+  item_type: 'recipe' | 'product' | 'mealkit';
+  item_id: number;
+  quantity: number;
+}
+
+interface DeleteCartItemPayload {
+  item_type: 'recipe' | 'product' | 'mealkit';
+  item_id: number;
+}
+
+export const useUpdateCartItem = () => {
+  const { getToken } = useAuth();
+  const queryClient = useQueryClient();
+
+  return useMutation<CartData, Error, UpdateCartItemPayload>({
+    mutationFn: async (payload) => {
+      const token = getToken() || '';
+      const response = await fetch('http://meal-u-api.nafisazizi.com:8001/api/v1/cart/', {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update cart item');
+      }
+
+      const data: CartResponse = await response.json();
+
+      if (!data.success) {
+        throw new Error(data.message || 'Failed to update cart item');
+      }
+
+      return data.data;
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(['cart'], data);
+    },
+  });
+};
+
+export const useDeleteCartItem = () => {
+  const { getToken } = useAuth();
+  const queryClient = useQueryClient();
+
+  return useMutation<CartData, Error, DeleteCartItemPayload>({
+    mutationFn: async (payload) => {
+      const token = getToken() || '';
+      const response = await fetch('http://meal-u-api.nafisazizi.com:8001/api/v1/cart/', {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete cart item');
+      }
+
+      const data: CartResponse = await response.json();
+
+      if (!data.success) {
+        throw new Error(data.message || 'Failed to delete cart item');
+      }
+
+      return data.data;
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(['cart'], data);
+    },
   });
 };

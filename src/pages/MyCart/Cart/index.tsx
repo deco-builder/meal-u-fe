@@ -65,7 +65,8 @@ const Cart: React.FC<CartProps> = ({subTotal, setSubTotal}) => {
 			<div className={styles.title}>Products</div>
     	  <div className={styles.cards}>
     	    {cartData.cart_products.map((data, index) => (
-    	        <IngredientRowCard key={index} title={data.product.name} dietaryDetails={data.product.dietary_details} price={data.product.price_per_unit} quantity={data.quantity}/>
+    	        <IngredientRowCard key={index} data={data}/>
+              // <IngredientRowCard key={index} data={data} title={data.product.name} dietaryDetails={data.product.dietary_details} price={data.product.price_per_unit} quantity={data.quantity}/>
     	    ))}
     	  </div>
     	</div>
