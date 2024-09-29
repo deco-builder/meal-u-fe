@@ -1,9 +1,9 @@
 import Cart from "../Cart";
 import Checkout from "../Checkout";
 import { IonButton, IonBackButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from './mobilecart.module.css';
-import { useCreateOrder, useDeliveryLocations } from "../../../api/deliveryApi";
+import { useCreateOrder } from "../../../api/deliveryApi";
 import DeliveryLocationPicker from "../Checkout/LocationPicker";
 
 export const formatDate = (date: Date) => {
@@ -36,15 +36,6 @@ const MyCartMobile: React.FC = () => {
     }
   }
 
-  // useEffect(() => {
-  //   if (deliveryLocation !== -1 && deliveryTime !== -1) {
-  //     setIsDeliveryDetailsSet(true);
-  //     console.log(deliveryLocation);
-  //     console.log(deliveryTime);
-  //     console.log(deliveryDate);
-  //   }
-  // })
-
   return (
     <IonPage>
       <IonHeader>
@@ -59,7 +50,7 @@ const MyCartMobile: React.FC = () => {
         <Cart subTotal={subTotal} setSubTotal={setSubTotal}/>
 
         {isDeliveryDetailsSet ? 
-          <Checkout subTotal={subTotal} total={total} setTotal={setTotal}/>
+          <Checkout subTotal={subTotal} total={total} setTotal={setTotal} location={deliveryLocation} date={deliveryDate} time={deliveryTime}/>
           : null
         }
         {isPickerShown ?
