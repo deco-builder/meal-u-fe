@@ -49,7 +49,7 @@ const IngredientRowCard: React.FC<IngredientRowCardProps> = ({data}) => {
           <div className={styles.card_image_default}></div>
         </div>
         <div className={styles.column_middle}>
-          <div className={styles.card_title}>{data.product.name}</div>
+          <div className={styles.card_title}>{data.product.name.length > 20 ? `${data.product.name.slice(0, 20)}...` : data.product.name}</div>
             <div className={styles.dietary_details}>
               {data.product.dietary_details?.map((item, index) => (
                 <div key={index} className={styles.node}>{item}</div>
