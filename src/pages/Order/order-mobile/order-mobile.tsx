@@ -25,8 +25,10 @@ import { LocationData, useLocationList } from "../../../api/locationApi";
 import { useCart, CartData, useUpdateCartItem, useDeleteCartItem, useAddCartItem } from "../../../api/cartApi";
 import { useParams } from "react-router-dom";
 import ItemCard from "../../../components/ItemCard";
+import { useQueryClient } from "@tanstack/react-query";
 
 function OrderMobile() {
+  const queryClient = useQueryClient();
   const { category } = useParams<{ category: string }>();
   const router = useIonRouter();
   const [count, setCount] = useState(0);
@@ -55,6 +57,11 @@ function OrderMobile() {
   const updateCartItem = useUpdateCartItem();
   const deleteCartItem = useDeleteCartItem();
   const addCartItem = useAddCartItem()
+
+  const refetchCart = () => {
+    queryClient.invalidateQueries({ queryKey: ['cart'] });
+  };
+
 
   // console.log(cart);
 
@@ -92,22 +99,27 @@ function OrderMobile() {
     const cartItem = getCartItem(productId);
     if (cartItem) {
       const newQuantity = cartItem.quantity + 1;
-      updateCartItem.mutate({
-        item_type: "product",
-        item_id: cartItem.id,
-        quantity: newQuantity,
-      });
+      updateCartItem.mutate(
+        {
+          item_type: "product",
+          item_id: cartItem.id,
+          quantity: newQuantity,
+        },
+        {
+          onSuccess: () => refetchCart()
+        }
+      );
     } else {
-      addCartItem.mutate({
-        item_type: "product",
-        product_id: productId,
-        quantity: 1,
-      });
-      console.log({
-        item_type: "product",
-        item_id: productId,
-        quantity: 1,
-      })
+      addCartItem.mutate(
+        {
+          item_type: "product",
+          product_id: productId,
+          quantity: 1,
+        },
+        {
+          onSuccess: () => refetchCart()
+        }
+      );
     }
   };
 
@@ -116,16 +128,26 @@ function OrderMobile() {
     if (cartItem) {
       if (cartItem.quantity > 1) {
         const newQuantity = cartItem.quantity - 1;
-        updateCartItem.mutate({
-          item_type: "product",
-          item_id: cartItem.id,
-          quantity: newQuantity,
-        });
+        updateCartItem.mutate(
+          {
+            item_type: "product",
+            item_id: cartItem.id,
+            quantity: newQuantity,
+          },
+          {
+            onSuccess: () => refetchCart()
+          }
+        );
       } else {
-        deleteCartItem.mutate({
-          item_type: "product",
-          cart_product_id: cartItem.id,
-        });
+        deleteCartItem.mutate(
+          {
+            item_type: "product",
+            cart_product_id: cartItem.id,
+          },
+          {
+            onSuccess: () => refetchCart()
+          }
+        );
       }
     }
   };
