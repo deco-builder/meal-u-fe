@@ -59,7 +59,7 @@ export const useRecipesList = (params: RecipeListParams): UseQueryResult<RecipeD
 
   const fetchRecipe = async (): Promise<RecipeData[]> => {
     const url = params.search && params.search !== "Show All"
-      ? `http://meal-u-api.nafisazizi.com:8001/api/v1/community/recipes/?categories=${encodeURIComponent(params.search)}`
+      ? `http://meal-u-api.nafisazizi.com:8001/api/v1/community/recipes/?search=${encodeURIComponent(params.search)}`
       : 'http://meal-u-api.nafisazizi.com:8001/api/v1/community/recipes/';
 
     const response = await fetch(url, {

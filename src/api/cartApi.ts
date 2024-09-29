@@ -159,8 +159,48 @@ interface UpdateCartItemPayload {
 
 interface DeleteCartItemPayload {
   item_type: 'recipe' | 'product' | 'mealkit';
-  item_id: number;
+  cart_product_id: number;
 }
+
+interface AddCartItemPayload {
+  item_type: 'recipe' | 'product' | 'mealkit';
+  product_id: number;
+  quantity: number;
+}
+
+export const useAddCartItem = () => {
+  const { getToken } = useAuth();
+  const queryClient = useQueryClient();
+
+  return useMutation<CartData, Error, AddCartItemPayload>({
+    mutationFn: async (payload) => {
+      const token = getToken() || '';
+      const response = await fetch('http://meal-u-api.nafisazizi.com:8001/api/v1/cart/', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update cart item');
+      }
+
+      const data: CartResponse = await response.json();
+
+      if (!data.success) {
+        throw new Error(data.message || 'Failed to update cart item');
+      }
+
+      return data.data;
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(['cart'], data);
+    },
+  });
+};
 
 export const useUpdateCartItem = () => {
   const { getToken } = useAuth();

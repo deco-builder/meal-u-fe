@@ -37,7 +37,6 @@ const Cart: React.FC<CartProps> = ({subTotal, setSubTotal}) => {
     return <div className={styles.empty_cart}>You have no items in your cart right now.</div>;
   }
 
-  console.log(cartData);
 
   return (
     <>
@@ -46,7 +45,7 @@ const Cart: React.FC<CartProps> = ({subTotal, setSubTotal}) => {
     	  <div className={styles.cards}>
           {cartData.cart_mealkits.length ? (
     	    cartData.cart_mealkits.map((data, index) => (
-    	        <CollapsibleMealkitCard key={index} title={data.mealkit.name} dietaryDetails={data.mealkit.dietary_details} price={data.mealkit.total_price} child={data.recipes} />
+    	        <CollapsibleMealkitCard key={index} image={data.mealkit.image} title={data.mealkit.name} dietaryDetails={data.mealkit.dietary_details} price={data.mealkit.total_price} child={data.recipes} />
     	    ))
           ) : <div className={styles.empty}>You have no mealkits in your cart.</div>
         }
@@ -57,7 +56,7 @@ const Cart: React.FC<CartProps> = ({subTotal, setSubTotal}) => {
     	  <div className={styles.cards}>
           {cartData.cart_recipes.length ? (
             cartData.cart_recipes.map((data, index) => (
-    	        <CollapsibleRecipeCard key={index} id={data.id} title={data.recipe.name} dietaryDetails={data.recipe.dietary_details} price={data.recipe.total_price} quantity={data.quantity} child={data.recipe.ingredients || []}/>
+    	        <CollapsibleRecipeCard key={index} id={data.id} image={data.recipe.image} title={data.recipe.name} dietaryDetails={data.recipe.dietary_details} price={data.recipe.total_price} quantity={data.quantity} child={data.recipe.ingredients || []}/>
     	    ))
           ) : <div className={styles.empty}>You have no recipes in your cart.</div>
               }
