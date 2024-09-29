@@ -67,7 +67,7 @@ const CollapsibleRecipeCard: React.FC<CollapsibleRecipeCardProps> = ({id, title,
             <div className={styles.card_image_default}></div>
         </div>
         <div className={styles.column_middle}>
-          <div className={styles.card_title}>{title}</div>
+          <div className={styles.card_title}> {title.length > 20 ? `${title.slice(0, 20)}...` : title}</div>
           <div className={styles.dietary_details}>
             {Object.values(dietaryDetails).map((detail, index) => (
               <div key={index} className={styles.node}>{detail}</div>
