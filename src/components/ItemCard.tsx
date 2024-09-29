@@ -35,8 +35,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
     <IonCard
       key={item.id}
       style={{
-        minWidth: "120px",
-        width: "125px",
+        width: "30vw",
         flex: "0 0 auto",
         margin: "10px",
         cursor: onClick ? "pointer" : "default",
@@ -60,12 +59,12 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
             height: "auto",
             objectFit: "cover",
             maxWidth: "130px",
-            maxHeight: "120px",
+            maxHeight: "90px",
             borderRadius: "15px",
           }}
         />
       </div>
-      <IonCardHeader style={{ padding: "10px" }}>
+      <IonCardHeader style={{ padding: "5px" }}>
         <div
           style={{
             display: "flex",
@@ -85,7 +84,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
                 margin: "0px",
                 fontWeight: "700",
                 color: "#000000",
-                fontSize: "12px",
+                fontSize: "10px",
               }}
             >
               {item.name.length > 25 ? `${item.name.slice(0, 25)}...` : item.name}
@@ -104,21 +103,21 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
               alt={item.creator.name}
               src={item.creator.profile_picture}
               style={{
-                width: "10px",
-                height: "10px",
+                width: "5px",
+                height: "5px",
                 objectFit: "cover",
                 borderRadius: "15px",
               }}
             />
-            <p style={{ margin: "0px", fontSize: "8px" }}>
-              {item.creator.name} -
+            <p style={{ margin: "0px", fontSize: "6px" }}>
+            {item.creator.name.length > 15 ? `${item.creator.name.slice(0, 15)}...` : item.creator.name} -
             </p>
-            <p style={{ margin: "0px", fontSize: "8px" }}>
+            <p style={{ margin: "0px", fontSize: "6px" }}>
               ${(item.price || item.total_price || 0).toFixed(2)}
             </p>
           </div>
           {item.cooking_time && (
-            <p style={{ margin: "0px", fontSize: "8px", textAlign: "center" }}>
+            <p style={{ margin: "0px", fontSize: "6px", textAlign: "center" }}>
               {item.cooking_time} min | {item.meal_type} | {item.serving_size} serving
             </p>
           )}
