@@ -29,6 +29,7 @@ import Login from "./pages/Login/login";
 import Category from "./pages/Category";
 import { useAuth } from "./contexts/authContext";
 import MealkitDetails from "./pages/MealkitDetails/MealkitDetails";
+import CourierHome from "./pages/Courier/CourierHome/CourierHome";
 
 const AppContent: React.FC = () => {
   const { isAuthenticated } = useAuth();
@@ -75,6 +76,7 @@ const AppContent: React.FC = () => {
               <Route path="/recipe-details/:id" component={RecipeDetails} />
               <Route path="/product-details/:id" component={ProductDetails} />
               <Route path="/payment-options" component={PaymentOptions} />
+              <Route path="/courier/home" component={CourierHome} />
               <Route exact path="/">
                 <Redirect to="/tab1" />
               </Route>

@@ -5,6 +5,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   user: any | null;
+  role: string | null;
   getToken: () => string | null;
 }
 
@@ -17,12 +18,15 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [user, setUser] = useState<any | null>(null);
+  const [role, setRole] = useState<string | null>(null);
 
   useEffect(() => {
     // Check if there's a token in local storage
     const token = localStorage.getItem('accessToken');
+    const storedRole = localStorage.getItem('role');
     if (token) {
       setIsAuthenticated(true);
+      setRole(storedRole);
       // Optionally fetch user data here
     }
   }, []);
@@ -40,8 +44,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (data.success) {
         localStorage.setItem('accessToken', data.data.access);
         localStorage.setItem('refreshToken', data.data.refresh);
+        localStorage.setItem('role', data.data.role);
         setIsAuthenticated(true);
         setUser(data.data);
+        setRole(data.data.role);
       } else {
         throw new Error(data.message || 'Login failed');
       }
@@ -54,16 +60,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const logout = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    localStorage.removeItem('role');
     setIsAuthenticated(false);
     setUser(null);
+    setRole(null);
   };
 
   const getToken = () => {
     return localStorage.getItem('accessToken');
   };
 
+  const getRole = () => {
+    return localStorage.getItem('role');
+  };
+
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, user, getToken }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, user, role, getToken }}>
       {children}
     </AuthContext.Provider>
   );
