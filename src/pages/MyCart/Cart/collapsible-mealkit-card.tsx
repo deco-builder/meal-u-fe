@@ -1,9 +1,8 @@
 import ArrowDownIcon from "../../../../public/icon/arrow-down";
 import ArrowUpIcon from "../../../../public/icon/arrow-up";
 import styles from './cart.module.css';
-import { Children, useState } from "react";
-import IngredientRowCard from "./ingredient-row-card";
-import { Recipe, RecipeIngredient } from '../../../api/cartApi';
+import { useState } from "react";
+import { Recipe } from '../../../api/cartApi';
 import CollapsibleRecipeCard from "./collapsible-recipe-card";
 
 interface CollapsibleMealkitCardProps {
@@ -42,7 +41,7 @@ const CollapsibleMealkitCard: React.FC<CollapsibleMealkitCardProps> = ({title, p
 	    {isExpanded ? (
 				<div className="expanded_content">
           {child.map((data, index) => (
-            <CollapsibleRecipeCard key={index} title={data.name} dietaryDetails={data.dietary_details} price={data.total_price} quantity={1} child={data.ingredients || []} />
+            <CollapsibleRecipeCard key={index} id={data.id} title={data.name} dietaryDetails={data.dietary_details} price={data.total_price} quantity={1} child={data.ingredients || []} />
           ))}
         </div>
 			) : null

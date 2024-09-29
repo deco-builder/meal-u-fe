@@ -1,13 +1,9 @@
 import CollapsibleMealkitCard from "./collapsible-mealkit-card";
 import CollapsibleRecipeCard from "./collapsible-recipe-card";
 import IngredientRowCard from "./ingredient-row-card";
-import { mealKits, recipes, products } from '../dummyData';
-import React, { Dispatch, SetStateAction, useState, useEffect }from "react";
+import React, { Dispatch, SetStateAction, useEffect }from "react";
 import styles from './cart.module.css';
-import { useCart, CartData } from '../../../api/cartApi';
-import { useAuth } from '../../../contexts/authContext';
-import { fingerPrintSharp } from "ionicons/icons";
-import { RecipeIngredient } from '../../../api/cartApi';
+import { useCart } from '../../../api/cartApi';
 
 interface CartProps {
   subTotal: number;
@@ -33,14 +29,12 @@ const Cart: React.FC<CartProps> = ({subTotal, setSubTotal}) => {
         setSubTotal(newSubTotal);
       };
       calculateSubTotal();
-      console.log("new subtotal:", subTotal);
     } else {
-      console.log("No cartData available");  // Debugging line
     }
   }, [cartData, setSubTotal]);
 
   if (!cartData) {
-    return <div>You have no items in your cart right now.</div>;
+    return <div className={styles.empty_cart}>You have no items in your cart right now.</div>;
   }
 
   return (
@@ -48,26 +42,35 @@ const Cart: React.FC<CartProps> = ({subTotal, setSubTotal}) => {
     	<div className={styles.subsection}>
 			<div className={styles.title}>Meal Kits</div>
     	  <div className={styles.cards}>
-    	    {cartData.cart_mealkits.map((data, index) => (
+          {cartData.cart_mealkits.length ? (
+    	    cartData.cart_mealkits.map((data, index) => (
     	        <CollapsibleMealkitCard key={index} title={data.mealkit.name} dietaryDetails={data.mealkit.dietary_details} price={data.mealkit.total_price} child={data.recipes} />
-    	    ))}
+    	    ))
+          ) : <div className={styles.empty}>You have no mealkits in your cart.</div>
+        }
     	  </div>
     	</div>
     	<div className={styles.subsection}>
 			<div className={styles.title}>Recipe</div>
     	  <div className={styles.cards}>
-    	    {cartData.cart_recipes.map((data, index) => (
-    	        <CollapsibleRecipeCard key={index} title={data.recipe.name} dietaryDetails={data.recipe.dietary_details} price={data.recipe.total_price} quantity={data.quantity} child={data.recipe.ingredients || []}/>
-    	    ))}
+          {cartData.cart_recipes.length ? (
+            cartData.cart_recipes.map((data, index) => (
+    	        <CollapsibleRecipeCard key={index} id={data.id} title={data.recipe.name} dietaryDetails={data.recipe.dietary_details} price={data.recipe.total_price} quantity={data.quantity} child={data.recipe.ingredients || []}/>
+    	    ))
+          ) : <div className={styles.empty}>You have no recipes in your cart.</div>
+              }
     	  </div>
     	</div>
     	<div className={styles.subsection}>
 			<div className={styles.title}>Products</div>
     	  <div className={styles.cards}>
-    	    {cartData.cart_products.map((data, index) => (
+          {cartData.cart_products.length ? (
+            cartData.cart_products.map((data, index) => (
     	        <IngredientRowCard key={index} data={data}/>
               // <IngredientRowCard key={index} data={data} title={data.product.name} dietaryDetails={data.product.dietary_details} price={data.product.price_per_unit} quantity={data.quantity}/>
-    	    ))}
+    	    ))
+          ) : <div className={styles.empty}>You have no products in your cart.</div>
+          }
     	  </div>
     	</div>
     </>

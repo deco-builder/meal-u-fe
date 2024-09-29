@@ -80,7 +80,7 @@ export interface Recipe {
   nutrition_details?: NutritionDetails;
 }
 
-interface CartRecipe {
+export interface CartRecipe {
   id: number;
   recipe: Recipe;
   quantity: number;
