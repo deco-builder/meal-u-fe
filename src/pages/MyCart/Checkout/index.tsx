@@ -8,9 +8,12 @@ interface CheckoutProps {
     subTotal: number;
     total: number;
     setTotal: Dispatch<SetStateAction<number>>;
+    location: number;
+    date: Date;
+    time: number;
 }
 
-const Checkout: React.FC<CheckoutProps> = ({subTotal, total, setTotal}) => {
+const Checkout: React.FC<CheckoutProps> = ({subTotal, total, setTotal, location, date, time}) => {
     const [deliveryData, setDeliveryData] = useState(deliveryDetails);
 
     useEffect(() => {

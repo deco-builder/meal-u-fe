@@ -1,11 +1,49 @@
 import Cart from "../Cart";
 import Checkout from "../Checkout";
-import { IonBackButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import React, { useState } from "react";
+import { IonButton, IonBackButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import React, { useEffect, useState } from "react";
+import styles from './mobilecart.module.css';
+import { useCreateOrder, useDeliveryLocations } from "../../../api/deliveryApi";
+import DeliveryLocationPicker from "../Checkout/LocationPicker";
+
+export const formatDate = (date: Date) => {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+}
 
 const MyCartMobile: React.FC = () => {
   const [subTotal, setSubTotal] = useState(0);
   const [total, setTotal] = useState(0);
+
+  const [isDeliveryDetailsSet, setIsDeliveryDetailsSet] = useState(false);
+  const [deliveryLocation, setDeliveryLocation] = useState(-1);
+  const [deliveryTime, setDeliveryTime] = useState(-1);
+  const [deliveryDate, setDeliveryDate] = useState(new Date());
+
+  const [isPickerShown, setIsPickerShown] = useState(false);
+  const {mutate: createOrder} = useCreateOrder();
+  
+  const handleSetLocation = () => {
+    setIsPickerShown(!isPickerShown);
+  }
+
+  const handleOrderCreation = () => {
+    if (deliveryDate && !Array.isArray(deliveryDate)) {
+      createOrder({
+        delivery_location: deliveryLocation,
+        delivery_time: deliveryTime,
+        delivery_date: formatDate(deliveryDate), 
+      })
+    }
+  }
+
+  // useEffect(() => {
+  //   if (deliveryLocation !== -1 && deliveryTime !== -1) {
+  //     setIsDeliveryDetailsSet(true);
+  //     console.log(deliveryLocation);
+  //     console.log(deliveryTime);
+  //     console.log(deliveryDate);
+  //   }
+  // })
 
   return (
     <IonPage>
@@ -19,7 +57,36 @@ const MyCartMobile: React.FC = () => {
       </IonHeader>
       <IonContent className="ion-padding">
         <Cart subTotal={subTotal} setSubTotal={setSubTotal}/>
-        <Checkout subTotal={subTotal} total={total} setTotal={setTotal}/>
+
+        {isDeliveryDetailsSet ? 
+          <Checkout subTotal={subTotal} total={total} setTotal={setTotal}/>
+          : null
+        }
+        {isPickerShown ?
+        <DeliveryLocationPicker
+          deliveryLocation={deliveryLocation}
+          setDeliveryLocation={setDeliveryLocation}
+          deliveryTime={deliveryTime}
+          setDeliveryTime={setDeliveryTime}
+          deliveryDate={deliveryDate}
+          setDeliveryDate={setDeliveryDate}
+          isDeliveryDetailsSet={isDeliveryDetailsSet}
+          setIsDeliveryDetailsSet={setIsDeliveryDetailsSet}
+          isPickerShown={isPickerShown}
+          setIsPickerShown={setIsPickerShown}
+        />
+        : null}
+
+        <div className={styles.bottom_button}>
+          {isDeliveryDetailsSet ? 
+          <IonButton expand="block" className={styles.checkout_button} onClick={handleOrderCreation}>
+          Checkout
+          </IonButton>
+          :
+          <IonButton expand="block" className={styles.checkout_button} onClick={handleSetLocation}>
+          Proceed
+          </IonButton>}
+        </div>
       </IonContent>
     </IonPage>
   )
