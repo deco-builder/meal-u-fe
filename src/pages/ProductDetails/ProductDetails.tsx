@@ -83,7 +83,7 @@ const ProductDetails: React.FC = () => {
             <IonContent fullscreen>
                 <div className="pb-20">
                     <div className="w-full h-64 overflow-hidden">
-                        <IonImg src={product.image || '/default-product-image.png'} alt={product.name} className="w-full h-full object-cover" />
+                        <IonImg src={product.image || "/img/no-photo.png"} alt={product.name} className="w-full h-full object-cover" />
                     </div>
                     <div className="flex justify-between items-start p-4">
                         <h1 className="text-2xl font-bold text-[#0A2533] m-0">{product.name}</h1>

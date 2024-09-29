@@ -173,7 +173,7 @@ const RecipeDetails: React.FC = () => {
                             key={index}
                             id={ingredient.ingredient.id}
                             name={ingredient.ingredient.name}
-                            image={ingredient.ingredient.image || '/food-placeholder.png'}
+                            image={ingredient.ingredient.image || "/img/no-photo.png"}
                             quantity={`${ingredient.ingredient.unit_size} ${ingredient.ingredient.unit_id === 2 ? 'g' : 'ml'}`}
                             price={`$${ingredient.price.toFixed(2)}`}
                         />
