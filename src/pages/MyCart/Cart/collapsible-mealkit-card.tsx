@@ -2,14 +2,17 @@ import ArrowDownIcon from "../../../../public/icon/arrow-down";
 import ArrowUpIcon from "../../../../public/icon/arrow-up";
 import styles from './cart.module.css';
 import { useState } from "react";
+import { Recipe } from '../../../api/cartApi';
+import CollapsibleRecipeCard from "./collapsible-recipe-card";
 
-interface CollapsibleRowCardProps {
+interface CollapsibleMealkitCardProps {
     title: string;
-    dietaryDetails: { [key: string]: string };
+    dietaryDetails: string[];
     price: number;
+    child: Recipe[];
 }
 
-const CollapsibleRowCard: React.FC<CollapsibleRowCardProps> = ({title, price, dietaryDetails}) => {
+const CollapsibleMealkitCard: React.FC<CollapsibleMealkitCardProps> = ({title, price, dietaryDetails, child}) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
 	const toggleExpand = () => {
@@ -35,12 +38,16 @@ const CollapsibleRowCard: React.FC<CollapsibleRowCardProps> = ({title, price, di
         {isExpanded ? <ArrowUpIcon /> : <ArrowDownIcon />}
         </div>
       </div>
-			{isExpanded ? (
-				<div className="expanded_content"></div>
+	    {isExpanded ? (
+				<div className="expanded_content">
+          {child.map((data, index) => (
+            <CollapsibleRecipeCard key={index} id={data.id} title={data.name} dietaryDetails={data.dietary_details} price={data.total_price} quantity={1} child={data.ingredients || []} />
+          ))}
+        </div>
 			) : null
 			}
     </div>
   );
 };
 
-export default CollapsibleRowCard;
+export default CollapsibleMealkitCard;
