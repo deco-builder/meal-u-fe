@@ -8,30 +8,21 @@ import {
   IonTitle,
   IonPage,
   IonIcon,
-  IonCard,
-  IonCardHeader,
-  IonCardSubtitle,
   IonButton,
   useIonRouter,
 } from "@ionic/react";
 import LocationIcon from "../../../../public/icon/location-icon";
 import SearchIcon from "../../../../public/icon/search-icon";
+import FloatCartIcon from "../../../../public/icon/float-cart-icon";
 import FilterIcon from "../../../../public/icon/filter";
 import FilterOverlay from "../../../components/FilterOverlay";
-import "./order-mobile.css";
-import {
-  heart,
-  searchOutline,
-  addCircleOutline,
-  removeCircleOutline,
-  remove,
-  optionsOutline,
-} from "ionicons/icons";
+import { addCircleOutline, removeCircleOutline } from "ionicons/icons";
 import IconInput from "../../../components/icon-input";
 import { useMealkitList, MealkitData } from "../../../api/mealkitApi";
 import { RecipeData, useRecipesList } from "../../../api/recipeApi";
 import { ProductData, useProductList } from "../../../api/productApi";
 import { LocationData, useLocationList } from "../../../api/locationApi";
+import { useCart, CartData } from "../../../api/cartApi";
 import { useParams } from "react-router-dom";
 import ItemCard from "../../../components/ItemCard";
 
@@ -43,7 +34,9 @@ function OrderMobile() {
   const [searchValue, setSearchValue] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [currentLocation, setCurrentLocation] = useState("");
-  const [selectedProducts, setSelectedProducts] = useState<{[key: number]: number}>({});
+  const [selectedProducts, setSelectedProducts] = useState<{
+    [key: number]: number;
+  }>({});
   const { data: mealkits = [], isFetching: isMealkitsFetching } =
     useMealkitList({
       search: selectedCategory,
@@ -54,6 +47,32 @@ function OrderMobile() {
   const { data: product = [], isFetching: isProductFetching } = useProductList({
     search: category,
   });
+  const { data: cart, isFetching: isCartFetching } = useCart() as {
+    data: CartData | undefined;
+    isFetching: boolean;
+  };
+
+  console.log(cart);
+
+  const totalCartItems = React.useMemo(() => {
+    if (!cart) return 0;
+
+    const ingredientsCount =
+      cart.cart_ingredients?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+    const mealkitsCount =
+      cart.cart_mealkits?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+    const productsCount =
+      cart.cart_products?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+    const recipesCount =
+      cart.cart_recipes?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+
+    // console.log("Ingredients count", ingredientsCount);
+    // console.log("MealKit count", mealkitsCount);
+    // console.log("Products count", productsCount);
+    // console.log("Recipes count", recipesCount);
+
+    return ingredientsCount + mealkitsCount + productsCount + recipesCount;
+  }, [cart]);
 
   const { data: location = [], isFetching: isLocationFetching } =
     useLocationList();
@@ -68,16 +87,16 @@ function OrderMobile() {
   };
 
   const increment = (productId: number) => {
-    setSelectedProducts(prev => {
+    setSelectedProducts((prev) => {
       const newCount = (prev[productId] || 0) + 1;
       const newSelected = { ...prev, [productId]: newCount };
       console.log("Selected products:", newSelected);
       return newSelected;
     });
   };
-  
+
   const decrement = (productId: number) => {
-    setSelectedProducts(prev => {
+    setSelectedProducts((prev) => {
       const newCount = Math.max((prev[productId] || 0) - 1, 0);
       const newSelected = { ...prev, [productId]: newCount };
       if (newCount === 0) {
@@ -131,15 +150,31 @@ function OrderMobile() {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        <div>
-          <p style={{ marginBottom: "0px" }}>Delivery Location</p>
-        </div>
-        <div className="header-location">
-          <LocationIcon />
-          <p>{currentLocation}</p>
+        <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+          <p style={{ fontSize: "12px" }}>Delivery Location</p>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              gap: 2,
+              alignItems: "flex-end",
+            }}
+          >
+            <LocationIcon />
+            <p style={{ fontSize: "14px", fontWeight: "500" }}>
+              {currentLocation}
+            </p>
+          </div>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "row", gap: "5px" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            gap: "5px",
+            marginTop: 5,
+          }}
+        >
           <IconInput
             onInputHandleChange={handleSearchChange}
             onKeyPress={handleKeyPress}
@@ -153,163 +188,230 @@ function OrderMobile() {
             <FilterIcon />
           </IonButton>
         </div>
-        {isFilterVisible ? (
+        {isFilterVisible && (
           <div className="filter">
             <FilterOverlay />
           </div>
-        ) : (
-          <>
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <h3>Mealkits</h3>
-              {isMealkitsFetching ? (
-                <p>Loading mealkits...</p>
-              ) : filteredMealkits.length > 0 ? (
-                <div style={{ overflowX: "auto", width: "100%" }}>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      minWidth: "min-content",
-                    }}
-                  >
-                    {filteredMealkits.map((mealkit: MealkitData) => (
-                      <ItemCard
-                        key={mealkit.id}
-                        item={mealkit}
-                        onClick={handleMealkitClick}
-                      />
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                <p>No mealkits found.</p>
-              )}
+        )}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            marginTop: "5px",
+          }}
+        >
+          <p style={{ fontSize: "16px", fontWeight: "600" }}>Mealkits</p>
+          {isMealkitsFetching ? (
+            <p>Loading mealkits...</p>
+          ) : filteredMealkits.length > 0 ? (
+            <div style={{ overflowX: "auto", width: "100%" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  minWidth: "min-content",
+                }}
+              >
+                {filteredMealkits.map((mealkit: MealkitData) => (
+                  <ItemCard
+                    key={mealkit.id}
+                    item={mealkit}
+                    onClick={handleMealkitClick}
+                  />
+                ))}
+              </div>
             </div>
+          ) : (
+            <p>No mealkits found.</p>
+          )}
+        </div>
 
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <h3>Recipes</h3>
-              {isRecipesFetching ? (
-                <p>Loading recipes...</p>
-              ) : filteredRecipes.length > 0 ? (
-                <div style={{ overflowX: "auto", width: "100%" }}>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      minWidth: "min-content",
-                    }}
-                  >
-                    {filteredRecipes.map((recipe: RecipeData) => (
-                      <ItemCard
-                        key={recipe.id}
-                        item={recipe}
-                        onClick={handleRecipeClick}
-                      />
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                <p>No recipes found.</p>
-              )}
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <h3 style={{ fontSize: "16px", fontWeight: "600" }}>Recipes</h3>
+          {isRecipesFetching ? (
+            <p>Loading recipes...</p>
+          ) : filteredRecipes.length > 0 ? (
+            <div style={{ overflowX: "auto", width: "100%" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  minWidth: "min-content",
+                }}
+              >
+                {filteredRecipes.map((recipe: RecipeData) => (
+                  <ItemCard
+                    key={recipe.id}
+                    item={recipe}
+                    onClick={handleRecipeClick}
+                  />
+                ))}
+              </div>
             </div>
+          ) : (
+            <p>No recipes found.</p>
+          )}
+        </div>
 
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <h3>Groceries</h3>
-              {isProductFetching ? (
-                <p>Loading groceries...</p>
-              ) : filteredProducts.length > 0 ? (
-                filteredProducts.map((product: ProductData) => (
+        {/* Bawah ini Product (Groceries) */}
+
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <h3 style={{ fontSize: "16px", fontWeight: "600" }}>Groceries</h3>
+          {isProductFetching ? (
+            <p>Loading groceries...</p>
+          ) : filteredProducts.length > 0 ? (
+            filteredProducts.map((product: ProductData) => (
+              <div
+                key={product.id}
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  backgroundColor: "#ffffff",
+                  borderRadius: 15,
+                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                  padding: "10px",
+                  marginBottom: "10px",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: "5px",
+                  }}
+                >
+                  <img
+                    alt={product.name}
+                    src={product.image || "/img/no-photo.png"}
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                      objectFit: "cover",
+                      maxWidth: "50px",
+                      maxHeight: "50px",
+                      borderRadius: "10px",
+                    }}
+                  />
                   <div
-                    key={product.id}
                     style={{
                       display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      backgroundColor: "#ffffff",
-                      borderRadius: 15,
-                      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                      padding: "10px",
-                      marginBottom: "10px",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "flex-start",
+                      height: "100%",
                     }}
                   >
-                    <div style={{display: 'flex', flexDirection: 'row', gap: '5px'}}>
-                      <img
-                        alt={product.name}
-                        src={product.image || "/img/no-photo.png"}
-                        style={{
-                          width: "100%",
-                          height: "auto",
-                          objectFit: "cover",
-                          maxWidth: "50px",
-                          maxHeight: "50px",
-                          borderRadius: "10px",
-                        }}
-                      />
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: "center",
-                          alignItems: "flex-start",
-                          height: "100%",
-                        }}
-                      >
-                        <p
-                          style={{
-                            margin: 0,
-                            marginBottom: "4px",
-                            fontSize: "12px",
-                            fontWeight: "normal",
-                          }}
-                        >
-                          {product.name.length > 65 ? `${product.name.slice(0, 65)}...` : product.name}
-                        </p>
-                        <h3
-                          style={{
-                            margin: 0,
-                            fontSize: "14px",
-                            fontWeight: "bold",
-                          }}
-                        >
-                          ${product.price_per_unit}
-                        </h3>
-                      </div>
-                    </div>
-
-                    <div
+                    <p
                       style={{
-                        display: "flex",
-                        flexDirection: "row",
+                        margin: 0,
+                        marginBottom: "4px",
+                        fontSize: "10px",
+                        fontWeight: "normal",
                       }}
                     >
-                      <IonIcon
-                        icon={removeCircleOutline}
-                        onClick={() => decrement(product.id)}
-                        style={{ fontSize: "24px", cursor: "pointer" }}
-                      />
-                      <div
-                        style={{
-                          width: "30px",
-                          textAlign: "center",
-                          margin: "0 5px",
-                        }}
-                      >
-                    {selectedProducts[product.id] || 0}
-                      </div>
-                      <IonIcon
-                        icon={addCircleOutline}
-                        onClick={() => increment(product.id)}
-                        style={{ fontSize: "24px", cursor: "pointer" }}
-                      />
-                    </div>
+                      {product.name.length > 50
+                        ? `${product.name.slice(0, 50)}...`
+                        : product.name}
+                    </p>
+                    <h3
+                      style={{
+                        margin: 0,
+                        fontSize: "14px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      ${product.price_per_unit}
+                    </h3>
                   </div>
-                ))
-              ) : (
-                <p>No Groceries found.</p>
-              )}
+                </div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                  }}
+                >
+                  <IonIcon
+                    icon={removeCircleOutline}
+                    onClick={() => decrement(product.id)}
+                    style={{ fontSize: "24px", cursor: "pointer" }}
+                  />
+                  <div
+                    style={{
+                      width: "30px",
+                      textAlign: "center",
+                      margin: "0px",
+                    }}
+                  >
+                    {selectedProducts[product.id] || 0}
+                  </div>
+                  <IonIcon
+                    icon={addCircleOutline}
+                    onClick={() => increment(product.id)}
+                    style={{ fontSize: "24px", cursor: "pointer" }}
+                  />
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>No Groceries found.</p>
+          )}
+        </div>
+
+        {/* Bawah ini Floating Button */}
+
+        {!isFilterVisible && (
+        <IonButton
+          onClick={() => router.push("/mycart")}
+          style={{
+            position: "fixed",
+            bottom: "20px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "85vw",
+            height: "50px",
+            "--border-radius": "25px",
+            "--box-shadow": "0 4px 6px rgba(0, 0, 0, 0.1)",
+            "--background": "#7862FC",
+            zIndex: 1000,
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: "100%",
+              flexDirection: "row",
+              padding: "5px",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                flexDirection: "column",
+                justifyContent: "space-around",
+              }}
+            >
+              <p
+                style={{
+                  fontSize: "16px",
+                  fontWeight: "400",
+                  textAlign: "left",
+                  color: "#fff",
+                }}
+              >
+                My Orders
+              </p>
+              <p style={{ fontSize: "12px", textAlign: "left", color: "#fff" }}>
+                {totalCartItems} items - $0 AUD
+              </p>
             </div>
-          </>
+            <FloatCartIcon />
+          </div>
+        </IonButton>
         )}
       </IonContent>
     </IonPage>

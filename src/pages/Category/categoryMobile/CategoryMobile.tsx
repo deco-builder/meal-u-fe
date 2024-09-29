@@ -1,4 +1,3 @@
-// CategoryMobile.tsx
 import React, { useEffect } from "react";
 import {
   IonPage,
@@ -18,7 +17,7 @@ import { CategoryData, useCategoriesList } from "../../../api/categoryApi";
 const SHOW_ALL_CATEGORY = {
   id: 0,
   name: "Show All",
-  image: "/public/img/AllFood.png",
+  image: "/img/AllFood.png",
 };
 
 const CategoryMobile: React.FC = () => {
@@ -42,23 +41,27 @@ const CategoryMobile: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        <div style={{ display: "flex", justifyContent: "center" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+            alignItems: "center",
+            margin: "10px",
+          }}
+        >
           <p style={{ fontSize: "16px", fontWeight: "600" }}>
-            Please select category
+            Craving something specific?
+          </p>
+          <p style={{ fontSize: "14px", fontWeight: "400" }}>
+            Pick a food category to get started!
           </p>
         </div>
 
         {isCategoriesFetching ? (
           <p>Loading categories...</p>
         ) : (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(100px, 1fr))",
-              gap: "10px",
-              width: "100%",
-            }}
-          >
+          <div className="grid grid-cols-3 gap-2.5 w-full md:grid-cols-2 sm:grid-cols-1">
             {categories.map((category: CategoryData) => (
               <IonCard
                 key={category.id}
@@ -76,7 +79,7 @@ const CategoryMobile: React.FC = () => {
                     alignItems: "center",
                     overflow: "hidden",
                     padding: "5px",
-                    height: "80px",
+                    height: "60px",
                     borderRadius: "15px",
                   }}
                 >
@@ -91,7 +94,7 @@ const CategoryMobile: React.FC = () => {
                     }}
                   />
                 </div>
-                <IonCardHeader style={{ padding: "5px" }}>
+                <IonCardHeader style={{ padding: "2px" }}>
                   <div>
                     <p
                       style={{
@@ -99,6 +102,7 @@ const CategoryMobile: React.FC = () => {
                         textAlign: "center",
                         fontWeight: "600",
                         color: "#000000",
+                        fontSize: "12px",
                       }}
                     >
                       {category.name}
