@@ -47,10 +47,10 @@ const Checkout: React.FC<CheckoutProps> = ({subTotal, total, setTotal, location,
             <CheckoutDetailsCard data1={deliveryData.delivery_date} data2={deliveryData.delivery_time} button="Change Time" />
           </div>
           
-          <div className={styles.subsection}>
+          {/* <div className={styles.subsection}>
             <div className={styles.title}>Payment Summary</div>
             <PaymentDetailsCard subTotal={subTotal} fee={deliveryData.fee} total={total} />
-          </div>
+          </div> */}
         </>
     )
 }

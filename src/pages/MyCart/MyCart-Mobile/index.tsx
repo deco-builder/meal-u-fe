@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import styles from './mobilecart.module.css';
 import { useCreateOrder } from "../../../api/deliveryApi";
 import DeliveryLocationPicker from "../Checkout/LocationPicker";
+import PaymentDetailsCard from "../Checkout/payment-details-card";
 
 export const formatDate = (date: Date) => {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
@@ -65,6 +66,14 @@ const MyCartMobile: React.FC = () => {
           setIsPickerShown={setIsPickerShown}
         />
         : null}
+
+        {
+          isDeliveryDetailsSet ? (
+            <PaymentDetailsCard subTotal={subTotal} fee={-1} total={-1}/>
+          ) : (
+            <PaymentDetailsCard subTotal={subTotal} fee={null} total={null}/>
+          )
+        }
 
         <div className={styles.bottom_button}>
           {isDeliveryDetailsSet ? 
