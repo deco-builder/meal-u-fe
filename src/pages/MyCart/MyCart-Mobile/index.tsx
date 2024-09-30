@@ -61,9 +61,7 @@ const MyCartMobile: React.FC = () => {
           setDeliveryTime={setDeliveryTime}
           deliveryDate={deliveryDate}
           setDeliveryDate={setDeliveryDate}
-          isDeliveryDetailsSet={isDeliveryDetailsSet}
           setIsDeliveryDetailsSet={setIsDeliveryDetailsSet}
-          isPickerShown={isPickerShown}
           setIsPickerShown={setIsPickerShown}
         />
         : null}

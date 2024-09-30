@@ -11,9 +11,7 @@ interface DeliveryLocationPickerProps {
   setDeliveryTime: Dispatch<SetStateAction<number>>;
   deliveryDate: Date;
   setDeliveryDate: Dispatch<SetStateAction<Date>>;
-	isDeliveryDetailsSet: boolean;
 	setIsDeliveryDetailsSet: Dispatch<SetStateAction<boolean>>;
-	isPickerShown: boolean;
 	setIsPickerShown: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -25,15 +23,12 @@ const DeliveryLocationPicker: React.FC<DeliveryLocationPickerProps> =
   setDeliveryTime,
   deliveryDate,
   setDeliveryDate,
-	isDeliveryDetailsSet,
 	setIsDeliveryDetailsSet,
-	isPickerShown,
 	setIsPickerShown,
 }) => {
 	const {data: deliveryTimeSlot} = useDeliveryTimeSlots();
 	const { data: deliveryData }= useDeliveryLocations();
   const [isFieldFilled, setIsFieldFilled] = useState(false);
-  const [datePickerOpen, setDatePickerOpen] = useState(false);
 
   useEffect(() => {
       if (deliveryLocation !== -1 && deliveryTime !== -1) {

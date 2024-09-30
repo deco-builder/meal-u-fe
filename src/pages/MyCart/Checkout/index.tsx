@@ -16,6 +16,7 @@ interface CheckoutProps {
 const Checkout: React.FC<CheckoutProps> = ({subTotal, total, setTotal, location, date, time}) => {
     const [deliveryData, setDeliveryData] = useState(deliveryDetails);
 
+    // TODO: delete when calculateTotal() doesn't use dummy data
     useEffect(() => {
       // TODO: change with API calls
       const fetchData = async () => {
@@ -25,6 +26,7 @@ const Checkout: React.FC<CheckoutProps> = ({subTotal, total, setTotal, location,
     }, []);
 
 
+    // TODO: change with delivery fee from BE when ready
     useEffect(() => {
         const calculateTotal = () => {
             const newTotal = subTotal + deliveryData.fee;
