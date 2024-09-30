@@ -1,7 +1,6 @@
 import CheckoutDetailsCard from './checkout-details-card';
 import { deliveryDetails } from '../dummyData';
 import { Dispatch, useState, SetStateAction, useEffect } from 'react';
-import PaymentDetailsCard from './payment-details-card';
 import styles from './checkout.module.css';
 
 interface CheckoutProps {

@@ -6,6 +6,7 @@ import styles from './mobilecart.module.css';
 import { useCreateOrder } from "../../../api/deliveryApi";
 import DeliveryLocationPicker from "../Checkout/LocationPicker";
 import PaymentDetailsCard from "../Checkout/payment-details-card";
+import { cartContents } from "../Cart";
 
 export const formatDate = (date: Date) => {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
@@ -21,7 +22,8 @@ const MyCartMobile: React.FC = () => {
   const [deliveryDate, setDeliveryDate] = useState(new Date());
 
   const [isPickerShown, setIsPickerShown] = useState(false);
-  const {mutate: createOrder} = useCreateOrder();
+  const { mutate: createOrder } = useCreateOrder();
+  const { cartNotEmpty } = cartContents();
   
   const handleSetLocation = () => {
     setIsPickerShown(!isPickerShown);
@@ -67,22 +69,29 @@ const MyCartMobile: React.FC = () => {
         />
         : null}
 
-        {
+        {cartNotEmpty ? (
           isDeliveryDetailsSet ? (
-            <PaymentDetailsCard subTotal={subTotal} fee={-1} total={-1}/>
+            <div className={styles.subsection}>
+              <div className={styles.title}>Payment Summary</div>
+                <PaymentDetailsCard subTotal={subTotal} fee={-1} total={-1}/>
+            </div>
           ) : (
-            <PaymentDetailsCard subTotal={subTotal} fee={null} total={null}/>
+            <div className={styles.subsection}>
+              <div className={styles.title}>Payment Summary</div>
+                <PaymentDetailsCard subTotal={subTotal} fee={null} total={null}/>
+                </div>
           )
+        ) : null
         }
 
         <div className={styles.bottom_button}>
           {isDeliveryDetailsSet ? 
           <IonButton expand="block" className={styles.checkout_button} onClick={handleOrderCreation}>
-          Checkout
+          Proceed to Payment
           </IonButton>
           :
-          <IonButton expand="block" className={styles.checkout_button} onClick={handleSetLocation}>
-          Proceed
+          <IonButton expand="block" disabled={!cartNotEmpty} className={styles.checkout_button} onClick={handleSetLocation}>
+          Enter Delivery Details
           </IonButton>}
         </div>
       </IonContent>

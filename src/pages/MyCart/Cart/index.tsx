@@ -10,6 +10,26 @@ interface CartProps {
   setSubTotal: Dispatch<SetStateAction<number>>;
 }
 
+export const cartContents = () => {
+  const { data: cartData } = useCart();
+
+  if (cartData?.cart_mealkits.length || cartData?.cart_recipes.length || cartData?.cart_products.length) {
+    return ({
+      cartNotEmpty: true,
+      cartMealkits: cartData.cart_mealkits,
+      cartRecipes: cartData.cart_recipes,
+      cartProducts: cartData.cart_products,
+    })
+  } 
+
+  return {
+    cartNotEmpty: false,
+    cartMealkits: [],
+    cartRecipes: [],
+    cartProducts: [],
+  };
+}
+
 const Cart: React.FC<CartProps> = ({subTotal, setSubTotal}) => {
   const { data: cartData } = useCart();
 
