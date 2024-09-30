@@ -1,9 +1,5 @@
 import { useMutation, useQuery, useQueryClient, UseQueryResult } from '@tanstack/react-query';
 import { useAuth } from '../contexts/authContext';
-import { ProductData } from './productApi';
-import { RecipeData } from './recipeApi';
-import { MealkitData } from './mealkitApi';
-
 
 // Interfaces for the API response structure
 export interface DeliveryLocation {
@@ -18,7 +14,7 @@ export interface DeliveryLocation {
   details: string;
 }
 
-interface DeliveryTimeSlot {
+export interface DeliveryTimeSlot {
   id: number;
   name: string;
   start_time: string;

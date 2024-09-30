@@ -3,10 +3,11 @@ import Checkout from "../Checkout";
 import { IonButton, IonBackButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import React, { useState } from "react";
 import styles from './mobilecart.module.css';
-import { useCreateOrder } from "../../../api/deliveryApi";
 import DeliveryLocationPicker from "../Checkout/LocationPicker";
 import PaymentDetailsCard from "../Checkout/payment-details-card";
 import { cartContents } from "../Cart";
+import { useIonRouter } from "@ionic/react";
+import { useOrder } from '../../../contexts/orderContext';
 
 export const formatDate = (date: Date) => {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
@@ -15,30 +16,21 @@ export const formatDate = (date: Date) => {
 const MyCartMobile: React.FC = () => {
   const [subTotal, setSubTotal] = useState(0);
   const [total, setTotal] = useState(0);
-
   const [isDeliveryDetailsSet, setIsDeliveryDetailsSet] = useState(false);
-  const [deliveryLocation, setDeliveryLocation] = useState(-1);
-  const [deliveryTime, setDeliveryTime] = useState(-1);
-  const [deliveryDate, setDeliveryDate] = useState(new Date());
-
   const [isPickerShown, setIsPickerShown] = useState(false);
-  const { mutate: createOrder } = useCreateOrder();
   const { cartNotEmpty } = cartContents();
-  
+  const { handleOrderCreation } = useOrder();
+  const router = useIonRouter();
+
   const handleSetLocation = () => {
     setIsPickerShown(!isPickerShown);
-  }
+  };
 
-  const handleOrderCreation = () => {
-    if (deliveryDate && !Array.isArray(deliveryDate)) {
-      createOrder({
-        delivery_location: deliveryLocation,
-        delivery_time: deliveryTime,
-        delivery_date: formatDate(deliveryDate), 
-      })
-    }
+  const createOrderFromCart = () => {
+    handleOrderCreation();
+    router.push("/payment-options");
   }
-
+  
   return (
     <IonPage>
       <IonHeader>
@@ -53,17 +45,11 @@ const MyCartMobile: React.FC = () => {
         <Cart subTotal={subTotal} setSubTotal={setSubTotal}/>
 
         {isDeliveryDetailsSet ? 
-          <Checkout subTotal={subTotal} total={total} setTotal={setTotal} location={deliveryLocation} date={deliveryDate} time={deliveryTime}/>
+          <Checkout subTotal={subTotal} total={total} setTotal={setTotal} />
           : null
         }
         {isPickerShown ?
         <DeliveryLocationPicker
-          deliveryLocation={deliveryLocation}
-          setDeliveryLocation={setDeliveryLocation}
-          deliveryTime={deliveryTime}
-          setDeliveryTime={setDeliveryTime}
-          deliveryDate={deliveryDate}
-          setDeliveryDate={setDeliveryDate}
           setIsDeliveryDetailsSet={setIsDeliveryDetailsSet}
           setIsPickerShown={setIsPickerShown}
         />
@@ -73,7 +59,7 @@ const MyCartMobile: React.FC = () => {
           isDeliveryDetailsSet ? (
             <div className={styles.subsection}>
               <div className={styles.title}>Payment Summary</div>
-                <PaymentDetailsCard subTotal={subTotal} fee={-1} total={-1}/>
+                <PaymentDetailsCard subTotal={subTotal} fee={10} total={total}/>
             </div>
           ) : (
             <div className={styles.subsection}>
@@ -86,7 +72,7 @@ const MyCartMobile: React.FC = () => {
 
         <div className={styles.bottom_button}>
           {isDeliveryDetailsSet ? 
-          <IonButton expand="block" className={styles.checkout_button} onClick={handleOrderCreation}>
+          <IonButton expand="block" className={styles.checkout_button} onClick={createOrderFromCart}>
           Proceed to Payment
           </IonButton>
           :

@@ -1,6 +1,5 @@
 import { IonButton } from '@ionic/react';
 import styles from './checkout.module.css';
-import { DeliveryLocation, useDeliveryLocations } from '../../../api/deliveryApi';
 import { useState } from 'react';
 
 interface CheckoutDetailsCardProps {
@@ -10,27 +9,21 @@ interface CheckoutDetailsCardProps {
 }
 
 const CheckoutDetailsCard: React.FC<CheckoutDetailsCardProps> = ({data1, data2, button}) => {
-  const { data: deliveryData }= useDeliveryLocations();
-  const [deliveryLocation, setDeliveryLocation] = useState("Delivery location not set.")
   const [isPickerShown, setIsPickerShown] = useState(false);
   
   const handleSetLocation = () => {
-    if (!isPickerShown) {
-      setIsPickerShown(true);
-    } else {
-      setIsPickerShown(false);
-    }
+    setIsPickerShown(!isPickerShown);
   }
     return (
       <>
       <div className={styles.card}>
           <div className={styles.card_2_contents}>
             <div className={styles.column}>
-              {/* <div className={styles.card_title}>
-                {deliveryLocation}
-              </div> */}
+              <div className={styles.card_title}>
+                {data1}
+              </div>
               <div>
-                {deliveryLocation}
+                {data2}
               </div>
             </div>
 

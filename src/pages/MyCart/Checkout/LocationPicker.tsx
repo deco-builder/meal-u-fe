@@ -3,44 +3,45 @@ import { IonButton } from "@ionic/react";
 import styles from './checkout.module.css';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import DatePicker from "react-datepicker";
+import { useOrder } from '../../../contexts/orderContext';
 
 interface DeliveryLocationPickerProps {
-  deliveryLocation: number;
-  setDeliveryLocation: Dispatch<SetStateAction<number>>;
-  deliveryTime: number;
-  setDeliveryTime: Dispatch<SetStateAction<number>>;
-  deliveryDate: Date;
-  setDeliveryDate: Dispatch<SetStateAction<Date>>;
 	setIsDeliveryDetailsSet: Dispatch<SetStateAction<boolean>>;
 	setIsPickerShown: Dispatch<SetStateAction<boolean>>;
 }
 
 const DeliveryLocationPicker: React.FC<DeliveryLocationPickerProps> = 
 ({
-  deliveryLocation,
-  setDeliveryLocation,
-  deliveryTime,
-  setDeliveryTime,
-  deliveryDate,
-  setDeliveryDate,
 	setIsDeliveryDetailsSet,
 	setIsPickerShown,
 }) => {
-	const {data: deliveryTimeSlot} = useDeliveryTimeSlots();
-	const { data: deliveryData }= useDeliveryLocations();
   const [isFieldFilled, setIsFieldFilled] = useState(false);
+  const [deliveryLocation, setDeliveryLocation] = useState(-1);
+  const [deliveryBatch, setDeliveryBatch] = useState(-1);
+  const [deliveryDate, setDeliveryDate] = useState(new Date());
+
+	const { data: deliveryTimeSlot } = useDeliveryTimeSlots();
+	const { data: deliveryData }= useDeliveryLocations();
+  const { fillDeliveryLocationDetails, setDeliveryDetails, fillDeliveryTimeSlotDetails } = useOrder();
 
   useEffect(() => {
-      if (deliveryLocation !== -1 && deliveryTime !== -1) {
-          setIsFieldFilled(true);
-      } else {
-          setIsFieldFilled(false);
-      }
-  }, [deliveryLocation, deliveryTime]);
+    if (deliveryLocation !== -1 && deliveryBatch !== -1) {
+        setIsFieldFilled(true);
+        setDeliveryDetails({
+          deliveryLocation: deliveryLocation,
+          deliveryTime: deliveryBatch,
+          deliveryDate: deliveryDate,
+        });
+    } else {
+        setIsFieldFilled(false);
+    }
+  }, [deliveryLocation, deliveryBatch, deliveryDate]);
 
   const handleSetDeliveryDetails = () => {
 		setIsDeliveryDetailsSet(true);
 		setIsPickerShown(false);
+    fillDeliveryLocationDetails(deliveryLocation);
+    fillDeliveryTimeSlotDetails(deliveryBatch);
   }
 		
   return (
@@ -82,7 +83,7 @@ const DeliveryLocationPicker: React.FC<DeliveryLocationPickerProps> =
                           </div>
                           <div className={styles.column}>
                             <p className={styles.clickable_word}>
-                              <IonButton onClick={() => setDeliveryTime(data.id)} size="small" >Set</IonButton>
+                              <IonButton onClick={() => setDeliveryBatch(data.id)} size="small" >Set</IonButton>
                             </p>
                           </div>
                       </div>

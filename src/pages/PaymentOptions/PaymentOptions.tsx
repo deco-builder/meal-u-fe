@@ -18,6 +18,10 @@ import { addOutline, chevronForward } from 'ionicons/icons';
 import styles from './PaymentOptions.module.css';
 
 const PaymentOptions: React.FC = () => {
+    const changeStatusToPaid = () => {
+        console.log("Status changed to paid.");
+    }
+    
     return (
         <IonPage>
             <IonHeader>
@@ -63,6 +67,11 @@ const PaymentOptions: React.FC = () => {
                         name="Cash on Delivery"
                         details="Pay in Cash"
                     />
+                </div>
+                <div className={styles.bottom_button}>
+                  <IonButton expand="block" className={styles.checkout_button} onClick={changeStatusToPaid} >
+                  Pay
+                  </IonButton>
                 </div>
             </IonContent>
         </IonPage>
