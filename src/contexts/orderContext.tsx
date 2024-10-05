@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import { DeliveryLocation, DeliveryTimeSlot, useCreateOrder, useDeliveryLocations, useDeliveryTimeSlots, useUpdateOrderStatusToPaid } from "../api/deliveryApi";
+import { DeliveryLocation, DeliveryTimeSlot, useCreateOrder, useDeliveryLocations, useDeliveryTimeSlots } from "../api/deliveryApi";
 import { formatDate } from '../pages/MyCart/MyCart-Mobile'
 
 // Define the shape of the order context
@@ -10,7 +10,7 @@ interface OrderContextProps {
     deliveryTime: number;
     deliveryDate: Date;
   };
-  setDeliveryDetails: React.Dispatch<React.SetStateAction<{
+  setDeliveryDetails: React.Dispatch<React.SetStateAction<{ // TODO: ganti implementation-nya jadi pas checkout aja
     deliveryLocation: number;
     deliveryTime: number;
     deliveryDate: Date;
@@ -107,7 +107,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   return (
-    <OrderContext.Provider value={{ handleOrderCreation, deliveryDetails, setDeliveryDetails, deliveryLocationDetails, setDeliveryLocationDetails, fillDeliveryLocationDetails, allDeliveryLocations, allDeliveryTimeSlots, deliveryTimeSlotDetails, setDeliveryTimeSlotDetails, fillDeliveryTimeSlotDetails, useUpdateOrderStatusToPaid }}>
+    <OrderContext.Provider value={{ handleOrderCreation, deliveryDetails, setDeliveryDetails, deliveryLocationDetails, setDeliveryLocationDetails, fillDeliveryLocationDetails, allDeliveryLocations, allDeliveryTimeSlots, deliveryTimeSlotDetails, setDeliveryTimeSlotDetails, fillDeliveryTimeSlotDetails }}>
       {children}
     </OrderContext.Provider>
   );
