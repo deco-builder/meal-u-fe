@@ -171,7 +171,7 @@ const RecipeDetails: React.FC = () => {
                     {recipe.ingredients.map((ingredient, index) => (
                         <LongIngredientCard
                             key={index}
-                            id={ingredient.ingredient.id}
+                            id={ingredient.ingredient.product_id}
                             name={ingredient.ingredient.name}
                             image={ingredient.ingredient.image || "/img/no-photo.png"}
                             quantity={`${ingredient.ingredient.unit_size} ${ingredient.ingredient.unit_id === 2 ? 'g' : 'ml'}`}
