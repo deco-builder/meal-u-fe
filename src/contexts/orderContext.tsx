@@ -39,7 +39,6 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const { mutate: createOrder } = useCreateOrder();
   const { data: allDeliveryLocations } = useDeliveryLocations();
   const { data: allDeliveryTimeSlots } = useDeliveryTimeSlots();
-  const { mutate: updateOrderStatusToPaid } = useUpdateOrderStatusToPaid();
 
   const [deliveryDetails, setDeliveryDetails] = useState({
     deliveryLocation: -1,
