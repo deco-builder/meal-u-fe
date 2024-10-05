@@ -7,6 +7,7 @@ interface AuthContextType {
   user: any | null;
   role: string | null;
   getToken: () => string | null;
+  getRole: () => string | null;
 }
 
 interface AuthProviderProps {
@@ -21,7 +22,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [role, setRole] = useState<string | null>(null);
 
   useEffect(() => {
-    // Check if there's a token in local storage
     const token = localStorage.getItem('accessToken');
     const storedRole = localStorage.getItem('role');
     if (token) {
@@ -71,11 +71,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const getRole = () => {
-    return localStorage.getItem('role');
+    return role;
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, user, role, getToken }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, user, role, getToken, getRole }}>
       {children}
     </AuthContext.Provider>
   );
