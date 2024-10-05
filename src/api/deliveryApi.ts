@@ -94,7 +94,7 @@ export const useDeliveryTimeSlots = (): UseQueryResult<DeliveryTimeSlot[], Error
 
 
 // Interface for order creation payload
-interface CreateOrderPayload {
+export interface CreateOrderPayload {
   delivery_location: number;
   delivery_time: number;
   delivery_date: string;
@@ -145,44 +145,3 @@ export const useCreateOrder = () => {
     },
   });
 };
-
-// Interface for Order Status response structure
-export interface OrderStatusResponse {
-  success: boolean;
-  message: string;
-  data: string;
-}
-
-export const useUpdateOrderStatusToPaid = () => {
-  const { getToken } = useAuth();
-  const queryClient = useQueryClient();
-
-  return useMutation<OrderStatusResponse, Error, number>({
-    mutationFn: async (orderId) => {
-      const token = getToken() || '';
-      const response = await fetch(`http://meal-u-api.nafisazizi.com:8001/api/v1/orders/${orderId}/status/paid/`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to update order status to paid');
-      }
-
-      const data: OrderStatusResponse = await response.json();
-
-      if (!data.success) {
-        throw new Error(data.message || 'Failed to update order status to paid');
-      }
-
-      console.log("success");
-      return data;
-    },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({queryKey: ['orders']});
-    }
-  })
-}
