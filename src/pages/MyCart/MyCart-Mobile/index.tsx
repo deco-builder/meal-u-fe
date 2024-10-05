@@ -8,6 +8,9 @@ import PaymentDetailsCard from "../Checkout/payment-details-card";
 import { cartContents } from "../Cart";
 import { useIonRouter } from "@ionic/react";
 import { useOrder } from '../../../contexts/orderContext';
+//import { useNavigate } from "react-router-dom";
+import { useGetUserOrders } from "../../../api/orderApi";
+
 
 export const formatDate = (date: Date) => {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
@@ -21,6 +24,8 @@ const MyCartMobile: React.FC = () => {
   const { cartNotEmpty } = cartContents();
   const { handleOrderCreation } = useOrder();
   const router = useIonRouter();
+  //const navigate = useNavigate();
+
 
   const handleSetLocation = () => {
     setIsPickerShown(!isPickerShown);
@@ -28,6 +33,7 @@ const MyCartMobile: React.FC = () => {
 
   const createOrderFromCart = () => {
     handleOrderCreation();
+    //navigate('/payment-options', {state: (taro sini)})
     router.push("/payment-options");
   }
   

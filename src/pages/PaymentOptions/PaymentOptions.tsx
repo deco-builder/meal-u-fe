@@ -16,10 +16,16 @@ import {
 } from '@ionic/react';
 import { addOutline, chevronForward } from 'ionicons/icons';
 import styles from './PaymentOptions.module.css';
+import { useUpdateOrderStatusToPaid } from '../../api/orderApi';
+import { useGetUserOrders } from '../../api/orderApi';
 
 const PaymentOptions: React.FC = () => {
+    const {data: orders} = useGetUserOrders();
+    const mostRecentOrder = orders && orders.length > 0 ? orders[0] : null;
+    const { mutate } = useUpdateOrderStatusToPaid();
+
     const changeStatusToPaid = () => {
-        console.log("Status changed to paid.");
+        mostRecentOrder && (mutate(mostRecentOrder.id));
     }
     
     return (

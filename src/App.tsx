@@ -4,7 +4,6 @@ import {
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import AppContent from "./AppContent";
-import { OrderProvider } from "./contexts/orderContext";
 
 import "@ionic/react/css/core.css";
 import "@ionic/react/css/normalize.css";
@@ -21,13 +20,11 @@ import "./theme/variables.css";
 setupIonicReact();
 const App: React.FC = () => {
   return (
-    <OrderProvider>
       <IonApp>
         <IonReactRouter>
           <AppContent />
         </IonReactRouter>
       </IonApp>
-    </OrderProvider>
   );
 };
 

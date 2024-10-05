@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import { DeliveryLocation, DeliveryTimeSlot, useCreateOrder, useDeliveryLocations, useDeliveryTimeSlots } from "../api/deliveryApi";
+import { DeliveryLocation, DeliveryTimeSlot, useCreateOrder, useDeliveryLocations, useDeliveryTimeSlots, useUpdateOrderStatusToPaid } from "../api/deliveryApi";
 import { formatDate } from '../pages/MyCart/MyCart-Mobile'
 
 // Define the shape of the order context
@@ -23,6 +23,7 @@ interface OrderContextProps {
   deliveryTimeSlotDetails: DeliveryTimeSlot;
   setDeliveryTimeSlotDetails: React.Dispatch<React.SetStateAction<DeliveryTimeSlot>>;
   fillDeliveryTimeSlotDetails: (id: number) => void;
+  useUpdateOrderStatusToPaid: () => void;
 }
 
 const OrderContext = createContext<OrderContextProps | undefined>(undefined);
@@ -39,6 +40,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const { mutate: createOrder } = useCreateOrder();
   const { data: allDeliveryLocations } = useDeliveryLocations();
   const { data: allDeliveryTimeSlots } = useDeliveryTimeSlots();
+  const { mutate: updateOrderStatusToPaid } = useUpdateOrderStatusToPaid();
 
   const [deliveryDetails, setDeliveryDetails] = useState({
     deliveryLocation: -1,
@@ -107,7 +109,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   return (
-    <OrderContext.Provider value={{ handleOrderCreation, deliveryDetails, setDeliveryDetails, deliveryLocationDetails, setDeliveryLocationDetails, fillDeliveryLocationDetails, allDeliveryLocations, allDeliveryTimeSlots, deliveryTimeSlotDetails, setDeliveryTimeSlotDetails, fillDeliveryTimeSlotDetails }}>
+    <OrderContext.Provider value={{ handleOrderCreation, deliveryDetails, setDeliveryDetails, deliveryLocationDetails, setDeliveryLocationDetails, fillDeliveryLocationDetails, allDeliveryLocations, allDeliveryTimeSlots, deliveryTimeSlotDetails, setDeliveryTimeSlotDetails, fillDeliveryTimeSlotDetails, useUpdateOrderStatusToPaid }}>
       {children}
     </OrderContext.Provider>
   );
