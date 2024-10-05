@@ -23,7 +23,6 @@ interface OrderContextProps {
   deliveryTimeSlotDetails: DeliveryTimeSlot;
   setDeliveryTimeSlotDetails: React.Dispatch<React.SetStateAction<DeliveryTimeSlot>>;
   fillDeliveryTimeSlotDetails: (id: number) => void;
-  useUpdateOrderStatusToPaid: () => void;
 }
 
 const OrderContext = createContext<OrderContextProps | undefined>(undefined);
