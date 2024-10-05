@@ -24,7 +24,7 @@ interface ItemCardProps {
   onClick?: (id: number) => void;
 }
 
-const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
+const CommunityItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
   const handleClick = () => {
     if (onClick) {
       onClick(item.id);
@@ -61,30 +61,8 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
               {item.creator.name.length > 15 ? `${item.creator.name.slice(0, 15)}...` : item.creator.name} -
             </p>
             <p className="m-0 text-[6px]">
-              ${(item.price || item.total_price || 0).toFixed(2)}
+              {item.cooking_time ? `${item.cooking_time} mins` : `$${(item.price || item.total_price || 0).toFixed(2)}`}
             </p>
-          </div>
-          {item.cooking_time && (
-            <p className="m-0 text-[6px] text-center">
-              {item.cooking_time} min | {item.meal_type} | {item.serving_size} serving
-            </p>
-          )}
-          <div className="flex flex-row gap-1 justify-center">
-            {item.dietary_details
-              .slice(0, 2)
-              .map((detail, index) => (
-                <div
-                  key={index}
-                  className="bg-[#F0F0F0] rounded-[10px] px-1.5 py-0.5 text-[8px]"
-                >
-                  {detail}
-                </div>
-              ))}
-            {item.dietary_details.length > 2 && (
-              <div className="bg-[#F0F0F0] rounded-[10px] px-1.5 py-0.5 text-[8px]">
-                +{item.dietary_details.length - 2}
-              </div>
-            )}
           </div>
         </div>
       </IonCardHeader>
@@ -92,4 +70,4 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
   );
 };
 
-export default ItemCard;
+export default CommunityItemCard;

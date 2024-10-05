@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import OrderMobile from "./order-mobile/order-mobile";
-import OrderWeb from "./order-web/order-web";
+import CommunityMobile from "./CommunityMobile/CommunityMobile";
+import CommunityWeb from "./CommunityWeb/CommunityWeb";
 
-function Order() {
+function Community() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 576);
 
   useEffect(() => {
@@ -18,10 +18,10 @@ function Order() {
   }, []);
 
   if (isMobile) {
-    return <OrderMobile />;
+    return <CommunityMobile />;
   }
 
-  return <OrderWeb />;
+  return <CommunityWeb />;
 }
 
-export default Order;
+export default Community;

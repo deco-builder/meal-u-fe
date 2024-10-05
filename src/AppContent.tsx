@@ -27,6 +27,7 @@ import PaymentOptions from "./pages/PaymentOptions/PaymentOptions";
 import Order from "./pages/Order";
 import Login from "./pages/Login/login";
 import Category from "./pages/Category";
+import Community from "./pages/Community";
 import { useAuth } from "./contexts/authContext";
 import MealkitDetails from "./pages/MealkitDetails/MealkitDetails";
 
@@ -67,7 +68,7 @@ const AppContent: React.FC = () => {
               <Route exact path="/tab1/subpage" component={SubPage} />
               <Route exact path="/order/:category" component={Order} />
               <Route exact path="/categories" component={Category} />
-              <Route exact path="/tab2" component={Tab2} />
+              <Route exact path="/community" component={Community} />
               <Route path="/tab4" component={Tab4} />
               <Route path="/tab5" component={Tab5} />
               <Route path="/mycart" component={MyCart} />
@@ -90,7 +91,7 @@ const AppContent: React.FC = () => {
               >
                 <RepeatIcon />
               </IonTabButton>
-              <IonTabButton tab="tab2" href="/tab2">
+              <IonTabButton tab="tab2" href="/community">
                 <StoreIcon />
               </IonTabButton>
               <IonTabButton tab="tab3" href="/categories">
