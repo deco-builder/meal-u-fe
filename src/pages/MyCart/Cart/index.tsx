@@ -10,20 +10,36 @@ interface CartProps {
   setSubTotal: Dispatch<SetStateAction<number>>;
 }
 
+export const cartContents = () => {
+  const { data: cartData } = useCart();
+
+  if (cartData?.cart_mealkits.length || cartData?.cart_recipes.length || cartData?.cart_products.length) {
+    return ({
+      cartNotEmpty: true,
+      cartMealkits: cartData.cart_mealkits,
+      cartRecipes: cartData.cart_recipes,
+      cartProducts: cartData.cart_products,
+    })
+  } 
+
+  return {
+    cartNotEmpty: false,
+    cartMealkits: [],
+    cartRecipes: [],
+    cartProducts: [],
+  };
+}
+
 const Cart: React.FC<CartProps> = ({subTotal, setSubTotal}) => {
   const { data: cartData } = useCart();
 
   useEffect(() => {
     if (cartData) {
       // Calculate the subtotal based on the prices of meal kits, recipes, and ingredients
-      console.log("Calculating subtotal:", cartData); 
       const calculateSubTotal = () => {
         const mealkitTotal = cartData.cart_mealkits.reduce((acc, item) => acc + item.mealkit.total_price * item.quantity, 0);
-        console.log("mealkit total:", mealkitTotal)
         const recipeTotal = cartData.cart_recipes.reduce((acc, item) => acc + item.recipe.total_price * item.quantity, 0);
-        console.log(recipeTotal);
         const productTotal = cartData.cart_products.reduce((acc, item) => acc + parseFloat(item.product.price_per_unit) * item.quantity, 0);
-        console.log(productTotal);
         
         const newSubTotal = mealkitTotal + recipeTotal + productTotal;
         setSubTotal(newSubTotal);
@@ -36,7 +52,6 @@ const Cart: React.FC<CartProps> = ({subTotal, setSubTotal}) => {
   if (!cartData) {
     return <div className={styles.empty_cart}>You have no items in your cart right now.</div>;
   }
-
 
   return (
     <>
