@@ -23,7 +23,7 @@ const CourierDelivery: React.FC = () => {
   const geolocateControl = useRef<maptilersdk.GeolocateControl | null>(null);
   const [currentLocation, setCurrentLocation] = useState<[number, number] | null>(null);
   const [destinationLocation] = useState<[number, number]>(
-    isPickup ? [153.0197, -27.4648] : [153.0140, -27.4975] // Roma Street Parkland : University of Queensland
+    isPickup ? [153.0197, -27.4648] : [153.0140, -27.4975]
   );
 
   const history = useHistory();
@@ -63,9 +63,11 @@ const CourierDelivery: React.FC = () => {
           geolocateControl.current.trigger();
         }
 
-        new maptilersdk.Marker({color: "#7862FC"})
-          .setLngLat(destinationLocation)
-          .addTo(map.current);
+        if (map.current) {
+          new maptilersdk.Marker({color: "#7862FC"})
+            .setLngLat(destinationLocation)
+            .addTo(map.current);
+        }
       });
 
       if (geolocateControl.current) {
