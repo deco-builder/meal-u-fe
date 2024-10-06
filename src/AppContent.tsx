@@ -9,7 +9,7 @@ import {
   IonTabs,
 } from "@ionic/react";
 import Tab1 from "./pages/Tab-1/Tab1";
-import Tab2 from "./pages/Tab-2/Tab2";
+import Tab2 from "./pages/Community";
 import Tab4 from "./pages/Tab-4/Tab4";
 import Tab5 from "./pages/Tab-5/Tab5";
 import RepeatIcon from "../public/icon/repeat-icon";
@@ -29,6 +29,7 @@ import Login from "./pages/Login/login";
 import Category from "./pages/Category";
 import { useAuth } from "./contexts/authContext";
 import MealkitDetails from "./pages/MealkitDetails/MealkitDetails";
+import CreateRecipe from "./pages/Community/Create/Recipe";
 
 const AppContent: React.FC = () => {
   const { isAuthenticated } = useAuth();
@@ -67,7 +68,8 @@ const AppContent: React.FC = () => {
               <Route exact path="/tab1/subpage" component={SubPage} />
               <Route exact path="/order/:category" component={Order} />
               <Route exact path="/categories" component={Category} />
-              <Route exact path="/tab2" component={Tab2} />
+              <Route exact path="/community" component={Tab2} />
+              <Route path="/community/create/recipe" component={CreateRecipe} />
               <Route path="/tab4" component={Tab4} />
               <Route path="/tab5" component={Tab5} />
               <Route path="/mycart" component={MyCart} />
@@ -90,7 +92,7 @@ const AppContent: React.FC = () => {
               >
                 <RepeatIcon />
               </IonTabButton>
-              <IonTabButton tab="tab2" href="/tab2">
+              <IonTabButton tab="community" href="/community">
                 <StoreIcon />
               </IonTabButton>
               <IonTabButton tab="tab3" href="/categories">
@@ -99,7 +101,7 @@ const AppContent: React.FC = () => {
               <IonTabButton tab="tab4" href="/tab4">
                 <ReceiptIcon />
               </IonTabButton>
-              <IonTabButton tab="mycart" href="/mycart">
+              <IonTabButton tab="tab5" href="/tab5">
                 <UserIcon />
               </IonTabButton>
             </IonTabBar>

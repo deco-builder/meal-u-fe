@@ -1,8 +1,13 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import ExploreContainer from '../../components/ExploreContainer';
 import './Tab2.css';
+import { useIonRouter } from '@ionic/react';
 
 const Tab2: React.FC = () => {
+  const router = useIonRouter();
+  const navigateToCreateRecipe = () => {
+    router.push('/community/create/recipe');
+  }
   return (
     <IonPage>
       <IonHeader>
@@ -17,6 +22,9 @@ const Tab2: React.FC = () => {
           </IonToolbar>
         </IonHeader>
         <ExploreContainer name="Tab 2 page" />
+        <IonButton onClick={navigateToCreateRecipe}>
+          Create Recipe
+        </IonButton>
       </IonContent>
     </IonPage>
   );
