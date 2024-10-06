@@ -16,9 +16,9 @@ import { useLocationList } from "../../../api/locationApi";
 import { useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import CommunityItemCard from "../../../components/HomeItemCard";
-import CommunityCard from "../../../components/CommunityCard";
+import HomeItemCard from "../../../components/HomeItemCard";
 
-function CommunityMobile() {
+function HomeMobile() {
   const { category } = useParams<{ category: string }>();
   const router = useIonRouter();
   const [isFilterVisible, setIsFilterVisible] = useState(false);
@@ -74,33 +74,79 @@ function CommunityMobile() {
     <IonPage>
       <IonHeader>
         <IonToolbar className="ion-hide-sm-up">
-          <IonTitle>Community</IonTitle>
+          <IonTitle>Home</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        <div className="flex flex-row justify-between items-center">
-          <div className="flex flex-row space-x-2">
-            {buttons.map((button) => (
-              <button
-                key={button}
-                onClick={() => handleButtonClick(button)}
-                className={`px-4 py-2 rounded-full text-xs transition-colors ${
-                  selectedFilter === button
-                    ? "bg-[#7862FC] text-white"
-                    : "bg-gray-100 text-gray-800 hover:bg-gray-200"
-                }`}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            marginTop: "20px",
+          }}
+        >
+          <h3 style={{ fontSize: "16px", fontWeight: "600" }}>
+            Trending Recipes
+          </h3>
+          {isRecipesFetching ? (
+            <p>Loading recipes...</p>
+          ) : filteredRecipes.length > 0 ? (
+            <div style={{ overflowX: "auto", width: "100%" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  minWidth: "min-content",
+                }}
               >
-                {button}
-              </button>
-            ))}
-          </div>
-
-          <IonButton size="small" onClick={handleFilter}>
-            <FilterIcon />
-          </IonButton>
+                {filteredRecipes.map((recipe: RecipeData) => (
+                  <HomeItemCard
+                    key={recipe.id}
+                    item={recipe}
+                    onClick={handleRecipeClick}
+                  />
+                ))}
+              </div>
+            </div>
+          ) : (
+            <p>No recipes found.</p>
+          )}
         </div>
 
-        <CommunityCard />
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            marginTop: "15px",
+          }}
+        >
+          <p style={{ fontSize: "16px", fontWeight: "600" }}>
+            Trending Mealkits
+          </p>
+          {isMealkitsFetching ? (
+            <p>Loading mealkits...</p>
+          ) : filteredMealkits.length > 0 ? (
+            <div style={{ overflowX: "auto", width: "100%" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  minWidth: "min-content",
+                }}
+              >
+                {filteredMealkits.map((mealkit: MealkitData) => (
+                  <HomeItemCard
+                    key={mealkit.id}
+                    item={mealkit}
+                    onClick={handleMealkitClick}
+                  />
+                ))}
+              </div>
+            </div>
+          ) : (
+            <p>No mealkits found.</p>
+          )}
+        </div>
 
         {isFilterVisible && (
           <div className="filter">
@@ -112,4 +158,4 @@ function CommunityMobile() {
   );
 }
 
-export default CommunityMobile;
+export default HomeMobile;

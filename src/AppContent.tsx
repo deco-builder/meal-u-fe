@@ -28,6 +28,7 @@ import Order from "./pages/Order";
 import Login from "./pages/Login/login";
 import Category from "./pages/Category";
 import Community from "./pages/Community";
+import Home from "./pages/Home";
 import { useAuth } from "./contexts/authContext";
 import MealkitDetails from "./pages/MealkitDetails/MealkitDetails";
 
@@ -64,11 +65,11 @@ const AppContent: React.FC = () => {
         {isAuthenticated ? (
           <IonTabs>
             <IonRouterOutlet>
-              <Route exact path="/tab1" component={Tab1} />
               <Route exact path="/tab1/subpage" component={SubPage} />
               <Route exact path="/order/:category" component={Order} />
               <Route exact path="/categories" component={Category} />
               <Route exact path="/community" component={Community} />
+              <Route exact path="/home" component={Home} />
               <Route path="/tab4" component={Tab4} />
               <Route path="/tab5" component={Tab5} />
               <Route path="/mycart" component={MyCart} />
@@ -86,7 +87,7 @@ const AppContent: React.FC = () => {
             >
               <IonTabButton
                 tab="tab1"
-                href="/tab1"
+                href="/home"
                 onClick={() => setIsSelected(!isSelected)}
               >
                 <RepeatIcon />

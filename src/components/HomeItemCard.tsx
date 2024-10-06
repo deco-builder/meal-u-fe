@@ -40,7 +40,7 @@ const CommunityItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
       <div className="flex justify-center items-center overflow-hidden p-1.5">
         <img
           alt={item.name}
-          src={item.image}
+          src={item.image || '/img/no-photo.png'}
           className="w-full h-auto object-cover max-w-[130px] max-h-[90px] rounded-[15px]"
         />
       </div>
