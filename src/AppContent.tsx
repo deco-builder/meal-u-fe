@@ -7,7 +7,7 @@ import {
 } from "@ionic/react";
 import Tab1 from "./pages/Tab-1/Tab1";
 import Tab2 from "./pages/Tab-2/Tab2";
-import Tab4 from "./pages/Tab-4/Tab4";
+import Tab4 from "./pages/Orders/Orders";
 import Tab5 from "./pages/Tab-5/Tab5";
 import MyCart from "./pages/MyCart";
 import { useState } from "react";
@@ -25,6 +25,7 @@ import CourierHome from "./pages/Courier/CourierHome/CourierHome";
 import CourierDelivery from "./pages/Courier/CourierDelivery/CourierDelivery";
 import ConfirmPickup from "./pages/Courier/ConfirmPickUp/ConfirmPickUp";
 import ConfirmDelivery from "./pages/Courier/ConfirmDelivery/ConfirmDelivery";
+import Orders from "./pages/Orders/Orders";
 
 const AppContent: React.FC = () => {
   const { isAuthenticated } = useAuth();
@@ -63,7 +64,7 @@ const AppContent: React.FC = () => {
               <Route exact path="/order/:category" component={Order} />
               <Route exact path="/categories" component={Category} />
               <Route exact path="/tab2" component={Tab2} />
-              <Route path="/tab4" component={Tab4} />
+              <Route path="/tab4" component={Orders} />
               <Route path="/tab5" component={Tab5} />
               <Route path="/mycart" component={MyCart} />
               <Route path="/mealkit-details/:id" component={MealkitDetails} />
