@@ -30,6 +30,7 @@ import Category from "./pages/Category";
 import { useAuth } from "./contexts/authContext";
 import MealkitDetails from "./pages/MealkitDetails/MealkitDetails";
 import CreateRecipe from "./pages/Community/Create/Recipe";
+import InstructionsForm from "./pages/Community/Create/Recipe/InstructionsForm";
 
 const AppContent: React.FC = () => {
   const { isAuthenticated } = useAuth();
@@ -70,6 +71,7 @@ const AppContent: React.FC = () => {
               <Route exact path="/categories" component={Category} />
               <Route exact path="/community" component={Tab2} />
               <Route path="/community/create/recipe" component={CreateRecipe} />
+              <Route path="/community/create/recipe/instructions" component={InstructionsForm} />
               <Route path="/tab4" component={Tab4} />
               <Route path="/tab5" component={Tab5} />
               <Route path="/mycart" component={MyCart} />

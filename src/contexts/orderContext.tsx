@@ -1,10 +1,12 @@
 import React, { createContext, useContext, useState } from 'react';
 import { DeliveryLocation, DeliveryTimeSlot, useCreateOrder, useDeliveryLocations, useDeliveryTimeSlots } from "../api/deliveryApi";
+import { useCreateRecipe, CreateRecipePayload } from '../api/recipeApi';
 import { formatDate } from '../pages/MyCart/MyCart-Mobile'
 
 // Define the shape of the order context
 interface OrderContextProps {
   handleOrderCreation: () => void;
+  handleRecipeCreation: (payload: CreateRecipePayload) => void;
   deliveryDetails: {
     deliveryLocation: number;
     deliveryTime: number;
@@ -37,6 +39,7 @@ export const useOrder = () => {
 
 export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { mutate: createOrder } = useCreateOrder();
+  const { mutate: createRecipe} = useCreateRecipe();
   const { data: allDeliveryLocations } = useDeliveryLocations();
   const { data: allDeliveryTimeSlots } = useDeliveryTimeSlots();
 
@@ -106,8 +109,12 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       });
   };
 
+  const handleRecipeCreation = (payload: CreateRecipePayload) => {
+    createRecipe(payload);
+  }
+
   return (
-    <OrderContext.Provider value={{ handleOrderCreation, deliveryDetails, setDeliveryDetails, deliveryLocationDetails, setDeliveryLocationDetails, fillDeliveryLocationDetails, allDeliveryLocations, allDeliveryTimeSlots, deliveryTimeSlotDetails, setDeliveryTimeSlotDetails, fillDeliveryTimeSlotDetails }}>
+    <OrderContext.Provider value={{ handleOrderCreation, handleRecipeCreation, deliveryDetails, setDeliveryDetails, deliveryLocationDetails, setDeliveryLocationDetails, fillDeliveryLocationDetails, allDeliveryLocations, allDeliveryTimeSlots, deliveryTimeSlotDetails, setDeliveryTimeSlotDetails, fillDeliveryTimeSlotDetails }}>
       {children}
     </OrderContext.Provider>
   );

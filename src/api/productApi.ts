@@ -119,3 +119,81 @@ export const fetchProductDetails = async (productId: number, token: string): Pro
 
   return data.data;
 };
+
+export interface DietaryDetail {
+  id: number;
+  name: string;
+}
+
+export const useDietaryDetails = (): UseQueryResult<DietaryDetail[], Error> => {
+  const { getToken } = useAuth();
+  const token = getToken() || '';
+
+  const fetchDietaryDetails = async (): Promise<DietaryDetail[]> => {
+    const url = 'http://meal-u-api.nafisazizi.com:8001/api/v1/groceries/dietary-details/';
+
+    const response = await fetch(url, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch dietary details');
+    }
+
+    const data = await response.json();
+
+    if (!data.success) {
+      throw new Error(data.message || 'Failed to fetch dietary details');
+    }
+
+    return data.data;
+  };
+
+  return useQuery<DietaryDetail[], Error>({
+    queryKey: ['dietary.details'],
+    queryFn: fetchDietaryDetails,
+    initialData: [],
+    enabled: !!token,
+  });
+};
+
+export interface UnitData {
+  id: number;
+  name: string;
+}
+
+export const useUnitList = (): UseQueryResult<UnitData[], Error> => {
+  const { getToken } = useAuth();
+  const token = getToken() || '';
+
+  const fetchUnits = async (): Promise<UnitData[]> => {
+    const url = 'http://meal-u-api.nafisazizi.com:8001/api/v1/groceries/units';
+
+    const response = await fetch(url, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch units');
+    }
+
+    const data = await response.json();
+
+    if (!data.success) {
+      throw new Error(data.message || 'Failed to fetch units');
+    }
+
+    return data.data;
+  };
+
+  return useQuery<UnitData[], Error, UnitData[], [string]>({
+    queryKey: ['unit.list'],
+    queryFn: fetchUnits,
+    initialData: [],
+    enabled: !!token,
+  });
+};
