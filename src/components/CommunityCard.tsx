@@ -58,16 +58,16 @@ const CommunityCard = () => {
               <div className="flex items-center w-6 h-6 mr-1">
                 <LoveIcon />
               </div>
-              <span>10K</span>
+              <span className="text-xs text-gray-700">10K</span>
             </button>
             <button className="flex items-center">
               <div className="flex items-center w-6 h-6 mr-1">
                 <CommentIcon />
               </div>
-              <span>927</span>
+              <span className="text-xs text-gray-700">927</span>
             </button>
             {/* <button>
-              <Share2 className="w-6 h-6" />
+             <CommentIcon />
             </button> */}
           </div>
         </div>

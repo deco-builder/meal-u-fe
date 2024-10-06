@@ -78,6 +78,9 @@ function HomeMobile() {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
+        <div style={{ backgroundColor: "#7862FC", width: "80%", justifyContent: "center", alignSelf: "center", justifySelf: "center" }}>
+          <p>1 Update From Your Order</p>
+        </div>
         <div
           style={{
             display: "flex",
