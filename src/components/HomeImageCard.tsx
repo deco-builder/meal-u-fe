@@ -13,7 +13,7 @@ const HomeImageCard = () => {
       {/* Overlay content */}
       <div className="absolute inset-0 p-6 flex flex-col justify-between">
         {/* Title */}
-        <h2 className="text-white text-xl font-bold w-[70%]">Asian Food Specialist</h2>
+        <h2 className="text-white text-md font-bold w-[70%]">Asian Food Specialist</h2>
         
         {/* Bottom row with profile and followers */}
         <div className="flex items-end justify-between">
@@ -22,9 +22,9 @@ const HomeImageCard = () => {
             <img 
               src="/img/no-photo.png" 
               alt="Uncle Roger" 
-              className="w-10 h-10 rounded-full mr-1"
+              className="w-8 h-8 rounded-full mr-1"
             />
-            <span className="text-white text-md">Uncle Roger</span>
+            <span className="text-white text-xs">Uncle Roger</span>
           </div>
           
           {/* Followers */}

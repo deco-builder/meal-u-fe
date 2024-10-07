@@ -6,18 +6,13 @@ import {
   IonTitle,
   IonPage,
   IonButton,
-  useIonRouter,
 } from "@ionic/react";
 import FilterIcon from "../../../../public/icon/filter";
 import FilterOverlay from "../../../components/FilterOverlay";
-import { useMealkitList, MealkitData } from "../../../api/mealkitApi";
-import { RecipeData, useCommunityRecipesList } from "../../../api/recipeApi";
-import { useLocationList } from "../../../api/locationApi";
-import { useParams } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
-import CommunityItemCard from "../../../components/HomeCard/HomeItemCard";
+import { useCommunityRecipesList } from "../../../api/recipeApi";
 import CommunityCard from "../../../components/CommunityCard/CommunityCard";
 import SkeletonCommunityCard from "../../../components/CommunityCard/SkeletonCommunityCard";
+import HomeImageCard from "../../../components/HomeImageCard";
 
 function CommunityMobile() {
   const [isFilterVisible, setIsFilterVisible] = useState(false);
@@ -31,8 +26,58 @@ function CommunityMobile() {
   const [selectedFilter, setSelectedFilter] = useState("All");
   const buttons = ["All", "Recipe", "Mealkits", "Creators"];
 
-  const handleButtonClick = (button: any) => {
+  const handleButtonClick = (button: string) => {
     setSelectedFilter(button);
+  };
+
+  const renderContent = () => {
+    if (isRecipesFetching) {
+      return (
+        <>
+          <SkeletonCommunityCard />
+          <SkeletonCommunityCard />
+          <SkeletonCommunityCard />
+        </>
+      );
+    }
+
+    if (selectedFilter === "Creators") {
+      return (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            marginTop: "20px",
+            gap: "5px",
+          }}
+        >
+          <h3 style={{ fontSize: "14px", fontWeight: "500" }}>
+            This week's spotlight
+          </h3>
+          <div style={{ overflowX: "auto", width: "100%" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                minWidth: "min-content",
+                gap: 10,
+              }}
+            >
+              <HomeImageCard />
+              <HomeImageCard />
+              <HomeImageCard />
+            </div>
+            <h3 style={{ fontSize: "14px", fontWeight: "500", marginTop: "20px" }}>
+            Popular Gluten Free Creators
+          </h3>
+          </div>
+        </div>
+      );
+    }
+
+    return trendingRecipes.map((recipe) => (
+      <CommunityCard key={recipe.id} recipe={recipe} />
+    ));
   };
 
   return (
@@ -65,17 +110,8 @@ function CommunityMobile() {
           </IonButton>
         </div>
 
-        {isRecipesFetching ? (
-          <>
-          <SkeletonCommunityCard />
-          <SkeletonCommunityCard />
-          <SkeletonCommunityCard />
-        </>
-        ) : (
-          trendingRecipes.map((recipe) => (
-            <CommunityCard key={recipe.id} recipe={recipe} />
-          ))
-        )}
+        {renderContent()}
+
         <div className="mb-20"></div>
 
         {isFilterVisible && (
