@@ -59,13 +59,17 @@ const QRReader: React.FC = () => {
 
   const initializeScanner = () => {
     if (readerRef.current) {
-      scannerRef.current = new Html5QrcodeScanner("reader", {
-        qrbox: {
-          width: 500,
-          height: 500,
+      scannerRef.current = new Html5QrcodeScanner(
+        "reader",
+        {
+          qrbox: {
+            width: 500,
+            height: 500,
+          },
+          fps: 5,
         },
-        fps: 5,
-      });
+        false
+      );
 
       scannerRef.current.render(success, error);
     }
@@ -117,9 +121,9 @@ const QRReader: React.FC = () => {
         ) : (
           <div>
             <div
+              className="w-full max-h-full"
               id="reader"
               ref={readerRef}
-              style={{ width: "100%", height: "0px" }}
             />
             {!isScanning && (
               <div className="flex justify-center items-center w-full min-h-screen">
