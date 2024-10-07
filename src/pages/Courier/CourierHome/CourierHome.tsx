@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { IonContent, IonPage, IonIcon } from '@ionic/react';
 import { arrowUp, arrowDown } from 'ionicons/icons';
 import * as maptilersdk from '@maptiler/sdk';
 import "@maptiler/sdk/dist/maptiler-sdk.css";
 import { useHistory } from 'react-router-dom';
+import { format, parseISO, addHours } from 'date-fns';
+import { useAllOrders } from '../../../api/courierApi';
 
 const MAPTILER_API_KEY = import.meta.env.VITE_MAPTILER_API_KEY;
 
@@ -17,6 +19,30 @@ const CourierHome: React.FC = () => {
   const geolocateControl = useRef<maptilersdk.GeolocateControl | null>(null);
   const [currentLocation, setCurrentLocation] = useState<[number, number] | null>(null);
   const history = useHistory();
+  const { data: ordersData, isLoading, error } = useAllOrders();
+
+  const nextDelivery = useMemo(() => {
+    if (!ordersData) return null;
+
+    let earliestDelivery: any = null;
+    let earliestDate: Date | null = null;
+
+    Object.entries(ordersData).forEach(([date, timeSlots]) => {
+      Object.entries(timeSlots).forEach(([time, orders]) => {
+        const deliveryTime = parseISO(`${date}T${time}`);
+        if (!earliestDate || deliveryTime < earliestDate) {
+          earliestDate = deliveryTime;
+          earliestDelivery = {
+            date,
+            time,
+            orders: orders,
+          };
+        }
+      });
+    });
+
+    return earliestDelivery;
+  }, [ordersData]);
 
   useEffect(() => {
     if (mapContainer.current && !map.current) {
@@ -66,8 +92,17 @@ const CourierHome: React.FC = () => {
   }, [currentLocation]);
 
   const handleStartDelivery = () => {
-    history.push('/courier/pickup/1');
+    if (nextDelivery) {
+      history.push('/courier/pickup/1', {
+        orders: nextDelivery.orders,
+        date: nextDelivery.date,
+        time: nextDelivery.time
+      });
+    }
   };
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
 
   return (
     <IonPage className="overflow-hidden">
@@ -81,37 +116,39 @@ const CourierHome: React.FC = () => {
             >
               Start Delivery
             </button>
-            <div className="bg-white rounded-2xl shadow p-4">
+            {nextDelivery && (
+              <div className="bg-white rounded-2xl shadow p-4">
                 <h3 className="font-medium text-lg mb-4">Next Delivery</h3>
                 <div className="relative">
-                    <div className="flex items-start mb-6 relative">
+                  <div className="flex items-start mb-6 relative">
                     <div className="w-8 h-8 rounded-full border border-black flex items-center justify-center z-10 mr-4">
-                        <IonIcon icon={arrowUp} className="text-sm" />
+                      <IonIcon icon={arrowUp} className="text-sm" />
                     </div>
                     <div className="flex-grow">
-                        <p className="text-xs text-gray-500">Pick Up</p>
-                        <p className="font-medium">Warehouse Center</p>
+                      <p className="text-xs text-gray-500">Pick Up</p>
+                      <p className="font-medium">Warehouse Center</p>
                     </div>
                     <div className="text-right">
-                        <p className="text-xs text-gray-500">Time</p>
-                        <p className="font-medium">11:00</p>
+                      <p className="text-xs text-gray-500">Time</p>
+                      <p className="font-medium">{format(addHours(parseISO(`${nextDelivery.date}T${nextDelivery.time}`), -1), 'HH:mm')}</p>
                     </div>
-                    </div>
-                    <div className="flex items-start relative">
+                  </div>
+                  <div className="flex items-start relative">
                     <div className="w-8 h-8 rounded-full border border-black flex items-center justify-center z-10 mr-4">
-                        <IonIcon icon={arrowDown} className="text-sm" />
+                      <IonIcon icon={arrowDown} className="text-sm" />
                     </div>
                     <div className="flex-grow">
-                        <p className="text-xs text-gray-500">Delivery</p>
-                        <p className="font-medium">University of Queensland</p>
+                      <p className="text-xs text-gray-500">Delivery</p>
+                      <p className="font-medium">{`${nextDelivery.orders[0].delivery_details.delivery_location.name} ${nextDelivery.orders[0].delivery_details.delivery_location.branch}`}</p>
                     </div>
                     <div className="text-right">
-                        <p className="text-xs text-gray-500">Time</p>
-                        <p className="font-medium">12:00</p>
+                      <p className="text-xs text-gray-500">Time</p>
+                      <p className="font-medium">{format(parseISO(`${nextDelivery.date}T${nextDelivery.time}`), 'HH:mm')}</p>
                     </div>
+                  </div>
                 </div>
-                </div>
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </IonContent>

@@ -1,51 +1,63 @@
 import React, { useState, useEffect } from 'react';
-import { IonContent, IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle } from '@ionic/react';
+import { IonContent, IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonToast } from '@ionic/react';
 import Order from '../../../components/Courier/Order/Order';
 import { useHistory, useParams, useLocation } from 'react-router-dom';
-
-interface OrderData {
-  id: string;
-  orderNumber: string;
-  customerName: string;
-  isChecked: boolean;
-}
+import { useUpdateOrderStatusToDelivering } from '../../../api/courierApi';
 
 interface RouteParams {
   type: string;
 }
 
+interface LocationState {
+  orders: any[];
+  date: string;
+  time: string;
+}
+
 const ConfirmPickup: React.FC = () => {
   const { type } = useParams<RouteParams>();
   const isPickup = type === 'pickup';
-  const [orders, setOrders] = useState<OrderData[]>([
-    { id: '1', orderNumber: '21345', customerName: 'Matthew H', isChecked: false },
-    { id: '2', orderNumber: '21346', customerName: 'Sarah L', isChecked: false },
-    { id: '3', orderNumber: '21347', customerName: 'John D', isChecked: false },
-  ]);
-
   const history = useHistory();
-  const location = useLocation();
+  const location = useLocation<LocationState>();
+  const { orders: initialOrders = [], date = '', time = '' } = location.state || {};
 
-  useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const confirmedOrderId = searchParams.get('confirmed');
-    if (confirmedOrderId) {
-      setOrders(prevOrders => 
-        prevOrders.map(order => 
-          order.id === confirmedOrderId ? { ...order, isChecked: true } : order
-        )
-      );
-    }
-  }, [location]);
+  const [orders, setOrders] = useState(initialOrders.map(order => ({
+    ...order,
+    isChecked: isPickup ? (order.order_status === 'delivering' || order.order_status === 'delivered') : order.order_status === 'delivered'
+  })));
+  
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
-  const toggleOrder = (id: string) => {
+  const updateToDelivering = useUpdateOrderStatusToDelivering();
+
+  const toggleOrder = async (id: number) => {
     if (isPickup) {
-      setOrders(orders.map(order => 
-        order.id === id ? { ...order, isChecked: !order.isChecked } : order
-      ));
+      const orderToUpdate = orders.find(order => order.id === id);
+      if (orderToUpdate && orderToUpdate.order_status !== 'delivering') {
+        try {
+          await updateToDelivering.mutateAsync(id);
+          setOrders(prevOrders => 
+            prevOrders.map(order => 
+              order.id === id ? { ...order, isChecked: true, order_status: 'delivering' } : order
+            )
+          );
+          setToastMessage(`Order ${id} status updated to 'delivering'`);
+          setShowToast(true);
+        } catch (error) {
+          console.error('Failed to update order status:', error);
+          setToastMessage('Failed to update order status');
+          setShowToast(true);
+        }
+      } else {
+        setOrders(prevOrders => 
+          prevOrders.map(order => 
+            order.id === id ? { ...order, isChecked: !order.isChecked } : order
+          )
+        );
+      }
     } else {
-      // For delivery, navigate to ConfirmDelivery
-      history.push(`/courier/confirm-delivery/${id}`);
+      history.push(`/courier/confirm-delivery/${id}`, { order: orders.find(o => o.id === id) });
     }
   };
 
@@ -54,8 +66,7 @@ const ConfirmPickup: React.FC = () => {
   const confirmAll = () => {
     if (allOrdersChecked) {
       if (isPickup) {
-        console.log('All orders picked up');
-        history.push('/courier/delivery/1');
+        history.push('/courier/delivery/1', { orders, date, time });
       } else {
         console.log('All deliveries confirmed');
         history.push('/courier/home');
@@ -78,12 +89,13 @@ const ConfirmPickup: React.FC = () => {
           <div className="flex-grow overflow-auto">
             {orders.map(order => (
               <Order
-                orderNumber={order.orderNumber}
-                customerName={order.customerName}
+                key={order.id}
+                orderNumber={order.id.toString()}
+                customerName={`${order.user_id.first_name} ${order.user_id.last_name}`}
                 isChecked={order.isChecked}
                 onToggle={() => toggleOrder(order.id)}
                 showCheckbox={true}
-                />
+              />
             ))}
           </div>
           <div className="absolute bottom-0 left-0 right-0 p-4 bg-white">
@@ -99,6 +111,12 @@ const ConfirmPickup: React.FC = () => {
           </div>
         </div>
       </IonContent>
+      <IonToast
+        isOpen={showToast}
+        onDidDismiss={() => setShowToast(false)}
+        message={toastMessage}
+        duration={2000}
+      />
     </IonPage>
   );
 };
