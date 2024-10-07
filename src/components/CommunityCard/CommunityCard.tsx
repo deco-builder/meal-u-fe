@@ -66,13 +66,13 @@ const CommunityCard: React.FC<CommunityCardProps> = ({ recipe }) => {
               {recipe.dietary_details.slice(0, 1).map((detail, index) => (
                 <span
                   key={index}
-                  className="text-[0.5rem] px-2 py-1 outline text-[#7862FC] rounded-full text-sm"
+                  className="text-[0.4rem] px-1 py-1 outline text-[#7862FC] rounded-full"
                 >
                   {detail}
                 </span>
               ))}
               {recipe.dietary_details.length > 1 && (
-                <div className="text-[0.5rem] px-2 py-1 outline text-[#7862FC] rounded-full text-sm">
+                <div className="text-[0.4rem] px-1 py-1 outline text-[#7862FC] rounded-full">
                   +{recipe.dietary_details.length - 1}
                 </div>
               )}
