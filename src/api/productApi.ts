@@ -197,3 +197,42 @@ export const useUnitList = (): UseQueryResult<UnitData[], Error> => {
     enabled: !!token,
   });
 };
+
+export interface MealType {
+  id: number;
+  name: string;
+}
+
+export const useMealTypeList = (): UseQueryResult<MealType[], Error> => {
+  const { getToken } = useAuth();
+  const token = getToken() || '';
+
+  const fetchMealTypes = async (): Promise<MealType[]> => {
+    const url = 'http://meal-u-api.nafisazizi.com:8001/api/v1/community/meal-types';
+
+    const response = await fetch(url, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch meal types');
+    }
+
+    const data = await response.json();
+
+    if (!data.success) {
+      throw new Error(data.message || 'Failed to fetch meal types');
+    }
+
+    return data.data;
+  };
+
+  return useQuery<MealType[], Error, MealType[], [string]>({
+    queryKey: ['mealType.list'],
+    queryFn: fetchMealTypes,
+    initialData: [],
+    enabled: !!token,
+  });
+};

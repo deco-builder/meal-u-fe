@@ -1,10 +1,8 @@
-import { Dispatch, SetStateAction, useEffect, useState, useCallback } from "react";
-import { IonBackButton, IonButton, IonButtons, IonCheckbox, IonChip, IonContent, IonHeader, IonLabel, IonPage, IonRange, IonTitle, IonToolbar, useIonRouter } from "@ionic/react";
-import { RecipeAction } from './index';
-import { useDietaryDetails } from '../../../../api/productApi';
-import { ProductData, useProductList } from "../../../../api/productApi";
-import { useParams } from "react-router-dom";
-import {CreateRecipePayload, useCreateRecipe} from "../../../../api/recipeApi"
+import React, { Dispatch, SetStateAction, useState } from "react";
+import { IonChip, IonButton, IonLabel } from "@ionic/react";
+import { RecipeAction } from "./index";
+import { CreateRecipePayload } from '../../../../api/recipeApi';
+import { useDietaryDetails } from "../../../../api/productApi";
 
 interface DietaryDetailsFormProps {
   state: CreateRecipePayload;
@@ -12,15 +10,8 @@ interface DietaryDetailsFormProps {
 }
 
 const DietaryDetailsForm: React.FC<DietaryDetailsFormProps> = ({ state, dispatch }) => {
-  const router = useIonRouter();
   const [dietary, setDietary] = useState<number[]>([]);
-  const {data: dietaryDetails } = useDietaryDetails();
-  const [searchValue, setSearchValue] = useState("");
-  const { category } = useParams<{ category: string }>();
-  const { data: product = [], isFetching: isProductFetching } = useProductList({
-    search: category,
-  });
-  const { mutate: handleRecipeCreation } = useCreateRecipe();
+  const { data: dietaryDetails } = useDietaryDetails();
 
   const handleDietaryToggle = (id: number) => {
     setDietary((prev) =>
@@ -29,15 +20,8 @@ const DietaryDetailsForm: React.FC<DietaryDetailsFormProps> = ({ state, dispatch
   };
 
   const handleApplyFilter = async () => {
-    // Dispatch the selected dietary details to the global state
-    dispatch({ type: 'SET_FIELD', field: 'dietary_details', value: dietary });
-    console.log(state);
+    dispatch({ type: "SET_FIELD", field: "dietary_details", value: dietary });
   };
-
-  const handleCreateRecipe = () => {
-    const payload = state;
-    handleRecipeCreation(payload);
-  }
 
   const handleClearFilter = () => {
     setDietary([]);
@@ -51,28 +35,29 @@ const DietaryDetailsForm: React.FC<DietaryDetailsFormProps> = ({ state, dispatch
             Dietary Details
           </label>
           <div className="flex items-center justify-center flex-wrap gap-1.5 w-full">
-              {dietaryDetails && dietaryDetails.map((item) => (
-                <IonChip 
-                  key={item.id} 
+            {dietaryDetails &&
+              dietaryDetails.map((item) => (
+                <IonChip
+                  key={item.id}
                   onClick={() => handleDietaryToggle(item.id)}
-                  color={dietary.includes(item.id) ? 'primary' : 'medium'}
+                  color={dietary.includes(item.id) ? "tertiary" : "medium"}
                 >
                   <IonLabel>{item.name}</IonLabel>
                 </IonChip>
               ))}
           </div>
-          <div className="flex flex-row gap-2.5 mb-1.25">
-            <IonButton expand="block" fill="clear" onClick={handleClearFilter}>Clear</IonButton>
-            <div>
-              <IonButton expand="block" onClick={handleApplyFilter}>Apply</IonButton>
-            </div>
+          <div className="flex flex-row gap-2.5 my-10 mb-1.25 justify-center">
+            <IonButton expand="block" fill="clear" onClick={handleClearFilter}>
+              Clear
+            </IonButton>
+            <IonButton expand="block" onClick={handleApplyFilter}>
+              Apply
+            </IonButton>
           </div>
         </div>
       </div>
-      <IonButton expand="block" onClick={handleCreateRecipe}>CreateRecipe</IonButton>
     </div>
-
   );
-}
+};
 
 export default DietaryDetailsForm;

@@ -8,9 +8,9 @@ interface Creator {
 
 export interface Ingredient {
   ingredient: {
-    id: number;
+    product_id: number;
     name: string;
-    image: string | null;
+    image?: string | null;
     unit_id: string;
     unit_size: string;
     price_per_unit: string;
@@ -113,16 +113,31 @@ export const fetchRecipeDetails = async (recipeId: number, token: string): Promi
     return data.data;
 };
 
+export interface IngredientRecipe {
+  ingredient: {
+    name: string;
+    product_id: number;
+    unit_id: number;
+    unit_size: string;
+    description?: string | null;
+  };
+  preparation_type: {
+    id: number;
+    name: string;
+    additional_price: string;
+  } | null;
+}
+
 export interface CreateRecipePayload {
   recipe: {
     name: string;
     description: string;
     cooking_time: number;
     serving_size: number;
-    meal_type: string;
+    meal_type: number;
     instructions: string[];
   };
-  ingredients: Ingredient[];
+  ingredients: IngredientRecipe[];
   dietary_details: string[];
   image: File | null;
 }
@@ -153,7 +168,8 @@ interface RecipeCreationResponse {
   };
 }
 
-export const useCreateRecipe = () => {
+export const useCreateRecipe = (options?: {
+  onSuccess?: (data: RecipeCreationResponse) => void;}) => {
   const { getToken } = useAuth();
   const queryClient = useQueryClient();
 
@@ -200,6 +216,7 @@ export const useCreateRecipe = () => {
     onSuccess: (data) => {
       // Invalidate or refetch queries related to recipes after a successful mutation
       queryClient.invalidateQueries({queryKey: ['recipes']});
+      options?.onSuccess?.(data);
     },
   });
 };

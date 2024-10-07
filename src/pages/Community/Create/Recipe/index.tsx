@@ -1,12 +1,15 @@
 import React, { useReducer, useState, useEffect } from 'react'
-import { IonBackButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react'
+import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, useIonRouter} from '@ionic/react'
 import ProgressBar from './ProgressBar'
 import GeneralForm from './GeneralForm'
-import { Ingredient, CreateRecipePayload } from '../../../../api/recipeApi';
+import { CreateRecipePayload } from '../../../../api/recipeApi';
 import InstructionsForm from './InstructionsForm';
 import NavigationButtons from './NavigationButton';
 import IngredientsForm from './IngredientsForm';
 import DietaryDetailsForm from './DietaryDetails';
+import Overview from './Overview';
+import { useCreateRecipe } from '../../../../api/recipeApi';
+import { useHistory } from 'react-router-dom';
 
 export interface RecipeAction {
   type: string;
@@ -42,6 +45,8 @@ const recipeReducer = (state: CreateRecipePayload, action: RecipeAction): Create
 };
 
 const CreateRecipe: React.FC = () => {
+  const router = useIonRouter();
+  const history = useHistory();
   const [state, dispatch] = useReducer(recipeReducer, initialState);
   const [currentStep, setCurrentStep] = useState(1);
 
@@ -49,14 +54,28 @@ const CreateRecipe: React.FC = () => {
   const [isInstructionsForm, setIsInstructionsForm] = useState(false);
   const [isIngredientsForm, setIsIngredientsForm] = useState(false);
   const [isDietaryDetailsForm, setIsDietaryDetailsForm] = useState(false);
+  const [isOverview, setIsOverview] = useState(false);
+  const { mutate: handleRecipeCreation } = useCreateRecipe({
+    onSuccess: (data) => {
+      console.log("Recipe created successfully");
+      console.log(data.data);
+      setTimeout(() => {
+        history.replace(`/recipe-details/${data.data.id}`); 
+      }, 100);
+    }
+  });
 
   const handleNextSection = () => {
-    setCurrentStep((prev) => Math.min(prev + 1, 4));
+    setCurrentStep((prev) => Math.min(prev + 1, 5));
   };
 
   const handlePreviousSection = () => {
     setCurrentStep((prev) => Math.max(prev - 1, 1));
   };
+
+  const handleCreateRecipe = () => {
+    const response = handleRecipeCreation(state);
+  }
 
   useEffect(() => {
     if (currentStep == 1) {
@@ -81,6 +100,7 @@ const CreateRecipe: React.FC = () => {
       setIsDietaryDetailsForm(true);
     } else {
       setIsDietaryDetailsForm(false);
+      setIsOverview(true);
     }
   })
 
@@ -101,11 +121,20 @@ const CreateRecipe: React.FC = () => {
           {currentStep === 2 && <InstructionsForm state={state} dispatch={dispatch} />}
           {currentStep === 3 && <IngredientsForm state={state} dispatch={dispatch}/>}
           {currentStep === 4 && <DietaryDetailsForm state={state} dispatch={dispatch} />}
+          {currentStep === 5 && <Overview state={state} /> }
+          {currentStep === 5 ? (
+            <NavigationButtons
+              currentStep={currentStep}
+              onPrevious={handlePreviousSection}
+              onNext={handleCreateRecipe}
+            />
+          ) : (
           <NavigationButtons 
             currentStep={currentStep} 
             onPrevious={handlePreviousSection} 
             onNext={handleNextSection} 
           />
+        )}
         </div>
       </IonContent>
     </IonPage>

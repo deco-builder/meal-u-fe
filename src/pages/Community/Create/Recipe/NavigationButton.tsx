@@ -8,6 +8,9 @@ interface NavigationButtonsProps {
 }
 
 const NavigationButtons: React.FC<NavigationButtonsProps> = ({ currentStep, onPrevious, onNext }) => {
+  const leftButton = (currentStep === 5 ? "Edit Details" : "Previous Section");
+  const rightButton = (currentStep === 5 ? "Create Recipe" : "Next Section");
+
   return (
     <div className="flex items-center justify-between mt-4">
       <button
@@ -18,7 +21,7 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({ currentStep, onPr
         onClick={onPrevious}
         disabled={currentStep === 1} // Disable if on the first step
       >
-        Previous Section
+        {leftButton}
       </button>
       <button
         className={`bg-purple-700 text-white font-bold py-2 px-4 rounded ${
@@ -26,9 +29,9 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({ currentStep, onPr
         }`}
         type="button"
         onClick={onNext}
-        disabled={currentStep === 4} // Disable if on the last step
+        disabled={currentStep >= 6} // Disable if on the last step
       >
-        Next Section
+        {rightButton}
       </button>
     </div>
   );
