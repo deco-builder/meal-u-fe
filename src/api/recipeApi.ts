@@ -10,8 +10,9 @@ export interface Ingredient {
   ingredient: {
     product_id: number;
     name: string;
-    image?: string | null;
-    unit_id: string;
+    image: string | null;
+    product_id: number;
+    unit_id: number;
     unit_size: string;
     price_per_unit: string;
   };

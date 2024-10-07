@@ -4,19 +4,11 @@ import {
   IonContent,
   IonHeader,
   IonRouterOutlet,
-  IonTabBar,
-  IonTabButton,
-  IonTabs,
 } from "@ionic/react";
 import Tab1 from "./pages/Tab-1/Tab1";
 import Tab2 from "./pages/Community";
 import Tab4 from "./pages/Tab-4/Tab4";
 import Tab5 from "./pages/Tab-5/Tab5";
-import RepeatIcon from "../public/icon/repeat-icon";
-import OrderIcon from "../public/icon/order-icon";
-import ReceiptIcon from "../public/icon/receipt-icon";
-import StoreIcon from "../public/icon/store-icon";
-import UserIcon from "../public/icon/user-icon";
 import MyCart from "./pages/MyCart";
 import { useState } from "react";
 import SubPage from "./pages/Tab-1/Sub-Page-1/sub-page-1";
@@ -30,17 +22,18 @@ import Category from "./pages/Category";
 import { useAuth } from "./contexts/authContext";
 import MealkitDetails from "./pages/MealkitDetails/MealkitDetails";
 import CreateRecipe from "./pages/Community/Create/Recipe";
-import InstructionsForm from "./pages/Community/Create/Recipe/InstructionsForm";
-import Overview from "./pages/Community/Create/Recipe/Overview";
+import CourierHome from "./pages/Courier/CourierHome/CourierHome";
+import CourierDelivery from "./pages/Courier/CourierDelivery/CourierDelivery";
+import ConfirmPickup from "./pages/Courier/ConfirmPickUp/ConfirmPickUp";
+import ConfirmDelivery from "./pages/Courier/ConfirmDelivery/ConfirmDelivery";
 
 const AppContent: React.FC = () => {
   const { isAuthenticated } = useAuth();
-  const [isSelected, setIsSelected] = useState(false);
   const location = useLocation();
 
   const shouldShowTabs = () => {
     const noTabRoutes = ['/categories', '/mycart', '/login'];
-    const noTabPrefixes = ['/order/', '/product-details/', '/recipe-details/', '/mealkit-details/'];
+    const noTabPrefixes = ['/order/', '/product-details/', '/recipe-details/', '/mealkit-details/', '/courier/delivery/', '/courier/pickup/', '/courier/confirm-pickup/', '/courier/confirm-delivery/'];
 
     if (noTabRoutes.includes(location.pathname)) {
       return false;
@@ -59,12 +52,12 @@ const AppContent: React.FC = () => {
     <>
       {isAuthenticated && (
         <IonHeader className="ion-hide-sm-down">
-          <Navbar isSelected={isSelected} setIsSelected={setIsSelected} />
+          <Navbar />
         </IonHeader>
       )}
       <IonContent>
         {isAuthenticated ? (
-          <IonTabs>
+          <>
             <IonRouterOutlet>
               <Route exact path="/tab1" component={Tab1} />
               <Route exact path="/tab1/subpage" component={SubPage} />
@@ -79,35 +72,16 @@ const AppContent: React.FC = () => {
               <Route path="/recipe-details/:id" component={RecipeDetails} />
               <Route path="/product-details/:id" component={ProductDetails} />
               <Route path="/payment-options" component={PaymentOptions} />
+              <Route path="/courier/home" component={CourierHome} />
+              <Route path="/courier/:type/:id" component={CourierDelivery} />
+              <Route path="/courier/confirm-pickup/:id" component={ConfirmPickup} />
+              <Route path="/courier/confirm-delivery/:id" component={ConfirmDelivery} />
               <Route exact path="/">
                 <Redirect to="/tab1" />
               </Route>
             </IonRouterOutlet>
-            <IonTabBar
-              slot="bottom"
-              className={`ion-hide-sm-up ${shouldShowTabs() ? "" : "ion-hide"}`}
-            >
-              <IonTabButton
-                tab="tab1"
-                href="/tab1"
-                onClick={() => setIsSelected(!isSelected)}
-              >
-                <RepeatIcon />
-              </IonTabButton>
-              <IonTabButton tab="community" href="/community">
-                <StoreIcon />
-              </IonTabButton>
-              <IonTabButton tab="tab3" href="/categories">
-                <OrderIcon />
-              </IonTabButton>
-              <IonTabButton tab="tab4" href="/tab4">
-                <ReceiptIcon />
-              </IonTabButton>
-              <IonTabButton tab="tab5" href="/tab5">
-                <UserIcon />
-              </IonTabButton>
-            </IonTabBar>
-          </IonTabs>
+            {shouldShowTabs() && <Navbar />}
+          </>
         ) : (
           <IonRouterOutlet>
             <Route path="/login" component={Login} />
