@@ -1,5 +1,4 @@
 import React from 'react';
-import { useIonRouter } from '@ionic/react';
 
 interface NavigationButtonsProps {
   currentStep: number; // Add currentStep as a prop

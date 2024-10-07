@@ -1,6 +1,5 @@
 import {
   Dispatch,
-  SetStateAction,
   useState,
   useCallback,
   useRef,
@@ -20,8 +19,8 @@ import { ProductData, useProductList } from "../../../../api/productApi";
 import { useParams } from "react-router-dom";
 import IconInput from "../../../../components/icon-input";
 import SearchIcon from "../../../../../public/icon/search-icon";
-import {CreateRecipePayload, IngredientRecipe} from "../../../../api/recipeApi"
-import {UnitData, useUnitList} from '../../../../api/productApi';
+import { CreateRecipePayload, IngredientRecipe } from "../../../../api/recipeApi"
+import { useUnitList } from '../../../../api/productApi';
 
 interface IngredientsFormProps {
   state: CreateRecipePayload;
@@ -36,7 +35,6 @@ const IngredientsForm: React.FC<IngredientsFormProps> = ({
   const { category } = useParams<{ category: string }>();
   const { data: products = [], isFetching: isProductFetching } = useProductList({ search: category });
   const {data: units} = useUnitList();
-  console.log(units);
 
   const [selectedIngredients, setSelectedIngredients] = useState<IngredientRecipe[]>( state.ingredients || [] );
   const [showResults, setShowResults] = useState(false);

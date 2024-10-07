@@ -1,5 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
-import { useIonRouter } from "@ionic/react";
+import { Dispatch, useState } from "react";
 import { RecipeAction } from './index';
 import { CreateRecipePayload } from "../../../../api/recipeApi";
 
@@ -9,7 +8,6 @@ interface InstructionsFormProps {
 }
 
 const InstructionsForm: React.FC<InstructionsFormProps> = ({ state, dispatch }) => {
-  const router = useIonRouter();
   const [instructions, setInstructions] = useState<string[]>([""]); // Start with one empty instruction
 
   // Handle input change for a specific instruction
