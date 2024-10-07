@@ -1,6 +1,6 @@
 import React from "react";
-import LoveIcon from "../../public/icon/love-icon";
-import CommentIcon from "../../public/icon/comment-icon";
+import LoveIcon from "../../../public/icon/love-icon";
+import CommentIcon from "../../../public/icon/comment-icon";
 import { formatDistanceToNow } from 'date-fns';
 
 interface Creator {
@@ -44,7 +44,7 @@ const CommunityCard: React.FC<CommunityCardProps> = ({ recipe }) => {
               className="w-12 h-12 rounded-full mr-4"
             />
             <div>
-              <h2 className="text-sm text-xl font-semibold">
+              <h2 className="text-xs text-xl font-semibold">
                 {recipe.creator.name}
               </h2>
               <p className="text-xs text-gray-500">
@@ -52,27 +52,27 @@ const CommunityCard: React.FC<CommunityCardProps> = ({ recipe }) => {
               </p>
             </div>
           </div>
-          <button className="text-xs px-4 py-2 outline text-[#7862FC] rounded-full font-semibold">
+          <button className="text-[0.5rem] px-4 py-2 outline text-[#7862FC] rounded-full font-semibold">
             Follow
           </button>
         </div>
 
         <div className="flex flex-row">
           <div className="mb-4 w-[70%]">
-            <h1 className="text-md font-medium mb-2 flex items-center">
+            <h1 className="text-xs font-medium mb-2 flex items-center">
               {recipe.name}
             </h1>
             <div className="flex space-x-2 mb-2">
               {recipe.dietary_details.slice(0, 1).map((detail, index) => (
                 <span
                   key={index}
-                  className="text-ss px-2 py-1 outline text-[#7862FC] rounded-full text-sm"
+                  className="text-[0.5rem] px-2 py-1 outline text-[#7862FC] rounded-full text-sm"
                 >
                   {detail}
                 </span>
               ))}
               {recipe.dietary_details.length > 1 && (
-                <div className="text-ss px-2 py-1 outline text-[#7862FC] rounded-full text-sm">
+                <div className="text-[0.5rem] px-2 py-1 outline text-[#7862FC] rounded-full text-sm">
                   +{recipe.dietary_details.length - 1}
                 </div>
               )}

@@ -24,7 +24,7 @@ interface ItemCardProps {
   onClick?: (id: number) => void;
 }
 
-const CommunityItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
+const HomeItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
   const handleClick = () => {
     if (onClick) {
       onClick(item.id);
@@ -70,4 +70,4 @@ const CommunityItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
   );
 };
 
-export default CommunityItemCard;
+export default HomeItemCard;

@@ -15,8 +15,9 @@ import { RecipeData, useCommunityRecipesList } from "../../../api/recipeApi";
 import { useLocationList } from "../../../api/locationApi";
 import { useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import CommunityItemCard from "../../../components/HomeItemCard";
-import CommunityCard from "../../../components/CommunityCard";
+import CommunityItemCard from "../../../components/HomeCard/HomeItemCard";
+import CommunityCard from "../../../components/CommunityCard/CommunityCard";
+import SkeletonCommunityCard from "../../../components/CommunityCard/SkeletonCommunityCard";
 
 function CommunityMobile() {
   const [isFilterVisible, setIsFilterVisible] = useState(false);
@@ -65,7 +66,11 @@ function CommunityMobile() {
         </div>
 
         {isRecipesFetching ? (
-          <p>Loading recipes...</p>
+          <>
+          <SkeletonCommunityCard />
+          <SkeletonCommunityCard />
+          <SkeletonCommunityCard />
+        </>
         ) : (
           trendingRecipes.map((recipe) => (
             <CommunityCard key={recipe.id} recipe={recipe} />

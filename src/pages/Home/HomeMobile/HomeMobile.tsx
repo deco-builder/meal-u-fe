@@ -10,15 +10,24 @@ import {
 } from "@ionic/react";
 import FilterIcon from "../../../../public/icon/filter";
 import FilterOverlay from "../../../components/FilterOverlay";
-import { useMealkitList, MealkitData, useTrendingMealkitList } from "../../../api/mealkitApi";
-import { CommunityRecipeData, useRecipesList, useTrendingRecipesList } from "../../../api/recipeApi";
+import {
+  useMealkitList,
+  MealkitData,
+  useTrendingMealkitList,
+} from "../../../api/mealkitApi";
+import {
+  CommunityRecipeData,
+  useRecipesList,
+  useTrendingRecipesList,
+} from "../../../api/recipeApi";
 import { useLocationList } from "../../../api/locationApi";
 import { useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import CommunityItemCard from "../../../components/HomeItemCard";
-import HomeItemCard from "../../../components/HomeItemCard";
+import CommunityItemCard from "../../../components/HomeCard/HomeItemCard";
+import HomeItemCard from "../../../components/HomeCard/HomeItemCard";
 import NotifIcon from "../../../../public/icon/notif-icon";
 import HomeImageCard from "../../../components/HomeImageCard";
+import SkeletonHomeItemCard from "../../../components/HomeCard/SkeletonHomeItemCard";
 
 function HomeMobile() {
   const { category } = useParams<{ category: string }>();
@@ -35,8 +44,10 @@ function HomeMobile() {
     search: category,
   });
 
-  const { data: trendingRecipes = [], isFetching: isTrendingRecipesFetching } = useTrendingRecipesList();
-  const { data: trendingMealkit = [], isFetching: isTrendingMealkitFetching } = useTrendingMealkitList();
+  const { data: trendingRecipes = [], isFetching: isTrendingRecipesFetching } =
+    useTrendingRecipesList();
+  const { data: trendingMealkit = [], isFetching: isTrendingMealkitFetching } =
+    useTrendingMealkitList();
 
   const { data: location = [], isFetching: isLocationFetching } =
     useLocationList();
@@ -104,7 +115,7 @@ function HomeMobile() {
                 display: "flex",
                 flexDirection: "row",
                 minWidth: "min-content",
-                gap: 10
+                gap: 10,
               }}
             >
               <HomeImageCard />
@@ -125,7 +136,19 @@ function HomeMobile() {
             Trending Recipes
           </h3>
           {isTrendingRecipesFetching ? (
-            <p>Loading recipes...</p>
+            <div style={{ overflowX: "auto", width: "100%" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  minWidth: "min-content",
+                }}
+              >
+                {[...Array(5)].map((_, index) => (
+                  <SkeletonHomeItemCard key={index} />
+                ))}
+              </div>
+            </div>
           ) : trendingRecipes.length > 0 ? (
             <div style={{ overflowX: "auto", width: "100%" }}>
               <div
@@ -160,7 +183,13 @@ function HomeMobile() {
             Trending Mealkits
           </p>
           {isTrendingMealkitFetching ? (
-            <p>Loading mealkits...</p>
+             <div style={{ overflowX: "auto", width: "100%" }}>
+             <div style={{ display: "flex", flexDirection: "row", minWidth: "min-content" }}>
+               {[...Array(5)].map((_, index) => (
+                 <SkeletonHomeItemCard key={index} />
+               ))}
+             </div>
+           </div>
           ) : trendingMealkit.length > 0 ? (
             <div style={{ overflowX: "auto", width: "100%" }}>
               <div
