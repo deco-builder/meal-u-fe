@@ -1,5 +1,5 @@
-import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { useAuth } from '../contexts/authContext';
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
+import { useAuth } from "../contexts/authContext";
 
 interface Creator {
   name: string;
@@ -50,66 +50,171 @@ export interface RecipeData {
   nutrition_details: NutritionDetails;
 }
 
+export interface CommunityRecipeData {
+  id: number;
+  creator: Creator;
+  name: string;
+  serving_size: number;
+  meal_type: string;
+  cooking_time: number;
+  created_at: string;
+  image: string;
+  dietary_details: string[];
+  total_price: number;
+  likes_count: number;
+  comments_count: number;
+}
+
 interface RecipeListParams {
   search: string;
 }
 
-export const useRecipesList = (params: RecipeListParams): UseQueryResult<RecipeData[], Error> => {
+export const useRecipesList = (
+  params: RecipeListParams
+): UseQueryResult<RecipeData[], Error> => {
   const { getToken } = useAuth();
-  const token = getToken() || '';
+  const token = getToken() || "";
 
   const fetchRecipe = async (): Promise<RecipeData[]> => {
-    const url = params.search && params.search !== "Show All"
-      ? `http://meal-u-api.nafisazizi.com:8001/api/v1/community/recipes/?search=${encodeURIComponent(params.search)}`
-      : 'http://meal-u-api.nafisazizi.com:8001/api/v1/community/recipes/';
+    const url =
+      params.search && params.search !== "Show All"
+        ? `http://meal-u-api.nafisazizi.com:8001/api/v1/community/recipes/?search=${encodeURIComponent(
+            params.search
+          )}`
+        : "http://meal-u-api.nafisazizi.com:8001/api/v1/community/recipes/";
 
     const response = await fetch(url, {
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
     if (!response.ok) {
-      throw new Error('Failed to fetch mealkits');
+      throw new Error("Failed to fetch mealkits");
     }
 
     const data = await response.json();
 
     if (!data.success) {
-      throw new Error(data.message || 'Failed to fetch recipes');
+      throw new Error(data.message || "Failed to fetch recipes");
     }
 
     return data.data;
   };
 
-  return useQuery<RecipeData[], Error, RecipeData[], [string, RecipeListParams]>({
-    queryKey: ['recipe.list', params],
+  return useQuery<
+    RecipeData[],
+    Error,
+    RecipeData[],
+    [string, RecipeListParams]
+  >({
+    queryKey: ["recipe.list", params],
     queryFn: fetchRecipe,
     initialData: [],
     enabled: !!token,
   });
 };
 
-export const fetchRecipeDetails = async (recipeId: number, token: string): Promise<RecipeData> => {
-    if (!token) {
-        throw new Error('No authentication token provided');
-    }
+export const fetchRecipeDetails = async (
+  recipeId: number,
+  token: string
+): Promise<RecipeData> => {
+  if (!token) {
+    throw new Error("No authentication token provided");
+  }
 
-    const response = await fetch(`http://meal-u-api.nafisazizi.com:8001/api/v1/community/recipe/${recipeId}/`, {
-        headers: {
-            'Authorization': `Bearer ${token}`,
-        },
+  const response = await fetch(
+    `http://meal-u-api.nafisazizi.com:8001/api/v1/community/recipe/${recipeId}/`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch recipe details");
+  }
+
+  const data = await response.json();
+
+  if (!data.success) {
+    throw new Error(data.message || "Failed to fetch recipe details");
+  }
+
+  return data.data;
+};
+
+export const useTrendingRecipesList = (): UseQueryResult<
+  CommunityRecipeData[],
+  Error
+> => {
+  const { getToken } = useAuth();
+  const token = getToken() || "";
+
+  const fetchTrendingRecipe = async (): Promise<CommunityRecipeData[]> => {
+    const url =
+      "http://meal-u-api.nafisazizi.com:8001/api/v1/community/trending-recipes/";
+
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     if (!response.ok) {
-        throw new Error('Failed to fetch recipe details');
+      throw new Error("Failed to fetch mealkits");
     }
 
     const data = await response.json();
 
     if (!data.success) {
-        throw new Error(data.message || 'Failed to fetch recipe details');
+      throw new Error(data.message || "Failed to fetch recipes");
     }
 
     return data.data;
+  };
+  return useQuery<CommunityRecipeData[], Error, CommunityRecipeData[], [string]>({
+    queryKey: ["trending-recipe.list"],
+    queryFn: fetchTrendingRecipe,
+    initialData: [],
+    enabled: !!token,
+  });
+};
+
+export const useCommunityRecipesList = (): UseQueryResult<
+  CommunityRecipeData[],
+  Error
+> => {
+  const { getToken } = useAuth();
+  const token = getToken() || "";
+
+  const fetchCommunityRecipe = async (): Promise<CommunityRecipeData[]> => {
+    const url =
+      "http://meal-u-api.nafisazizi.com:8001/api/v1/community/community-recipes/";
+
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch mealkits");
+    }
+
+    const data = await response.json();
+
+    if (!data.success) {
+      throw new Error(data.message || "Failed to fetch recipes");
+    }
+
+    return data.data;
+  };
+  return useQuery<CommunityRecipeData[], Error, CommunityRecipeData[], [string]>({
+    queryKey: ["community-recipe.list"],
+    queryFn: fetchCommunityRecipe,
+    initialData: [],
+    enabled: !!token,
+  });
 };

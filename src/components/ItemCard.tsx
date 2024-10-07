@@ -71,7 +71,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
           )}
           <div className="flex flex-row gap-1 justify-center">
             {item.dietary_details
-              .slice(0, 2)
+              .slice(0, 1)
               .map((detail, index) => (
                 <div
                   key={index}
@@ -80,9 +80,9 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
                   {detail}
                 </div>
               ))}
-            {item.dietary_details.length > 2 && (
+            {item.dietary_details.length > 1 && (
               <div className="bg-[#F0F0F0] rounded-[10px] px-1.5 py-0.5 text-[8px]">
-                +{item.dietary_details.length - 2}
+                +{item.dietary_details.length - 1}
               </div>
             )}
           </div>

@@ -10,13 +10,15 @@ import {
 } from "@ionic/react";
 import FilterIcon from "../../../../public/icon/filter";
 import FilterOverlay from "../../../components/FilterOverlay";
-import { useMealkitList, MealkitData } from "../../../api/mealkitApi";
-import { RecipeData, useRecipesList } from "../../../api/recipeApi";
+import { useMealkitList, MealkitData, useTrendingMealkitList } from "../../../api/mealkitApi";
+import { CommunityRecipeData, useRecipesList, useTrendingRecipesList } from "../../../api/recipeApi";
 import { useLocationList } from "../../../api/locationApi";
 import { useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import CommunityItemCard from "../../../components/HomeItemCard";
 import HomeItemCard from "../../../components/HomeItemCard";
+import NotifIcon from "../../../../public/icon/notif-icon";
+import HomeImageCard from "../../../components/HomeImageCard";
 
 function HomeMobile() {
   const { category } = useParams<{ category: string }>();
@@ -32,6 +34,9 @@ function HomeMobile() {
   const { data: recipes = [], isFetching: isRecipesFetching } = useRecipesList({
     search: category,
   });
+
+  const { data: trendingRecipes = [], isFetching: isTrendingRecipesFetching } = useTrendingRecipesList();
+  const { data: trendingMealkit = [], isFetching: isTrendingMealkitFetching } = useTrendingMealkitList();
 
   const { data: location = [], isFetching: isLocationFetching } =
     useLocationList();
@@ -77,10 +82,38 @@ function HomeMobile() {
           <IonTitle>Home</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">
-        <div style={{ backgroundColor: "#7862FC", width: "80%", justifyContent: "center", alignSelf: "center", justifySelf: "center" }}>
-          <p>1 Update From Your Order</p>
+      <IonContent className="ion-padding font-sans">
+        <div className="flex justify-center items-center">
+          <div className="flex justify-between items-center w-4/5 border-2 border-[#7862FC] p-3 rounded-xl">
+            <p className="text-sm font-semibold text-[#7862FC]">
+              1 Update From Your Order
+            </p>
+            <NotifIcon />
+          </div>
         </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            marginTop: "20px",
+          }}
+        >
+          <div style={{ overflowX: "auto", width: "100%" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                minWidth: "min-content",
+                gap: 10
+              }}
+            >
+              <HomeImageCard />
+              <HomeImageCard />
+              <HomeImageCard />
+            </div>
+          </div>
+        </div>
+
         <div
           style={{
             display: "flex",
@@ -91,9 +124,9 @@ function HomeMobile() {
           <h3 style={{ fontSize: "16px", fontWeight: "600" }}>
             Trending Recipes
           </h3>
-          {isRecipesFetching ? (
+          {isTrendingRecipesFetching ? (
             <p>Loading recipes...</p>
-          ) : filteredRecipes.length > 0 ? (
+          ) : trendingRecipes.length > 0 ? (
             <div style={{ overflowX: "auto", width: "100%" }}>
               <div
                 style={{
@@ -102,7 +135,7 @@ function HomeMobile() {
                   minWidth: "min-content",
                 }}
               >
-                {filteredRecipes.map((recipe: RecipeData) => (
+                {trendingRecipes.map((recipe: CommunityRecipeData) => (
                   <HomeItemCard
                     key={recipe.id}
                     item={recipe}
@@ -126,9 +159,9 @@ function HomeMobile() {
           <p style={{ fontSize: "16px", fontWeight: "600" }}>
             Trending Mealkits
           </p>
-          {isMealkitsFetching ? (
+          {isTrendingMealkitFetching ? (
             <p>Loading mealkits...</p>
-          ) : filteredMealkits.length > 0 ? (
+          ) : trendingMealkit.length > 0 ? (
             <div style={{ overflowX: "auto", width: "100%" }}>
               <div
                 style={{
@@ -137,7 +170,7 @@ function HomeMobile() {
                   minWidth: "min-content",
                 }}
               >
-                {filteredMealkits.map((mealkit: MealkitData) => (
+                {trendingMealkit.map((mealkit: MealkitData) => (
                   <HomeItemCard
                     key={mealkit.id}
                     item={mealkit}

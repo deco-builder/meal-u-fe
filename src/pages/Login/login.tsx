@@ -60,7 +60,7 @@ const Login: React.FC = () => {
 
     try {
       await login(email, password);
-      router.push("/tab1");
+      router.push("/home");
     } catch (error) {
       setError("Login failed. Please check your credentials and try again.");
       console.error("Login error:", error);

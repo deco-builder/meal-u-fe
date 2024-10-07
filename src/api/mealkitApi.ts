@@ -144,3 +144,37 @@ export const useMealkitDetails = (mealkitId: number): UseQueryResult<MealkitDeta
     enabled: !!token && !!mealkitId,
   });
 };
+
+export const useTrendingMealkitList = (): UseQueryResult<MealkitData[], Error> => {
+  const { getToken } = useAuth();
+  const token = getToken() || '';
+
+  const fetchTrendingMealkits = async (): Promise<MealkitData[]> => {
+    const url = 'http://meal-u-api.nafisazizi.com:8001/api/v1/community/trending-mealkits/';
+
+    const response = await fetch(url, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch mealkits');
+    }
+
+    const data = await response.json();
+
+    if (!data.success) {
+      throw new Error(data.message || 'Failed to fetch mealkits');
+    }
+
+    return data.data;
+  };
+
+  return useQuery<MealkitData[], Error, MealkitData[], [string]>({
+    queryKey: ['trending-mealkit.list'],
+    queryFn: fetchTrendingMealkits,
+    initialData: [],
+    enabled: !!token,
+  });
+};

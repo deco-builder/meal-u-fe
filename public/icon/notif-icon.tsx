@@ -14,9 +14,9 @@ const NotifIcon: React.FC<NotifIconProps> = ({
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="23"
-      height="25"
-      viewBox="0 0 23 25"
+      width="25"
+      height="14"
+      viewBox="0 0 12 14"
       fill="none"
     >
       <path
