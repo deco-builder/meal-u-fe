@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import CommunityMobile from "./CommunityMobile/CommunityMobile";
-import CommunityWeb from "./CommunityWeb/CommunityWeb";
+import HomeMobile from "./HomeMobile/HomeMobile";
+import HomeWeb from "./HomeWeb/HomeWeb";
 
-function Community() {
+function Home() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 576);
 
   useEffect(() => {
@@ -18,10 +18,10 @@ function Community() {
   }, []);
 
   if (isMobile) {
-    return <CommunityMobile />;
+    return <HomeMobile />;
   }
 
-  return <CommunityWeb />;
+  return <HomeWeb />;
 }
 
-export default Community;
+export default Home;

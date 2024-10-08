@@ -22,10 +22,18 @@ import { useMealkitList, MealkitData } from "../../../api/mealkitApi";
 import { RecipeData, useRecipesList } from "../../../api/recipeApi";
 import { ProductData, useProductList } from "../../../api/productApi";
 import { LocationData, useLocationList } from "../../../api/locationApi";
-import { useCart, CartData, useUpdateCartItem, useDeleteCartItem, useAddCartItem } from "../../../api/cartApi";
+import {
+  useCart,
+  CartData,
+  useUpdateCartItem,
+  useDeleteCartItem,
+  useAddCartItem,
+} from "../../../api/cartApi";
 import { useParams } from "react-router-dom";
-import ItemCard from "../../../components/ItemCard";
+import ItemCard from "../../../components/ItemCard/ItemCard";
 import { useQueryClient } from "@tanstack/react-query";
+import SkeletonOrderCard from "../../../components/ItemCard/SkeletonItemCard";
+import SkeletonProductItem from "../../../components/ProductCard/SkeletonProductCard";
 
 function OrderMobile() {
   const queryClient = useQueryClient();
@@ -56,16 +64,14 @@ function OrderMobile() {
 
   const updateCartItem = useUpdateCartItem();
   const deleteCartItem = useDeleteCartItem();
-  const addCartItem = useAddCartItem()
+  const addCartItem = useAddCartItem();
 
   const refetchCart = () => {
-    queryClient.invalidateQueries({ queryKey: ['cart'] });
+    queryClient.invalidateQueries({ queryKey: ["cart"] });
   };
 
   const getCartItem = (productId: number) => {
-    return cart?.cart_products?.find(
-      (item) => item.product.id === productId
-    );
+    return cart?.cart_products?.find((item) => item.product.id === productId);
   };
 
   const { data: location = [], isFetching: isLocationFetching } =
@@ -80,8 +86,6 @@ function OrderMobile() {
     setIsFilterVisible(!isFilterVisible);
   };
 
-
-
   const increment = (productId: number) => {
     const cartItem = getCartItem(productId);
     if (cartItem) {
@@ -93,7 +97,7 @@ function OrderMobile() {
           quantity: newQuantity,
         },
         {
-          onSuccess: () => refetchCart()
+          onSuccess: () => refetchCart(),
         }
       );
     } else {
@@ -104,7 +108,7 @@ function OrderMobile() {
           quantity: 1,
         },
         {
-          onSuccess: () => refetchCart()
+          onSuccess: () => refetchCart(),
         }
       );
     }
@@ -122,7 +126,7 @@ function OrderMobile() {
             quantity: newQuantity,
           },
           {
-            onSuccess: () => refetchCart()
+            onSuccess: () => refetchCart(),
           }
         );
       } else {
@@ -132,7 +136,7 @@ function OrderMobile() {
             cart_product_id: cartItem.id,
           },
           {
-            onSuccess: () => refetchCart()
+            onSuccess: () => refetchCart(),
           }
         );
       }
@@ -235,7 +239,19 @@ function OrderMobile() {
         >
           <p style={{ fontSize: "16px", fontWeight: "600" }}>Mealkits</p>
           {isMealkitsFetching ? (
-            <p>Loading mealkits...</p>
+            <div style={{ overflowX: "auto", width: "100%" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  minWidth: "min-content",
+                }}
+              >
+                {[...Array(5)].map((_, index) => (
+                  <SkeletonOrderCard key={index} />
+                ))}
+              </div>
+            </div>
           ) : filteredMealkits.length > 0 ? (
             <div style={{ overflowX: "auto", width: "100%" }}>
               <div
@@ -262,7 +278,19 @@ function OrderMobile() {
         <div style={{ display: "flex", flexDirection: "column" }}>
           <h3 style={{ fontSize: "16px", fontWeight: "600" }}>Recipes</h3>
           {isRecipesFetching ? (
-            <p>Loading recipes...</p>
+            <div style={{ overflowX: "auto", width: "100%" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  minWidth: "min-content",
+                }}
+              >
+                {[...Array(5)].map((_, index) => (
+                  <SkeletonOrderCard key={index} />
+                ))}
+              </div>
+            </div>
           ) : filteredRecipes.length > 0 ? (
             <div style={{ overflowX: "auto", width: "100%" }}>
               <div
@@ -297,7 +325,11 @@ function OrderMobile() {
         >
           <h3 style={{ fontSize: "16px", fontWeight: "600" }}>Groceries</h3>
           {isProductFetching ? (
-            <p>Loading groceries...</p>
+             <>
+             <SkeletonProductItem />
+             <SkeletonProductItem />
+             <SkeletonProductItem />
+           </>
           ) : filteredProducts.length > 0 ? (
             filteredProducts.map((product: ProductData) => {
               const cartItem = getCartItem(product.id);

@@ -19,6 +19,8 @@ import PaymentOptions from "./pages/PaymentOptions/PaymentOptions";
 import Order from "./pages/Order";
 import Login from "./pages/Login/login";
 import Category from "./pages/Category";
+import Community from "./pages/Community";
+import Home from "./pages/Home";
 import { useAuth } from "./contexts/authContext";
 import MealkitDetails from "./pages/MealkitDetails/MealkitDetails";
 import CreateRecipe from "./pages/Community/Create/Recipe";
@@ -28,6 +30,7 @@ import ConfirmPickup from "./pages/Courier/ConfirmPickUp/ConfirmPickUp";
 import ConfirmDelivery from "./pages/Courier/ConfirmDelivery/ConfirmDelivery";
 import Orders from "./pages/Orders/Orders";
 import QRReader from "./pages/QR-Reader/QR-Reader";
+import User from "./pages/User";
 import CourierDeliveries from "./pages/Courier/CourierDeliveries/CourierDeliveries";
 import DeliveryBatchDetails from "./pages/Courier/DeliveryBatchDetails/DeliveryBatchDetails";
 
@@ -63,14 +66,15 @@ const AppContent: React.FC = () => {
         {isAuthenticated ? (
           <>
             <IonRouterOutlet>
-              <Route exact path="/tab1" component={Tab1} />
               <Route exact path="/tab1/subpage" component={SubPage} />
               <Route exact path="/order/:category" component={Order} />
               <Route exact path="/categories" component={Category} />
+              <Route path="/community" component={Community} />
+              <Route exact path="/home" component={Home} />
               <Route exact path="/community" component={Tab2} />
               <Route path="/community/create/recipe" component={CreateRecipe} />
               <Route path="/tab4" component={Orders} />
-              <Route path="/tab5" component={Tab5} />
+              <Route path="/user" component={User} />
               <Route path="/mycart" component={MyCart} />
               <Route path="/mealkit-details/:id" component={MealkitDetails} />
               <Route path="/recipe-details/:id" component={RecipeDetails} />
@@ -84,7 +88,7 @@ const AppContent: React.FC = () => {
               <Route path="/courier/deliveries" component={CourierDeliveries} />
               <Route path="/courier/delivery-batch/:batchNumber" component={DeliveryBatchDetails} />
               <Route exact path="/">
-                <Redirect to="/tab1" />
+                <Redirect to="/home" />
               </Route>
             </IonRouterOutlet>
             {shouldShowTabs() && <Navbar />}
