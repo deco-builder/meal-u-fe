@@ -33,7 +33,6 @@ const CommunityCard: React.FC<CommunityCardProps> = ({ recipe }) => {
     const date = new Date(dateString);
     return formatDistanceToNow(date, { addSuffix: true });
   };
-  console.log("RECIPE BOSS: ", recipe)
   return (
     <div className="max-w-xl mx-auto bg-white rounded-lg shadow-md overflow-hidden mb-2 mt-2">
       <div className="p-4">
