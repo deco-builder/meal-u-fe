@@ -56,6 +56,7 @@ export interface CommunityRecipeData {
   name: string;
   serving_size: number;
   meal_type: string;
+  description: string;
   cooking_time: number;
   created_at: string;
   image: string;

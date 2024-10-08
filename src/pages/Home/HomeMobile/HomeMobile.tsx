@@ -22,8 +22,6 @@ import {
 } from "../../../api/recipeApi";
 import { useLocationList } from "../../../api/locationApi";
 import { useParams } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
-import CommunityItemCard from "../../../components/HomeCard/HomeItemCard";
 import HomeItemCard from "../../../components/HomeCard/HomeItemCard";
 import NotifIcon from "../../../../public/icon/notif-icon";
 import HomeImageCard from "../../../components/HomeImageCard";
@@ -177,6 +175,7 @@ function HomeMobile() {
             display: "flex",
             flexDirection: "column",
             marginTop: "15px",
+            marginBottom: "50px"
           }}
         >
           <p style={{ fontSize: "16px", fontWeight: "600" }}>

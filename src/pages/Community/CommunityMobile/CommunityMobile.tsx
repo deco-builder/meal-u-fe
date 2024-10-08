@@ -9,10 +9,16 @@ import {
 } from "@ionic/react";
 import FilterIcon from "../../../../public/icon/filter";
 import FilterOverlay from "../../../components/FilterOverlay";
-import { useCommunityRecipesList } from "../../../api/recipeApi";
+import {
+  CommunityRecipeData,
+  useCommunityRecipesList,
+} from "../../../api/recipeApi";
 import CommunityCard from "../../../components/CommunityCard/CommunityCard";
 import SkeletonCommunityCard from "../../../components/CommunityCard/SkeletonCommunityCard";
 import HomeImageCard from "../../../components/HomeImageCard";
+import CreatorCommunityCard from "../../../components/CreatorCommunityCard/CreatorCommunityCard";
+import SkeletonCreatorCommunityCard from "../../../components/CreatorCommunityCard/SkeletonCreatorCommunityCard";
+import RecipeIcon from "../../../../public/icon/recipe-icon";
 
 function CommunityMobile() {
   const [isFilterVisible, setIsFilterVisible] = useState(false);
@@ -67,10 +73,81 @@ function CommunityMobile() {
               <HomeImageCard />
               <HomeImageCard />
             </div>
-            <h3 style={{ fontSize: "14px", fontWeight: "500", marginTop: "20px" }}>
+          </div>
+
+          <h3
+            style={{ fontSize: "14px", fontWeight: "500", marginTop: "20px" }}
+          >
             Popular Gluten Free Creators
           </h3>
-          </div>
+          {isRecipesFetching ? (
+            <div style={{ overflowX: "auto", width: "100%" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  minWidth: "min-content",
+                }}
+              >
+                {[...Array(5)].map((_, index) => (
+                  <SkeletonCreatorCommunityCard key={index} />
+                ))}
+              </div>
+            </div>
+          ) : trendingRecipes.length > 0 ? (
+            <div style={{ overflowX: "auto", width: "100%" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  minWidth: "min-content",
+                }}
+              >
+                {trendingRecipes.map((recipe: CommunityRecipeData) => (
+                  <CreatorCommunityCard key={recipe.id} item={recipe} />
+                ))}
+              </div>
+            </div>
+          ) : (
+            <p>No recipes found.</p>
+          )}
+
+          <h3
+            style={{ fontSize: "14px", fontWeight: "500", marginTop: "10px" }}
+          >
+            Popular Vegan Creator
+          </h3>
+          {isRecipesFetching ? (
+            <div style={{ overflowX: "auto", width: "100%" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  minWidth: "min-content",
+                }}
+              >
+                {[...Array(5)].map((_, index) => (
+                  <SkeletonCreatorCommunityCard key={index} />
+                ))}
+              </div>
+            </div>
+          ) : trendingRecipes.length > 0 ? (
+            <div style={{ overflowX: "auto", width: "100%" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  minWidth: "min-content",
+                }}
+              >
+                {trendingRecipes.map((recipe: CommunityRecipeData) => (
+                  <CreatorCommunityCard key={recipe.id} item={recipe} />
+                ))}
+              </div>
+            </div>
+          ) : (
+            <p>No recipes found.</p>
+          )}
         </div>
       );
     }

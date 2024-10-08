@@ -9,6 +9,7 @@ interface Creator {
 }
 
 interface CommunityRecipeData {
+  description: string;
   id: number;
   creator: Creator;
   name: string;
@@ -57,8 +58,8 @@ const CommunityCard: React.FC<CommunityCardProps> = ({ recipe }) => {
           </button>
         </div>
 
-        <div className="flex flex-row">
-          <div className="mb-4 w-[70%]">
+        <div className="flex flex-row justify-between]">
+          <div className="mb-4 w-[67%]">
             <h1 className="text-xs font-medium mb-2 flex items-center">
               {recipe.name}
             </h1>
@@ -77,13 +78,12 @@ const CommunityCard: React.FC<CommunityCardProps> = ({ recipe }) => {
                 </div>
               )}
             </div>
-            {/* <p className="text-xs text-gray-700">
-              {recipe.meal_type} • {recipe.cooking_time} mins • $
-              {recipe.total_price.toFixed(2)}
-            </p> */}
+            <p className="text-xs text-gray-700">
+            {recipe.description.length > 40 ? `${recipe.description.slice(0, 40)}...` : recipe.description}
+            </p>
           </div>
 
-          <div className="mb-4">
+          <div className="mb-4 w-[30%]">
             <img
               src={recipe.image || "/img/no-photo.png"}
               alt={recipe.name}
