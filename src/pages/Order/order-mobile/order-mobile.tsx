@@ -39,14 +39,12 @@ function OrderMobile() {
   const queryClient = useQueryClient();
   const { category } = useParams<{ category: string }>();
   const router = useIonRouter();
-  const [count, setCount] = useState(0);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [currentLocation, setCurrentLocation] = useState("");
-  const [selectedProducts, setSelectedProducts] = useState<{
-    [key: number]: number;
-  }>({});
+  const [totalItem, setTotalItem] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
   const { data: mealkits = [], isFetching: isMealkitsFetching } =
     useMealkitList({
       search: selectedCategory,
@@ -71,7 +69,9 @@ function OrderMobile() {
   };
 
   const getCartItem = (productId: number) => {
-    return cart?.cart_products?.find((item) => item.product.id === productId);
+    return cart?.products?.find(
+      (item: { product: { id: number } }) => item.product.id === productId
+    );
   };
 
   const { data: location = [], isFetching: isLocationFetching } =
@@ -80,6 +80,11 @@ function OrderMobile() {
   if (!isLocationFetching && location && !currentLocation) {
     const firstLocation = location[0].name;
     setCurrentLocation(firstLocation);
+  }
+
+  if (!isCartFetching && cart && !totalItem && !totalPrice) {
+    setTotalItem(cart?.total_item);
+    setTotalPrice(cart?.total_price);
   }
 
   const handleFilter = () => {
@@ -108,7 +113,15 @@ function OrderMobile() {
           quantity: 1,
         },
         {
-          onSuccess: () => refetchCart(),
+          onSuccess: (data) => {
+            refetchCart();
+          },
+          onError: (error) => {
+            console.error("Add to cart failed:", error);
+          },
+          onSettled: () => {
+            console.log("Add to cart operation completed (success or failure)");
+          },
         }
       );
     }
@@ -321,15 +334,16 @@ function OrderMobile() {
             display: "flex",
             flexDirection: "column",
             marginBottom: "50px",
+            marginTop: "10px",
           }}
         >
           <h3 style={{ fontSize: "16px", fontWeight: "600" }}>Groceries</h3>
           {isProductFetching ? (
-             <>
-             <SkeletonProductItem />
-             <SkeletonProductItem />
-             <SkeletonProductItem />
-           </>
+            <>
+              <SkeletonProductItem />
+              <SkeletonProductItem />
+              <SkeletonProductItem />
+            </>
           ) : filteredProducts.length > 0 ? (
             filteredProducts.map((product: ProductData) => {
               const cartItem = getCartItem(product.id);
@@ -480,11 +494,17 @@ function OrderMobile() {
                 >
                   My Orders
                 </p>
-                <p
-                  style={{ fontSize: "12px", textAlign: "left", color: "#fff" }}
-                >
-                  0 items - $0 AUD
-                </p>
+                {cart && (
+                  <p
+                    style={{
+                      fontSize: "12px",
+                      textAlign: "left",
+                      color: "#fff",
+                    }}
+                  >
+                    {totalItem} items - ${totalPrice} AUD
+                  </p>
+                )}
               </div>
               <FloatCartIcon />
             </div>
