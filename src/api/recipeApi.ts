@@ -11,7 +11,6 @@ export interface Ingredient {
     product_id: number;
     name: string;
     image: string | null;
-    product_id: number;
     unit_id: number;
     unit_size: string;
     price_per_unit: string;
