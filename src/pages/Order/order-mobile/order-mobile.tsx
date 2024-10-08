@@ -70,21 +70,9 @@ function OrderMobile() {
     queryClient.invalidateQueries({ queryKey: ["cart"] });
   };
 
-  // console.log(cart);
-
   const getCartItem = (productId: number) => {
     return cart?.cart_products?.find((item) => item.product.id === productId);
   };
-
-  // const totalCartItems = React.useMemo(() => {
-  //   if (!cart) return 0;
-  //   return (
-  //     cart.cart_mealkits.length +
-  //     cart.cart_ingredients.length +
-  //     cart.cart_products.length +
-  //     cart.cart_recipes.length
-  //   );
-  // }, [cart]);
 
   const { data: location = [], isFetching: isLocationFetching } =
     useLocationList();

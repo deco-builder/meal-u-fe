@@ -6,6 +6,7 @@ import {
   IonTitle,
   IonPage,
   IonButton,
+  useIonRouter,
 } from "@ionic/react";
 import FilterIcon from "../../../../public/icon/filter";
 import FilterOverlay from "../../../components/FilterOverlay";
@@ -156,7 +157,10 @@ function CommunityMobile() {
       <CommunityCard key={recipe.id} recipe={recipe} />
     ));
   };
-
+  const router = useIonRouter();
+  const navigateToCreateRecipe = () => {
+    router.push('/community/create/recipe');
+  }
   return (
     <IonPage>
       <IonHeader>
@@ -189,7 +193,11 @@ function CommunityMobile() {
 
         {renderContent()}
 
-        <div className="mb-20"></div>
+        <div className="mb-20">
+        <IonButton onClick={navigateToCreateRecipe}>
+          Create Recipe
+        </IonButton>
+        </div>
 
         {isFilterVisible && (
           <div className="filter">

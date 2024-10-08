@@ -6,8 +6,8 @@ import {
   IonRouterOutlet,
 } from "@ionic/react";
 import Tab1 from "./pages/Tab-1/Tab1";
-import Tab2 from "./pages/Tab-2/Tab2";
-import Tab4 from "./pages/Tab-4/Tab4";
+import Tab2 from "./pages/Community";
+import Tab4 from "./pages/Orders/Orders";
 import Tab5 from "./pages/Tab-5/Tab5";
 import MyCart from "./pages/MyCart";
 import { useState } from "react";
@@ -23,17 +23,22 @@ import Community from "./pages/Community";
 import Home from "./pages/Home";
 import { useAuth } from "./contexts/authContext";
 import MealkitDetails from "./pages/MealkitDetails/MealkitDetails";
+import CreateRecipe from "./pages/Community/Create/Recipe";
 import CourierHome from "./pages/Courier/CourierHome/CourierHome";
 import CourierDelivery from "./pages/Courier/CourierDelivery/CourierDelivery";
 import ConfirmPickup from "./pages/Courier/ConfirmPickUp/ConfirmPickUp";
 import ConfirmDelivery from "./pages/Courier/ConfirmDelivery/ConfirmDelivery";
+import Orders from "./pages/Orders/Orders";
+import QRReader from "./pages/QR-Reader/QR-Reader";
+import CourierDeliveries from "./pages/Courier/CourierDeliveries/CourierDeliveries";
+import DeliveryBatchDetails from "./pages/Courier/DeliveryBatchDetails/DeliveryBatchDetails";
 
 const AppContent: React.FC = () => {
   const { isAuthenticated } = useAuth();
   const location = useLocation();
 
   const shouldShowTabs = () => {
-    const noTabRoutes = ['/categories', '/mycart', '/login'];
+    const noTabRoutes = ['/categories', '/mycart', '/login', '/qr-reader'];
     const noTabPrefixes = ['/order/', '/product-details/', '/recipe-details/', '/mealkit-details/', '/courier/delivery/', '/courier/pickup/', '/courier/confirm-pickup/', '/courier/confirm-delivery/'];
 
     if (noTabRoutes.includes(location.pathname)) {
@@ -65,7 +70,9 @@ const AppContent: React.FC = () => {
               <Route exact path="/categories" component={Category} />
               <Route path="/community" component={Community} />
               <Route exact path="/home" component={Home} />
-              <Route path="/tab4" component={Tab4} />
+              <Route exact path="/community" component={Tab2} />
+              <Route path="/community/create/recipe" component={CreateRecipe} />
+              <Route path="/tab4" component={Orders} />
               <Route path="/tab5" component={Tab5} />
               <Route path="/mycart" component={MyCart} />
               <Route path="/mealkit-details/:id" component={MealkitDetails} />
@@ -74,8 +81,11 @@ const AppContent: React.FC = () => {
               <Route path="/payment-options" component={PaymentOptions} />
               <Route path="/courier/home" component={CourierHome} />
               <Route path="/courier/:type/:id" component={CourierDelivery} />
-              <Route path="/courier/confirm-pickup/:id" component={ConfirmPickup} />
+              <Route path="/courier/confirm-pickup/:type/:id" component={ConfirmPickup} />
               <Route path="/courier/confirm-delivery/:id" component={ConfirmDelivery} />
+              <Route path="/qr-reader" component={QRReader} />
+              <Route path="/courier/deliveries" component={CourierDeliveries} />
+              <Route path="/courier/delivery-batch/:batchNumber" component={DeliveryBatchDetails} />
               <Route exact path="/">
                 <Redirect to="/home" />
               </Route>
