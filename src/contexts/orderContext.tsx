@@ -1,10 +1,13 @@
 import React, { createContext, useContext, useState } from 'react';
 import { DeliveryLocation, DeliveryTimeSlot, useCreateOrder, useDeliveryLocations, useDeliveryTimeSlots } from "../api/deliveryApi";
-import { formatDate } from '../pages/MyCart/MyCart-Mobile'
+import { useCreateRecipe, CreateRecipePayload } from '../api/recipeApi';
+import { formatDate } from '../pages/MyCart/MyCart-Mobile';
+import { UnitData, useUnitList, ProductData, MealType, useMealTypeList } from '../api/productApi';
 
 // Define the shape of the order context
 interface OrderContextProps {
   handleOrderCreation: () => void;
+  handleRecipeCreation: (payload: CreateRecipePayload) => void;
   deliveryDetails: {
     deliveryLocation: number;
     deliveryTime: number;
@@ -23,6 +26,10 @@ interface OrderContextProps {
   deliveryTimeSlotDetails: DeliveryTimeSlot;
   setDeliveryTimeSlotDetails: React.Dispatch<React.SetStateAction<DeliveryTimeSlot>>;
   fillDeliveryTimeSlotDetails: (id: number) => void;
+  units: UnitData[] | undefined;
+  getUnitId: (product: ProductData) => number;
+  meal_types: MealType[] | undefined;
+  getMealTypeFromId: (id: number) => string | undefined;
 }
 
 const OrderContext = createContext<OrderContextProps | undefined>(undefined);
@@ -37,6 +44,7 @@ export const useOrder = () => {
 
 export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { mutate: createOrder } = useCreateOrder();
+  const { mutate: createRecipe} = useCreateRecipe();
   const { data: allDeliveryLocations } = useDeliveryLocations();
   const { data: allDeliveryTimeSlots } = useDeliveryTimeSlots();
 
@@ -106,8 +114,44 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       });
   };
 
+  const handleRecipeCreation = (payload: CreateRecipePayload) => {
+    createRecipe(payload);
+  }
+
+  const { data: units } = useUnitList();
+  const getUnitId = (product: ProductData) => {
+  const data = units!.find(unit => unit.name === product.unit_id);
+    return data!.id;
+  }
+
+  const { data: meal_types } = useMealTypeList();
+
+  const getMealTypeFromId =  (id: number) => {
+    const data = meal_types?.find(type => type.id === id);
+    return data?.name;
+  }
+
   return (
-    <OrderContext.Provider value={{ handleOrderCreation, deliveryDetails, setDeliveryDetails, deliveryLocationDetails, setDeliveryLocationDetails, fillDeliveryLocationDetails, allDeliveryLocations, allDeliveryTimeSlots, deliveryTimeSlotDetails, setDeliveryTimeSlotDetails, fillDeliveryTimeSlotDetails }}>
+    <OrderContext.Provider
+      value={{
+        handleOrderCreation,
+        handleRecipeCreation,
+        deliveryDetails,
+        setDeliveryDetails,
+        deliveryLocationDetails,
+        setDeliveryLocationDetails,
+        fillDeliveryLocationDetails,
+        allDeliveryLocations,
+        allDeliveryTimeSlots,
+        deliveryTimeSlotDetails,
+        setDeliveryTimeSlotDetails,
+        fillDeliveryTimeSlotDetails,
+        units,
+        getUnitId,
+        meal_types,
+        getMealTypeFromId,
+      }
+    }>
       {children}
     </OrderContext.Provider>
   );

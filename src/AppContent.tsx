@@ -6,7 +6,7 @@ import {
   IonRouterOutlet,
 } from "@ionic/react";
 import Tab1 from "./pages/Tab-1/Tab1";
-import Tab2 from "./pages/Tab-2/Tab2";
+import Tab2 from "./pages/Community";
 import Tab4 from "./pages/Orders/Orders";
 import Tab5 from "./pages/Tab-5/Tab5";
 import MyCart from "./pages/MyCart";
@@ -21,6 +21,7 @@ import Login from "./pages/Login/login";
 import Category from "./pages/Category";
 import { useAuth } from "./contexts/authContext";
 import MealkitDetails from "./pages/MealkitDetails/MealkitDetails";
+import CreateRecipe from "./pages/Community/Create/Recipe";
 import CourierHome from "./pages/Courier/CourierHome/CourierHome";
 import CourierDelivery from "./pages/Courier/CourierDelivery/CourierDelivery";
 import ConfirmPickup from "./pages/Courier/ConfirmPickUp/ConfirmPickUp";
@@ -66,7 +67,8 @@ const AppContent: React.FC = () => {
               <Route exact path="/tab1/subpage" component={SubPage} />
               <Route exact path="/order/:category" component={Order} />
               <Route exact path="/categories" component={Category} />
-              <Route exact path="/tab2" component={Tab2} />
+              <Route exact path="/community" component={Tab2} />
+              <Route path="/community/create/recipe" component={CreateRecipe} />
               <Route path="/tab4" component={Orders} />
               <Route path="/tab5" component={Tab5} />
               <Route path="/mycart" component={MyCart} />
