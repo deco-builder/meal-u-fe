@@ -30,9 +30,9 @@ const CourierDelivery: React.FC = () => {
 
   const handleConfirm = () => {
     if (isPickup) {
-      history.push('/courier/confirm-pickup/1');
+      history.push('/courier/confirm-pickup/pickup/1');
     } else {
-        history.push('/courier/confirm-delivery/1');
+        history.push('/courier/confirm-pickup/delivery/1');
     }
   };
 
@@ -96,8 +96,8 @@ const CourierDelivery: React.FC = () => {
 
   return (
     <IonPage className="overflow-hidden">
-      <IonHeader>
-        <IonToolbar>
+      <IonHeader collapse='fade'>
+        <IonToolbar className='font-sans'>
           <IonButtons slot="start">
             <IonBackButton defaultHref="/courier/home" />
           </IonButtons>

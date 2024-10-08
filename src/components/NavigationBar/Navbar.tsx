@@ -9,6 +9,7 @@ import OrderIcon from '../../../public/icon/order-icon';
 import ReceiptIcon from '../../../public/icon/receipt-icon';
 import StoreIcon from '../../../public/icon/store-icon';
 import UserIcon from '../../../public/icon/user-icon';
+import ScheduleIcon from '../../../public/icon/schedule-icon';
 import { useAuth } from '../../contexts/authContext';
 
 const Navbar: React.FC = () => {
@@ -16,7 +17,7 @@ const Navbar: React.FC = () => {
 
   const courierNavItems = [
     { to: "/courier/home", icon: RepeatIcon, label: "Home" },
-    { to: "/courier/orders", icon: OrderIcon, label: "Orders" },
+    { to: "/courier/deliveries", icon: ScheduleIcon, label: "Orders" },
     { to: "/courier/profile", icon: UserIcon, label: "Profile" }
   ];
 
