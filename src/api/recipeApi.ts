@@ -7,6 +7,7 @@ interface Creator {
 }
 
 export interface Ingredient {
+  id: number;
   ingredient: {
     product_id: number;
     name: string;
@@ -20,6 +21,7 @@ export interface Ingredient {
     name: string;
     additional_price: string;
   } | null;
+  quantity: number;
   price: number;
 }
 
@@ -234,6 +236,8 @@ export interface IngredientRecipe {
     name: string;
     additional_price: string;
   } | null;
+  quantity: number;
+  price: number;
 }
 
 export interface CreateRecipePayload {

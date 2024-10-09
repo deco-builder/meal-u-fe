@@ -4,18 +4,19 @@ import styles from "./cart.module.css";
 import { useEffect, useState } from "react";
 import {
   CartProduct,
+  RecipeIngredient,
   useDeleteCartItem,
   useUpdateCartItem,
 } from "../../../api/cartApi";
+import { Ingredient } from "../../../api/recipeApi";
 
-interface IngredientRowCardProps {
-  data: CartProduct;
+interface RecipeIngredientRowCardProps {
+  data: Ingredient;
 }
 
-const IngredientRowCard: React.FC<IngredientRowCardProps> = ({ data }) => {
-  const pricePerUnit = parseFloat(data.product.price_per_unit);
+const RecipeIngredientRowCard: React.FC<RecipeIngredientRowCardProps> = ({ data }) => {
   const [quantity, setQuantity] = useState(data.quantity);
-  const [price, setPrice] = useState(pricePerUnit);
+  const [price, setPrice] = useState(data.price);
   const updateCartItem = useUpdateCartItem();
   const deleteCartItem = useDeleteCartItem();
 
@@ -27,11 +28,11 @@ const IngredientRowCard: React.FC<IngredientRowCardProps> = ({ data }) => {
       item_id: data.id,
       quantity: newQuantity,
     });
-    console.log("DARI AZRA", {
-      item_type: "product",
-      item_id: data.id,
-      quantity: newQuantity,
-    })
+    // console.log("DARI AZRA", {
+    //   item_type: "product",
+    //   item_id: data.id,
+    //   quantity: newQuantity,
+    // })
   };
 
   const handleDecrement = () => {
@@ -56,7 +57,7 @@ const IngredientRowCard: React.FC<IngredientRowCardProps> = ({ data }) => {
       <div className={styles.row_card_content}>
         <div className={styles.column}>
           <img
-            src={data.product.image || "/img/no-photo.png"}
+            src={data.ingredient.image || "/img/no-photo.png"}
             style={{
               borderRadius: "10px",
               width: "100%",
@@ -70,19 +71,12 @@ const IngredientRowCard: React.FC<IngredientRowCardProps> = ({ data }) => {
         <div className={styles.column_middle}>
           <div className={styles.card_title}>
             <p style={{ fontSize: "11px", fontWeight: "600" }}>
-              {data.product.name.length > 20
-                ? `${data.product.name.slice(0, 20)}...`
-                : data.product.name}
+              {data.ingredient.name.length > 20
+                ? `${data.ingredient.name.slice(0, 20)}...`
+                : data.ingredient.name}
             </p>
           </div>
-          <div className={styles.dietary_details}>
-            {data.product.dietary_details?.map((item, index) => (
-              <div key={index} className={styles.node}>
-                {item}
-              </div>
-            ))}
-          </div>
-          <div className={styles.price}>${data.product.total_price}</div>
+          <div className={styles.price}>${data.price}</div>
         </div>
         <div className={styles.column}>
           <div className={styles.quantity}>
@@ -96,4 +90,4 @@ const IngredientRowCard: React.FC<IngredientRowCardProps> = ({ data }) => {
   );
 };
 
-export default IngredientRowCard;
+export default RecipeIngredientRowCard;

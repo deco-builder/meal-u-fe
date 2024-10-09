@@ -57,8 +57,6 @@ const CreateRecipe: React.FC = () => {
   const [isOverview, setIsOverview] = useState(false);
   const { mutate: handleRecipeCreation } = useCreateRecipe({
     onSuccess: (data) => {
-      console.log("Recipe created successfully");
-      console.log(data.data);
       setTimeout(() => {
         history.replace(`/recipe-details/${data.data.id}`); 
       }, 100);
@@ -115,7 +113,7 @@ const CreateRecipe: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        <div className="w-full max-w-md mx-auto">
+        <div className="w-full max-w-md mx-auto mb-[80px]">
           <ProgressBar currentStep={currentStep} />
           {currentStep === 1 && <GeneralForm state={state} dispatch={dispatch} />}
           {currentStep === 2 && <InstructionsForm state={state} dispatch={dispatch} />}
