@@ -69,8 +69,6 @@ const IngredientsForm: React.FC<IngredientsFormProps> = ({
 
   const handleIngredientSelect = (product: ProductData) => {
     if (!selectedIngredients.some((item) => item.ingredient.product_id === product.id)) {
-      console.log(product);
-      console.log("Product.unit_id: ", product.unit_id);
 
       const newIngredient: IngredientRecipe = {
         ingredient: {
@@ -81,6 +79,8 @@ const IngredientsForm: React.FC<IngredientsFormProps> = ({
           description: product.description,
         },
         preparation_type: null,
+        quantity: 1,
+        price: product.total_price
       };
       setSelectedIngredients((prev) => [...prev, newIngredient]);
       dispatch({
