@@ -16,8 +16,7 @@ import {
 } from '@ionic/react';
 import { addOutline, chevronForward } from 'ionicons/icons';
 import styles from './PaymentOptions.module.css';
-import { useUpdateOrderStatusToPaid } from '../../api/orderApi';
-import { useGetUserOrders } from '../../api/orderApi';
+import { useUpdateOrderStatusToPaid, useGetUserOrders } from '../../api/orderApi';
 
 const PaymentOptions: React.FC = () => {
     const {data: orders} = useGetUserOrders();
