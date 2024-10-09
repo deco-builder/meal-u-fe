@@ -41,7 +41,7 @@ const PaymentOptions: React.FC = () => {
             <IonContent>
                 <div className={styles.container}>
                     <h2 className={styles.sectionTitle}>Your Card</h2>
-                    <IonCard className={styles.creditCard}>
+                    <IonCard className={styles.creditCard} onClick={changeStatusToPaid}>
                         <IonCardContent>
                             <div className={styles.cardContent}>
                                 <IonText className={styles.cardName}>Oscar Isaac</IonText>
@@ -73,11 +73,6 @@ const PaymentOptions: React.FC = () => {
                         name="Cash on Delivery"
                         details="Pay in Cash"
                     />
-                </div>
-                <div className={styles.bottom_button}>
-                  <IonButton expand="block" className={styles.checkout_button} onClick={changeStatusToPaid} >
-                  Pay
-                  </IonButton>
                 </div>
             </IonContent>
         </IonPage>

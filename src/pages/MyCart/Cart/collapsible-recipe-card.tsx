@@ -5,10 +5,10 @@ import Decrement from "../../../../public/icon/decrement";
 import styles from "./cart.module.css";
 import { useEffect, useState } from "react";
 import {
-  RecipeIngredient,
   useDeleteCartItem,
   useUpdateCartItem,
 } from "../../../api/cartApi";
+import { Ingredient } from '../../../api/recipeApi'
 
 interface CollapsibleRecipeCardProps {
   // data: CartRecipe | Recipe[];
@@ -18,7 +18,7 @@ interface CollapsibleRecipeCardProps {
   dietaryDetails: string[];
   price: number;
   quantity: number;
-  child: RecipeIngredient[];
+  child: Ingredient[];
 }
 
 const CollapsibleRecipeCard: React.FC<CollapsibleRecipeCardProps> = ({

@@ -56,7 +56,8 @@ export interface MealkitData {
   created_at: string;
   description: string;
   dietary_details: string[];
-  price: number;
+  total_price: number;
+  quantity: number;
 }
 
 export interface MealkitDetailsData {
