@@ -3,7 +3,8 @@ import { IonContent, IonPage, IonIcon, IonBackButton, IonButtons, IonHeader, Ion
 import { arrowUp, arrowDown } from 'ionicons/icons';
 import * as maptilersdk from '@maptiler/sdk';
 import "@maptiler/sdk/dist/maptiler-sdk.css";
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams, useLocation } from 'react-router-dom';
+import { format, parseISO, addHours } from 'date-fns';
 
 const MAPTILER_API_KEY = import.meta.env.VITE_MAPTILER_API_KEY;
 
@@ -15,24 +16,41 @@ interface RouteParams {
   type: string;
 }
 
+interface LocationState {
+  orders: any[];
+  date: string;
+  time: string;
+}
+
 const CourierDelivery: React.FC = () => {
   const { type } = useParams<RouteParams>();
+  const location = useLocation<LocationState>();
+  const { orders, date, time } = location.state || {};
   const isPickup = type === 'pickup';
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<maptilersdk.Map | null>(null);
   const geolocateControl = useRef<maptilersdk.GeolocateControl | null>(null);
   const [currentLocation, setCurrentLocation] = useState<[number, number] | null>(null);
-  const [destinationLocation] = useState<[number, number]>(
-    isPickup ? [153.0197, -27.4648] : [153.0140, -27.4975]
-  );
-
   const history = useHistory();
+
+  const destinationLocation: [number, number] = isPickup 
+    ? [153.0197, -27.4648]
+    : [parseFloat(orders[0].delivery_details.delivery_location.longitude), 
+       parseFloat(orders[0].delivery_details.delivery_location.latitude)];
+
+  const destinationName = isPickup 
+    ? 'Warehouse Center'
+    : `${orders[0].delivery_details.delivery_location.name} ${orders[0].delivery_details.delivery_location.branch}`;
+
+  const destinationTime = isPickup
+    ? format(addHours(parseISO(`${date}T${time}`), -1), 'HH:mm')
+    : format(parseISO(`${date}T${time}`), 'HH:mm');
 
   const handleConfirm = () => {
     if (isPickup) {
-      history.push('/courier/confirm-pickup/pickup/1');
+      history.push('/courier/confirm-pickup/pickup/1', { orders, date, time });
     } else {
-        history.push('/courier/confirm-pickup/delivery/1');
+      history.push('/courier/confirm-pickup/delivery/1', { orders, date, time });
     }
   };
 
@@ -116,11 +134,11 @@ const CourierDelivery: React.FC = () => {
                 </div>
                 <div className="flex-grow">
                   <p className="text-xs text-gray-500">{isPickup ? 'Pick Up' : 'Delivery'}</p>
-                  <p className="font-medium">{isPickup ? 'Roma Street Parkland' : 'University of Queensland'}</p>
+                  <p className="font-medium">{destinationName}</p>
                 </div>
                 <div className="text-right">
                   <p className="text-xs text-gray-500">Time</p>
-                  <p className="font-medium">{isPickup ? '11:00' : '12:00'}</p>
+                  <p className="font-medium">{destinationTime}</p>
                 </div>
               </div>
               <button 
@@ -131,10 +149,10 @@ const CourierDelivery: React.FC = () => {
               </button>
             </div>
             <button 
-                className="w-full bg-[#7862FC] text-white font-semibold py-3 rounded-2xl"
-                onClick={handleConfirm}
+              className="w-full bg-[#7862FC] text-white font-semibold py-3 rounded-2xl"
+              onClick={handleConfirm}
             >
-                {isPickup ? 'Confirm Pick Up' : 'Confirm Delivery'}
+              {isPickup ? 'Confirm Pick Up' : 'Confirm Delivery'}
             </button>
           </div>
         </div>

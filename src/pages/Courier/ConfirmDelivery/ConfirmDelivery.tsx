@@ -9,19 +9,31 @@ import {
   IonTitle,
   IonButton,
   IonIcon,
+  IonToast,
 } from '@ionic/react';
 import { cameraOutline, cloudUploadOutline, imageOutline } from 'ionicons/icons';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams, useLocation } from 'react-router-dom';
+import { useUpdateOrderStatusToDelivered } from '../../../api/courierApi';
 
 interface RouteParams {
   id: string;
 }
 
+interface LocationState {
+  order: any;
+}
+
 const ConfirmDelivery: React.FC = () => {
   const [photo, setPhoto] = useState<string | null>(null);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
   const history = useHistory();
   const { id } = useParams<RouteParams>();
+  const location = useLocation<LocationState>();
+  const { order } = location.state || { order: null };
+
+  const updateToDelivered = useUpdateOrderStatusToDelivered();
 
   const takePhoto = async () => {
     try {
@@ -35,6 +47,8 @@ const ConfirmDelivery: React.FC = () => {
       setPhoto(image.dataUrl || null);
     } catch (error) {
       console.error('Error taking photo:', error);
+      setToastMessage('Failed to take photo');
+      setShowToast(true);
     }
   };
 
@@ -50,16 +64,32 @@ const ConfirmDelivery: React.FC = () => {
       setPhoto(image.dataUrl || null);
     } catch (error) {
       console.error('Error uploading photo:', error);
+      setToastMessage('Failed to upload photo');
+      setShowToast(true);
     }
   };
 
-  const confirmDelivery = () => {
+  const confirmDelivery = async () => {
     if (photo) {
-      console.log('Delivery confirmed with photo');
-      // Navigate back to ConfirmPickup page with the confirmed order ID
-      history.push(`/courier/confirm-pickup/delivery/1?confirmed=${id}`);
+      try {
+        const response = await fetch(photo);
+        const blob = await response.blob();
+        const photoFile = new File([blob], "delivery_proof.jpg", { type: "image/jpeg" });
+
+        await updateToDelivered.mutateAsync({ orderId: parseInt(id), photoProof: photoFile });
+        
+        setToastMessage('Delivery confirmed successfully');
+        setShowToast(true);
+
+        history.push(`/courier/confirm-pickup/delivery/1?confirmed=${id}`);
+      } catch (error) {
+        console.error('Error confirming delivery:', error);
+        setToastMessage('Failed to confirm delivery');
+        setShowToast(true);
+      }
     } else {
-      alert('Please upload or take a photo before confirming delivery');
+      setToastMessage('Please upload or take a photo before confirming delivery');
+      setShowToast(true);
     }
   };
 
@@ -112,6 +142,12 @@ const ConfirmDelivery: React.FC = () => {
           </div>
         </div>
       </IonContent>
+      <IonToast
+        isOpen={showToast}
+        onDidDismiss={() => setShowToast(false)}
+        message={toastMessage}
+        duration={2000}
+      />
     </IonPage>
   );
 };
