@@ -51,14 +51,6 @@ const IngredientRowCard: React.FC<IngredientRowCardProps> = ({ data }) => {
     }
   };
 
-  useEffect(() => {
-    const calculatePrice = () => {
-      const newPrice = pricePerUnit * data.quantity;
-      setPrice(newPrice);
-    };
-    calculatePrice();
-  }, [quantity, data]);
-
   return (
     <div className={styles.card}>
       <div className={styles.row_card_content}>
@@ -90,7 +82,7 @@ const IngredientRowCard: React.FC<IngredientRowCardProps> = ({ data }) => {
               </div>
             ))}
           </div>
-          <div className={styles.price}>${price}</div>
+          <div className={styles.price}>${data.product.total_price}</div>
         </div>
         <div className={styles.column}>
           <div className={styles.quantity}>

@@ -8,32 +8,24 @@ import {
   useDeleteCartItem,
   useUpdateCartItem,
 } from "../../../api/cartApi";
-import { Ingredient } from '../../../api/recipeApi'
+import { Ingredient, RecipeData } from '../../../api/recipeApi'
+import { CartRecipe } from '../../../api/cartApi'
 
 interface CollapsibleRecipeCardProps {
-  // data: CartRecipe | Recipe[];
-  id: number;
-  title: string;
-  image: string;
-  dietaryDetails: string[];
-  price: number;
-  quantity: number;
-  child: Ingredient[];
+  data: RecipeData;
+  // id: number;
+  // title: string;
+  // image: string;
+  // dietaryDetails: string[];
+  // price: number;
+  // quantity: number;
+  // child: Ingredient[];
 }
 
-const CollapsibleRecipeCard: React.FC<CollapsibleRecipeCardProps> = ({
-  id,
-  title,
-  image,
-  dietaryDetails,
-  price,
-  quantity,
-  child,
-}) => {
+const CollapsibleRecipeCard: React.FC<CollapsibleRecipeCardProps> = ({data}) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isChildExist, setIsChildExist] = useState(false);
-  const [newQuantity, setNewQuantity] = useState(quantity);
-  const [calculatedPrice, setCalculatedPrice] = useState(price);
+  const [newQuantity, setNewQuantity] = useState(0);
   const updateCartItem = useUpdateCartItem();
   const deleteCartItem = useDeleteCartItem();
 
@@ -41,52 +33,45 @@ const CollapsibleRecipeCard: React.FC<CollapsibleRecipeCardProps> = ({
     setIsExpanded((prevState) => !prevState);
   };
 
-  useEffect(() => {
-    const newPrice = price * quantity;
-    setCalculatedPrice(newPrice);
-  }, [price, newQuantity]);
-
   const handleIncrement = () => {
-    const newQuantity = quantity + 1;
+    const newQuantity = data.quantity + 1;
     setNewQuantity(newQuantity);
     updateCartItem.mutate({
       item_type: "recipe",
-      item_id: id,
+      item_id: data.id,
       quantity: newQuantity,
     });
   };
 
   const handleDecrement = () => {
-    if (quantity > 1) {
-      const newQuantity = quantity - 1;
+    if (data.quantity > 1) {
+      const newQuantity = data.quantity - 1;
       setNewQuantity(newQuantity);
       updateCartItem.mutate({
         item_type: "recipe",
-        item_id: id,
+        item_id: data.id,
         quantity: newQuantity,
       });
     } else {
       deleteCartItem.mutate({
         item_type: "recipe",
-        cart_product_id: id,
+        cart_product_id: data.id,
       });
     }
   };
 
   useEffect(() => {
-    const calculatePrice = () => {
-      const newPrice = price * newQuantity;
-      setCalculatedPrice(newPrice);
-    };
-    calculatePrice();
-  }, [newQuantity, price]);
+    if (data.ingredients) {
+      setIsChildExist(true);
+    }
+  })
 
   return (
     <div className={styles.card}>
       <div className={styles.row_card_content}>
         <div className={styles.column}>
           <img
-            src={image || "/img/no-photo.png"}
+            src={data.image || "/img/no-photo.png"}
             style={{
               borderRadius: "10px",
               width: "100%",
@@ -100,17 +85,17 @@ const CollapsibleRecipeCard: React.FC<CollapsibleRecipeCardProps> = ({
         <div className={styles.column_middle}>
           <div className={styles.card_title}>
             <p style={{ fontSize: "11px", fontWeight: "600" }}>
-              {title.length > 20 ? `${title.slice(0, 20)}...` : title}
+              {data.name.length > 20 ? `${data.name.slice(0, 20)}...` : data.name}
             </p>
           </div>
           <div className={styles.dietary_details}>
-            {Object.values(dietaryDetails).map((detail, index) => (
+            {Object.values(data.dietary_details).map((detail, index) => (
               <div key={index} className={styles.node}>
                 {detail}
               </div>
             ))}
           </div>
-          <div className={styles.price}>${calculatedPrice}</div>
+          <div className={styles.price}>${data.total_price}</div>
         </div>
         <div className={styles.column} onClick={toggleExpand}>
           {isChildExist ? (

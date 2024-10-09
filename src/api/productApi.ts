@@ -33,6 +33,7 @@ export interface ProductData {
   dietary_details: string[];
   product_nutrition: ProductNutrition | null;
   recipes: RecipePreview[];
+  total_price: number;
 }
 
 interface ProductNutrition {

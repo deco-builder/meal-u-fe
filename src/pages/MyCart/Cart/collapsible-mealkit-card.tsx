@@ -6,21 +6,14 @@ import { RecipeData } from "../../../api/recipeApi";
 
 
 import CollapsibleRecipeCard from "./collapsible-recipe-card";
+import { MealkitData } from "../../../api/mealkitApi";
 
 interface CollapsibleMealkitCardProps {
-  title: string;
-  image: string;
-  dietaryDetails: string[];
-  price: number;
-  child: RecipeData[];
+  data: MealkitData;
 }
 
 const CollapsibleMealkitCard: React.FC<CollapsibleMealkitCardProps> = ({
-  title,
-  price,
-  image,
-  dietaryDetails,
-  child,
+  data
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -32,9 +25,8 @@ const CollapsibleMealkitCard: React.FC<CollapsibleMealkitCardProps> = ({
     <div className={styles.card}>
       <div className={styles.row_card_content}>
         <div className={styles.column}>
-          {/* <div className={styles.card_image_default}></div> */}
           <img
-            src={image || "/img/no-photo.png"}
+            src={data.image ? data.image : "/img/no-photo.png"}
             style={{
               borderRadius: "10px",
               width: "100%",
@@ -48,17 +40,17 @@ const CollapsibleMealkitCard: React.FC<CollapsibleMealkitCardProps> = ({
         <div className={styles.column_middle}>
           <div className={styles.card_title}>
             <p style={{ fontSize: "11px", fontWeight: "600" }}>
-              {title.length > 20 ? `${title.slice(0, 20)}...` : title}
+              {data.name.length > 20 ? `${data.name.slice(0, 20)}...` : data.name}
             </p>
           </div>
           <div className={styles.dietary_details}>
-            {dietaryDetails && Object.values(dietaryDetails).map((detail, index) => (
+            {data.dietary_details && Object.values(data.dietary_details).map((detail, index) => (
               <div key={index} className={styles.node}>
                 {detail}
               </div>
             ))}
           </div>
-          <div className={styles.price}>${price}</div>
+          <div className={styles.price}>${data.total_price}</div>
         </div>
         <div className={styles.column} onClick={toggleExpand}>
           {isExpanded ? <ArrowUpIcon /> : <ArrowDownIcon />}
@@ -66,16 +58,10 @@ const CollapsibleMealkitCard: React.FC<CollapsibleMealkitCardProps> = ({
       </div>
       {isExpanded ? (
         <div className="expanded_content">
-          {child.map((data, index) => (
+          {data.recipes.map((data, index) => (
             <CollapsibleRecipeCard
               key={index}
-              id={data.id}
-              image={data.image}
-              title={data.name}
-              dietaryDetails={data.dietary_details}
-              price={data.total_price}
-              quantity={1}
-              child={data.ingredients || []}
+              data={data}
             />
           ))}
         </div>
