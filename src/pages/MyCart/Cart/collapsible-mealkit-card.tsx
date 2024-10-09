@@ -2,7 +2,9 @@ import ArrowDownIcon from "../../../../public/icon/arrow-down";
 import ArrowUpIcon from "../../../../public/icon/arrow-up";
 import styles from "./cart.module.css";
 import { useState } from "react";
-import { Recipe } from "../../../api/cartApi";
+import { RecipeData } from "../../../api/recipeApi";
+
+
 import CollapsibleRecipeCard from "./collapsible-recipe-card";
 
 interface CollapsibleMealkitCardProps {
@@ -10,7 +12,7 @@ interface CollapsibleMealkitCardProps {
   image: string;
   dietaryDetails: string[];
   price: number;
-  child: Recipe[];
+  child: RecipeData[];
 }
 
 const CollapsibleMealkitCard: React.FC<CollapsibleMealkitCardProps> = ({

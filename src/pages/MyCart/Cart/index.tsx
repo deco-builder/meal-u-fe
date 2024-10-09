@@ -57,14 +57,14 @@ const Cart: React.FC<CartProps> = ({subTotal, setSubTotal}) => {
     <>
     	<div className={styles.subsection}>
 			<div className={styles.title}>Meal Kits</div>
-    	  {/* <div className={styles.cards}>
+    	  <div className={styles.cards}>
           {cartData.mealkits.length ? (
     	    cartData.mealkits.map((data, index) => (
     	        <CollapsibleMealkitCard key={index} image={data.image} title={data.name} dietaryDetails={data.dietary_details} price={data.total_price} child={data.recipes} />
     	    ))
           ) : <div className={styles.empty}>You have no mealkits in your cart.</div>
         }
-    	  </div> */}
+    	  </div>
     	</div>
     	<div className={styles.subsection}>
 			<div className={styles.title}>Recipe</div>
