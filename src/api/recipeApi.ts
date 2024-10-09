@@ -224,7 +224,6 @@ export const useCommunityRecipesList = (): UseQueryResult<
 
 
 export interface IngredientRecipe {
-  id: number;
   ingredient: {
     name: string;
     product_id: number;
