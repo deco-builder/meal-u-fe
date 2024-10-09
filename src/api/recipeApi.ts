@@ -47,6 +47,7 @@ export interface RecipeData {
   ingredients: Ingredient[];
   total_price: number;
   nutrition_details: NutritionDetails;
+  quantity: number;
 }
 
 export interface CommunityRecipeData {

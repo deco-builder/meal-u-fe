@@ -22,29 +22,23 @@ import { useMealkitList, MealkitData } from "../../../api/mealkitApi";
 import { RecipeData, useRecipesList } from "../../../api/recipeApi";
 import { ProductData, useProductList } from "../../../api/productApi";
 import { LocationData, useLocationList } from "../../../api/locationApi";
-import {
-  useCart,
-  CartData,
-  useUpdateCartItem,
-  useDeleteCartItem,
-  useAddCartItem,
-} from "../../../api/cartApi";
+import { useCart, CartData, useUpdateCartItem, useDeleteCartItem, useAddCartItem } from "../../../api/cartApi";
 import { useParams } from "react-router-dom";
 import ItemCard from "../../../components/ItemCard/ItemCard";
 import { useQueryClient } from "@tanstack/react-query";
-import SkeletonOrderCard from "../../../components/ItemCard/SkeletonItemCard";
-import SkeletonProductItem from "../../../components/ProductCard/SkeletonProductCard";
 
 function OrderMobile() {
   const queryClient = useQueryClient();
   const { category } = useParams<{ category: string }>();
   const router = useIonRouter();
+  const [count, setCount] = useState(0);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [currentLocation, setCurrentLocation] = useState("");
-  const [totalItem, setTotalItem] = useState(0);
-  const [totalPrice, setTotalPrice] = useState(0);
+  const [selectedProducts, setSelectedProducts] = useState<{
+    [key: number]: number;
+  }>({});
   const { data: mealkits = [], isFetching: isMealkitsFetching } =
     useMealkitList({
       search: selectedCategory,
@@ -62,15 +56,15 @@ function OrderMobile() {
 
   const updateCartItem = useUpdateCartItem();
   const deleteCartItem = useDeleteCartItem();
-  const addCartItem = useAddCartItem();
+  const addCartItem = useAddCartItem()
 
   const refetchCart = () => {
-    queryClient.invalidateQueries({ queryKey: ["cart"] });
+    queryClient.invalidateQueries({ queryKey: ['cart'] });
   };
 
   const getCartItem = (productId: number) => {
     return cart?.products?.find(
-      (item: { product: { id: number } }) => item.product.id === productId
+      (item) => item.product.id === productId
     );
   };
 
@@ -82,14 +76,11 @@ function OrderMobile() {
     setCurrentLocation(firstLocation);
   }
 
-  if (!isCartFetching && cart && !totalItem && !totalPrice) {
-    setTotalItem(cart?.total_item);
-    setTotalPrice(cart?.total_price);
-  }
-
   const handleFilter = () => {
     setIsFilterVisible(!isFilterVisible);
   };
+
+
 
   const increment = (productId: number) => {
     const cartItem = getCartItem(productId);
@@ -102,7 +93,7 @@ function OrderMobile() {
           quantity: newQuantity,
         },
         {
-          onSuccess: () => refetchCart(),
+          onSuccess: () => refetchCart()
         }
       );
     } else {
@@ -113,15 +104,7 @@ function OrderMobile() {
           quantity: 1,
         },
         {
-          onSuccess: (data) => {
-            refetchCart();
-          },
-          onError: (error) => {
-            console.error("Add to cart failed:", error);
-          },
-          onSettled: () => {
-            console.log("Add to cart operation completed (success or failure)");
-          },
+          onSuccess: () => refetchCart()
         }
       );
     }
@@ -139,7 +122,7 @@ function OrderMobile() {
             quantity: newQuantity,
           },
           {
-            onSuccess: () => refetchCart(),
+            onSuccess: () => refetchCart()
           }
         );
       } else {
@@ -149,7 +132,7 @@ function OrderMobile() {
             cart_product_id: cartItem.id,
           },
           {
-            onSuccess: () => refetchCart(),
+            onSuccess: () => refetchCart()
           }
         );
       }
@@ -252,19 +235,7 @@ function OrderMobile() {
         >
           <p style={{ fontSize: "16px", fontWeight: "600" }}>Mealkits</p>
           {isMealkitsFetching ? (
-            <div style={{ overflowX: "auto", width: "100%" }}>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  minWidth: "min-content",
-                }}
-              >
-                {[...Array(5)].map((_, index) => (
-                  <SkeletonOrderCard key={index} />
-                ))}
-              </div>
-            </div>
+            <p>Loading mealkits...</p>
           ) : filteredMealkits.length > 0 ? (
             <div style={{ overflowX: "auto", width: "100%" }}>
               <div
@@ -291,19 +262,7 @@ function OrderMobile() {
         <div style={{ display: "flex", flexDirection: "column" }}>
           <h3 style={{ fontSize: "16px", fontWeight: "600" }}>Recipes</h3>
           {isRecipesFetching ? (
-            <div style={{ overflowX: "auto", width: "100%" }}>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  minWidth: "min-content",
-                }}
-              >
-                {[...Array(5)].map((_, index) => (
-                  <SkeletonOrderCard key={index} />
-                ))}
-              </div>
-            </div>
+            <p>Loading recipes...</p>
           ) : filteredRecipes.length > 0 ? (
             <div style={{ overflowX: "auto", width: "100%" }}>
               <div
@@ -334,16 +293,11 @@ function OrderMobile() {
             display: "flex",
             flexDirection: "column",
             marginBottom: "50px",
-            marginTop: "10px",
           }}
         >
           <h3 style={{ fontSize: "16px", fontWeight: "600" }}>Groceries</h3>
           {isProductFetching ? (
-            <>
-              <SkeletonProductItem />
-              <SkeletonProductItem />
-              <SkeletonProductItem />
-            </>
+            <p>Loading groceries...</p>
           ) : filteredProducts.length > 0 ? (
             filteredProducts.map((product: ProductData) => {
               const cartItem = getCartItem(product.id);
@@ -494,17 +448,11 @@ function OrderMobile() {
                 >
                   My Orders
                 </p>
-                {cart && (
-                  <p
-                    style={{
-                      fontSize: "12px",
-                      textAlign: "left",
-                      color: "#fff",
-                    }}
-                  >
-                    {totalItem} items - ${totalPrice} AUD
-                  </p>
-                )}
+                <p
+                  style={{ fontSize: "12px", textAlign: "left", color: "#fff" }}
+                >
+                  0 items - $0 AUD
+                </p>
               </div>
               <FloatCartIcon />
             </div>
