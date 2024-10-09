@@ -12,7 +12,6 @@ import { useAuth } from "../../contexts/authContext";
 const Login: React.FC = () => {
   const router = useIonRouter();
   const { login } = useAuth();
-  console.log("///////////////////////////////")
 
   const [isMobile, setIsMobile] = useState(window.innerWidth < 576);
   const [email, setEmail] = useState("");
@@ -59,12 +58,9 @@ const Login: React.FC = () => {
     event.preventDefault();
     setError("");
 
-    console.log("data to send: ", email, "and", password);
-
     try {
-      console.log("coba kirim");
       await login(email, password);
-      router.push("/tab1");
+      router.push("/home");
     } catch (error) {
       setError("Login failed. Please check your credentials and try again.");
       console.error("Login error:", error);

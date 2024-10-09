@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import {
     IonContent,
     IonHeader,
@@ -16,23 +17,65 @@ import {
     IonItem,
     IonLabel,
     IonAvatar,
-    IonRouterOutlet
+    IonSkeletonText,
 } from '@ionic/react';
-import {heart, share, bookmark, time, restaurant, flame, fastFood, pencil} from 'ionicons/icons';
+import { heartOutline, chatbubbleOutline, shareOutline, bookmarkOutline, time, restaurant, flame, fastFood, pencil } from 'ionicons/icons';
 import LongIngredientCard from '../../components/LongIngredientCard/LongIngredientCard';
-import styles from './RecipeDetails.module.css';
+import { fetchRecipeDetails, RecipeData } from '../../api/recipeApi';
+import { useAuth } from '../../contexts/authContext';
+import { BsPencilSquare } from 'react-icons/bs'
 
 const RecipeDetails: React.FC = () => {
-    const ingredients = [
-        { name: 'Parmigiano Reggiano', image: '/food.png', quantity: '100g', price: '$1.40 per 250g' },
-        { name: 'Eggs', image: '/food.png', quantity: '2 pieces', price: '$4.00 per pack' },
-        { name: 'GF Fettuccine', image: '/food.png', quantity: '400g', price: '$5.00 per pack' },
-        { name: 'Butter', image: '/food.png', quantity: '35g', price: '$3.00 per 500g' },
-        { name: 'Black Pepper', image: '/food.png', quantity: '1/4 tsp', price: '$3.00 per 100g' },
-        { name: 'Kosher Salt', image: '/food.png', quantity: '1 tbsp', price: '$1.00 per 500g' },
-        { name: 'Garlic', image: '/food.png', quantity: '1 clove', price: '$2.00 per 250g' },
-        { name: 'Parsley', image: '/food.png', quantity: '1 tbsp (chopped)', price: '$1.50 per 10g' },
-    ];
+    const { id } = useParams<{ id: string }>();
+    const [recipe, setRecipe] = useState<RecipeData | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    const { getToken } = useAuth();
+    const token = getToken();
+
+    
+
+    useEffect(() => {
+        const loadRecipe = async () => {
+            if (!token) {
+                setError('No authentication token available');
+                setLoading(false);
+                return;
+            }
+
+            try {
+                const data = await fetchRecipeDetails(parseInt(id), token);
+                setRecipe(data);
+            } catch (err) {
+                setError('Failed to load recipe details');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadRecipe();
+    }, [id, token]);
+
+    if (loading) {
+        return (
+            <IonPage>
+                <IonContent>
+                    <IonSkeletonText animated className="w-full h-full" />
+                </IonContent>
+            </IonPage>
+        );
+    }
+
+    if (error || !recipe) {
+        return (
+            <IonPage>
+                <IonContent>
+                    <IonText color="danger">{error || 'Recipe not found'}</IonText>
+                </IonContent>
+            </IonPage>
+        );
+    }
 
     return (
         <IonPage>
@@ -41,123 +84,115 @@ const RecipeDetails: React.FC = () => {
                     <IonButtons slot="start">
                         <IonBackButton defaultHref="/recipes" />
                     </IonButtons>
-                    <IonTitle>Recipe</IonTitle>
+                    <IonTitle>{recipe.name}</IonTitle>
                 </IonToolbar>
             </IonHeader>
             <IonContent fullscreen>
-                <div className={styles.contentContainer}>
-                    <div className={styles.authorContainer}>
-                        <div className={styles.avatarContainer}>
+                <div className="pb-24 font-sans">
+                    <div className="flex items-center p-4 justify-between">
+                        <div className="flex items-center gap-3">
                             <IonAvatar>
-                                <img src="/food.png" alt="Jane Doe"/>
+                                <img src={recipe.creator.profile_picture || '/default-avatar.png'} alt={recipe.creator.name} />
                             </IonAvatar>
                             <div>
-                                <IonText className={styles.authorName}>Jane Doe</IonText>
-                                <IonText className={styles.followers}>18K Followers</IonText>
-                            </div>
-                        </div>
-                        <IonButton fill="outline" className={styles.followButton}>Follow</IonButton>
-                    </div>
-                    <div className={styles.imageContainer}>
-                        <IonImg src="/food.png" alt="Easy Fettuccine Carbonara"/>
-                    </div>
-                    <div className={styles.statsContainer}>
-                        <div className={styles.likeChatShare}>
-                            <div className={styles.stat}>
-                                <IonIcon icon={heart} className={styles.statIcon}/>
-                                <IonText className={styles.statText}>121</IonText>
-                            </div>
-                            <div className={styles.stat}>
-                                <IonIcon icon={share} className={styles.statIcon}/>
-                                <IonText>35</IonText>
-                            </div>
-                            <div className={styles.stat}>
-                                <IonIcon icon={share} className={styles.statIcon}/>
-                                <IonText>35</IonText>
-                            </div>
-                        </div>
-                        <div className={styles.stat}>
-                            <IonIcon icon={bookmark} className={styles.statIcon}/>
-                        </div>
-                    </div>
-                    <div className={styles.titleContainer}>
-                        <h1>Easy Fettuccine Carbonara</h1>
-                        <div className={styles.timeContainer}>
-                            <IonIcon icon={time}/>
-                            <div className={styles.timeText}>
-                                <IonText>15 mins</IonText>
+                                <IonText className="font-bold text-base block">{recipe.creator.name}</IonText>
+                                <IonText className="text-sm text-gray-600">Followers: N/A</IonText>
                             </div>
                         </div>
                     </div>
-                    <div className={styles.tags}>
-                        <IonChip className={styles.customChip} color="success">Gluten-Free</IonChip>
+                    <div className="w-full h-64 overflow-hidden">
+                        <IonImg src={recipe.image || '/food-placeholder.png'} alt={recipe.name} className="w-full h-full object-cover" />
                     </div>
-                    <div className={styles.nutritionInfo}>
-                        <div className={styles.nutritionItem}>
-                            <IonIcon icon={fastFood} className={styles.nutritionIcon}/>
-                            <IonText className={styles.nutritionText}>65g carbs</IonText>
+                    <div className="flex justify-between items-center px-4 py-2.5 border-b border-gray-200 mt-1">
+                        <div className="flex items-center gap-5">
+                            <div className="flex items-center gap-2">
+                                <IonIcon icon={heartOutline} className="w-6 h-6" />
+                                <IonText>N/A</IonText>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <IonIcon icon={shareOutline} className="w-6 h-6" />
+                                <IonText>N/A</IonText>
+                            </div>
                         </div>
-                        <div className={styles.nutritionItem}>
-                            <IonIcon icon={restaurant} className={styles.nutritionIcon}/>
-                            <IonText className={styles.nutritionText}>27g proteins</IonText>
-                        </div>
-                    </div>
-                    <div className={styles.nutritionInfo}>
-                        <div className={styles.nutritionItem}>
-                            <IonIcon icon={flame} className={styles.nutritionIcon}/>
-                            <IonText className={styles.nutritionText}>120 Kcal</IonText>
-                        </div>
-                        <div className={styles.nutritionItem}>
-                            <IonIcon icon={fastFood} className={styles.nutritionIcon}/>
-                            <IonText className={styles.nutritionText}>9g fats</IonText>
+                        <div>
+                            <IonIcon icon={bookmarkOutline} className="w-6 h-6" />
                         </div>
                     </div>
-                    <div className={styles.descriptionContainer}>
-                        <div className={styles.description}>
-                            <IonText>
-                                Need a quick gluten-free dinner? You're in the right place! This fettuccine carbonara
-                                just
-                                takes
-                                15 minutes to make and it's so delish!
-                            </IonText>
+                    <div className="flex items-start justify-between p-4">
+                        <h1 className="text-2xl font-bold m-0">{recipe.name}</h1>
+                        <div className="flex items-center gap-1 text-gray-600 pt-2">
+                            <IonIcon icon={time} />
+                            <div className="text-xs whitespace-nowrap">
+                                <IonText>{recipe.cooking_time} mins</IonText>
+                            </div>
                         </div>
                     </div>
-                    <div className={styles.sectionTitle}>
-                        <h2>Steps</h2>
+                    <div className="flex px-4">
+                        {recipe.dietary_details.map((detail, index) => (
+                            <IonChip key={index} className="text-[#7862FC] border border-[#7862FC] bg-transparent rounded-full px-2.5 py-1 text-sm mr-2">{detail}</IonChip>
+                        ))}
+                    </div>
+                    <div className="flex justify-start p-4 gap-3">
+                        <div className="flex items-center gap-3">
+                            <IonIcon icon={fastFood} className="bg-[#E6EBF2] text-[#0A2533] p-2 rounded-lg text-2xl" />
+                            <IonText className="text-[#0A2533] font-normal text-base w-24">{recipe.nutrition_details ? recipe.nutrition_details.carbohydrate_per_serving : "--" }g carbs</IonText>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <IonIcon icon={restaurant} className="bg-[#E6EBF2] text-[#0A2533] p-2 rounded-lg text-2xl" />
+                            <IonText className="text-[#0A2533] font-normal text-base w-24">{recipe.nutrition_details ? recipe.nutrition_details.protein_per_serving : "--" }g proteins</IonText>
+                        </div>
+                    </div>
+                    <div className="flex justify-start p-4 gap-3">
+                        <div className="flex items-center gap-3">
+                            <IonIcon icon={flame} className="bg-[#E6EBF2] text-[#0A2533] p-2 rounded-lg text-2xl" />
+                            <IonText className="text-[#0A2533] font-normal text-base w-24">{recipe.nutrition_details ? recipe.nutrition_details.energy_per_serving : "--" } Kcal</IonText>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <IonIcon icon={fastFood} className="bg-[#E6EBF2] text-[#0A2533] p-2 rounded-lg text-2xl" />
+                            <IonText className="text-[#0A2533] font-normal text-base w-24">{recipe.nutrition_details ? recipe.nutrition_details.fat_total_per_serving : "--" }g fats</IonText>
+                        </div>
+                    </div>
+                    <div className="px-4">
+                        <div className="bg-[#F1F5F5] rounded-2xl p-3.5">
+                            <IonText>{recipe.description}</IonText>
+                        </div>
+                    </div>
+                    <div className="px-4 mt-4">
+                        <h2 className="font-bold text-base">Steps</h2>
                     </div>
                     <IonList>
-                        <IonItem>
-                            <IonLabel className={styles.step}>
-                                1. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget
-                                ultricies aliquam, nunc nunc ultricies nisi.
-                            </IonLabel>
-                        </IonItem>
-                        {/* Add more steps here */}
+                        {recipe.instructions.map((step, index) => (
+                            <IonItem key={index}>
+                                <IonLabel className="whitespace-normal">{index + 1}. {step}</IonLabel>
+                            </IonItem>
+                        ))}
                     </IonList>
-                    <div className={styles.sectionTitle}>
-                        <h2>Ingredients</h2>
+                    <div className="px-4 mt-4">
+                        <h2 className="font-bold text-base">Ingredients</h2>
                     </div>
-                    {ingredients.map((ingredient, index) => (
+                    {recipe.ingredients.map((ingredient, index) => (
                         <LongIngredientCard
                             key={index}
-                            name={ingredient.name}
-                            image={ingredient.image}
-                            quantity={ingredient.quantity}
-                            price={ingredient.price}
+                            id={ingredient.ingredient.product_id}
+                            name={ingredient.ingredient.name}
+                            image={ingredient.ingredient.image || "/img/no-photo.png"}
+                            quantity={`${ingredient.ingredient.unit_size} ${ingredient.ingredient.unit_id}`}
+                            price={`$${ingredient.price.toFixed(2)}`}
                         />
                     ))}
-                    <div className={styles.sectionTitle}>
-                        <h2>Comments</h2>
+                    <div className="px-4 mt-4">
+                        <h2 className="font-bold text-base">Comments</h2>
                     </div>
+                    <IonText className="px-4">No comments yet. Be the first to comment!</IonText>
                 </div>
 
-                <div className={styles.fixedButtonContainer}>
-                    <IonButton expand="block" className={styles.addRecipeButton}>
-                        Add ingredients to cart
-                    </IonButton>
-                    <IonButton className={styles.editButton}>
-                        <IonIcon icon={pencil} />
-                    </IonButton>
+                <div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-md z-10 flex items-center gap-3 rounded-t-3xl">
+                    <button className="flex-grow bg-[#7862FC] text-white py-3 px-4 rounded-2xl font-semibold text-base font-sans">
+                        Add Mealkit to cart
+                    </button>
+                    <div className="w-12 h-12 flex items-center justify-center font-sans">
+                        <BsPencilSquare className="w-8 h-8 text-[#7862FC]" />
+                    </div>
                 </div>
             </IonContent>
         </IonPage>
