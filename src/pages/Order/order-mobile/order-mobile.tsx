@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   IonBackButton,
   IonButtons,
@@ -82,10 +82,16 @@ function OrderMobile() {
     setCurrentLocation(firstLocation);
   }
 
-  if (!isCartFetching && cart && !totalItem && !totalPrice) {
-    setTotalItem(cart?.total_item);
-    setTotalPrice(cart?.total_price);
-  }
+  const updateTotals = useCallback(() => {
+    if (cart) {
+      setTotalItem(cart.total_item);
+      setTotalPrice(cart.total_price);
+    }
+  }, [cart]);
+
+  useEffect(() => {
+    updateTotals();
+  }, [cart, updateTotals]);
 
   const handleFilter = () => {
     setIsFilterVisible(!isFilterVisible);
@@ -102,7 +108,10 @@ function OrderMobile() {
           quantity: newQuantity,
         },
         {
-          onSuccess: () => refetchCart(),
+          onSuccess: () => {
+            refetchCart();
+            updateTotals();
+          },
         }
       );
     } else {
@@ -113,8 +122,9 @@ function OrderMobile() {
           quantity: 1,
         },
         {
-          onSuccess: (data) => {
+          onSuccess: () => {
             refetchCart();
+            updateTotals();
           },
           onError: (error) => {
             console.error("Add to cart failed:", error);
