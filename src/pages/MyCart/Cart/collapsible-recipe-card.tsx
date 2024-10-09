@@ -10,6 +10,7 @@ import {
 } from "../../../api/cartApi";
 import { Ingredient, RecipeData } from '../../../api/recipeApi'
 import { CartRecipe } from '../../../api/cartApi'
+import RecipeIngredientRowCard from "./recipe-ingredient-row-card";
 
 interface CollapsibleRecipeCardProps {
   data: RecipeData;
@@ -110,14 +111,20 @@ const CollapsibleRecipeCard: React.FC<CollapsibleRecipeCardProps> = ({data}) => 
           <div className={styles.quantity}>
             <Decrement onClick={handleDecrement} />
             <p style={{fontSize: '12px'}}>
-            {newQuantity}
+            {data.quantity}
             </p>
             <Increment onClick={handleIncrement} />
           </div>
         </div>
       </div>
-      {isExpanded ? <div className="expanded_content"></div> : null}
-    </div>
+      {isExpanded ? (
+        <div className="expanded_content">
+          {data.ingredients.map((data, index) => (
+            <RecipeIngredientRowCard key={index} data={data} />
+          ))}
+        </div>
+      ) : null}
+      </div>
   );
 };
 
