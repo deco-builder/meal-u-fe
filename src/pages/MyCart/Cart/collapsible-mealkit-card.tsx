@@ -52,7 +52,7 @@ const CollapsibleMealkitCard: React.FC<CollapsibleMealkitCardProps> = ({
             </p>
           </div>
           <div className={styles.dietary_details}>
-            {Object.values(dietaryDetails).map((detail, index) => (
+            {dietaryDetails && Object.values(dietaryDetails).map((detail, index) => (
               <div key={index} className={styles.node}>
                 {detail}
               </div>

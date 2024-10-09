@@ -53,6 +53,8 @@ const Cart: React.FC<CartProps> = ({subTotal, setSubTotal}) => {
     return <div className={styles.empty_cart}>You have no items in your cart right now.</div>;
   }
 
+  console.log("ini cart data: ", cartData);
+
   return (
     <>
     	<div className={styles.subsection}>
