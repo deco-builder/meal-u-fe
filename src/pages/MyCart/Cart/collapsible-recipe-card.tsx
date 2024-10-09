@@ -98,15 +98,6 @@ const CollapsibleRecipeCard: React.FC<CollapsibleRecipeCardProps> = ({data}) => 
           </div>
           <div className={styles.price}>${data.total_price}</div>
         </div>
-        <div className={styles.column} onClick={toggleExpand}>
-          {isChildExist ? (
-            isExpanded ? (
-              <ArrowUpIcon />
-            ) : (
-              <ArrowDownIcon />
-            )
-          ) : null}
-        </div>
         <div className={styles.column}>
           <div className={styles.quantity}>
             <Decrement onClick={handleDecrement} />
@@ -115,6 +106,15 @@ const CollapsibleRecipeCard: React.FC<CollapsibleRecipeCardProps> = ({data}) => 
             </p>
             <Increment onClick={handleIncrement} />
           </div>
+        </div>
+        <div className={styles.column} onClick={toggleExpand}>
+          {isChildExist ? (
+            isExpanded ? (
+              <ArrowUpIcon />
+            ) : (
+              <ArrowDownIcon />
+            )
+          ) : null}
         </div>
       </div>
       {isExpanded ? (
