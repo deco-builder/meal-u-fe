@@ -35,19 +35,9 @@ const Cart: React.FC<CartProps> = ({subTotal, setSubTotal}) => {
 
   useEffect(() => {
     if (cartData) {
-      // Calculate the subtotal based on the prices of meal kits, recipes, and ingredients
-      const calculateSubTotal = () => {
-        const mealkitTotal = cartData.mealkits.reduce((acc, item) => acc + item.total_price * item.quantity, 0);
-        const recipeTotal = cartData.recipes.reduce((acc, item) => acc + item.total_price * item.quantity, 0);
-        const productTotal = cartData.products.reduce((acc, item) => acc + parseFloat(item.product.price_per_unit) * item.quantity, 0);
-        
-        const newSubTotal = mealkitTotal + recipeTotal + productTotal;
-        setSubTotal(newSubTotal);
-      };
-      calculateSubTotal();
-    } else {
+      setSubTotal(cartData.total_price);
     }
-  }, [cartData, setSubTotal]);
+  }, [cartData]);
 
   if (!cartData) {
     return <div className={styles.empty_cart}>You have no items in your cart right now.</div>;
