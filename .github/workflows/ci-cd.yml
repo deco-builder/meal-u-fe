@@ -74,7 +74,7 @@ jobs:
           ls -R android/app/build/outputs/
 
       - name: Upload APK Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: android-apk
           path: android/app/build/outputs/apk/release/app-release-unsigned.apk
