@@ -18,6 +18,7 @@ export const formatDate = (date: Date) => {
 const MyCartMobile: React.FC = () => {
   const [subTotal, setSubTotal] = useState(0);
   const [total, setTotal] = useState(0);
+  const [deliveryFee, setDeliveryFee] = useState(0);
   const [isDeliveryDetailsSet, setIsDeliveryDetailsSet] = useState(false);
   const [isPickerShown, setIsPickerShown] = useState(false);
   const { cartNotEmpty } = cartContents();
@@ -57,6 +58,7 @@ const MyCartMobile: React.FC = () => {
         <DeliveryLocationPicker
           setIsDeliveryDetailsSet={setIsDeliveryDetailsSet}
           setIsPickerShown={setIsPickerShown}
+          setDeliveryFee={setDeliveryFee}
         />
         : null}
 

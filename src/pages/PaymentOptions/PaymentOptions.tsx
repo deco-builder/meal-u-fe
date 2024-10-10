@@ -16,7 +16,7 @@ import {
 } from '@ionic/react';
 import { addOutline, chevronForward } from 'ionicons/icons';
 import styles from './PaymentOptions.module.css';
-import { useUpdateOrderStatusToPaid, useGetUserOrders } from '../../api/orderApi';
+import { useUpdateOrderStatusToPaid } from '../../api/orderApi';
 import { useHistory, useParams } from 'react-router-dom';
 
 const PaymentOptions: React.FC = () => {

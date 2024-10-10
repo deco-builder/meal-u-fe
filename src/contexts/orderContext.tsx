@@ -65,7 +65,10 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     postal_code: "",
     country: "",
     details: "",
-  })
+    delivery_fee: "",
+    longitude: "",
+    latitude: "",
+  });
 
   const fillDeliveryLocationDetails = (id: number) => {
     const data = allDeliveryLocations?.find(location => location.id === id);
@@ -80,6 +83,9 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         postal_code: data.postal_code,
         country: data.country,
         details: data.details,
+        delivery_fee: data.delivery_fee,
+        longitude: data.longitude,
+        latitude: data.latitude,
       });
     }
   }
