@@ -17,8 +17,8 @@ export const formatDate = (date: Date) => {
 
 const MyCartMobile: React.FC = () => {
   const [subTotal, setSubTotal] = useState(0);
-  const [total, setTotal] = useState(0);
-  const [deliveryFee, setDeliveryFee] = useState(0);
+  const [total, setTotal] = useState(-1);
+  const [deliveryFee, setDeliveryFee] = useState(-1);
   const [isDeliveryDetailsSet, setIsDeliveryDetailsSet] = useState(false);
   const [isPickerShown, setIsPickerShown] = useState(false);
   const { cartNotEmpty } = cartContents();
@@ -63,17 +63,21 @@ const MyCartMobile: React.FC = () => {
         : null}
 
         {cartNotEmpty ? (
-          isDeliveryDetailsSet ? (
+          // isDeliveryDetailsSet ? (
+          //   <div className={styles.subsection}>
+          //     <div className={styles.title}>Payment Summary</div>
+          //       <PaymentDetailsCard subTotal={subTotal} fee={deliveryFee} total={total}/>
+          //   </div>
+          // ) : (
+          //   <div className={styles.subsection}>
+          //     <div className={styles.title}>Payment Summary</div>
+          //       <PaymentDetailsCard subTotal={subTotal} fee={null} total={null}/>
+          //       </div>
+          // )
             <div className={styles.subsection}>
               <div className={styles.title}>Payment Summary</div>
-                <PaymentDetailsCard subTotal={subTotal} fee={10} total={total}/>
-            </div>
-          ) : (
-            <div className={styles.subsection}>
-              <div className={styles.title}>Payment Summary</div>
-                <PaymentDetailsCard subTotal={subTotal} fee={null} total={null}/>
-                </div>
-          )
+                <PaymentDetailsCard subTotal={subTotal} fee={deliveryFee} total={total}/>
+              </div>
         ) : null
         }
 

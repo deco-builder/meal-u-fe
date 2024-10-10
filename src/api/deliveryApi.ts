@@ -12,6 +12,9 @@ export interface DeliveryLocation {
   postal_code: string;
   country: string;
   details: string;
+  delivery_fee: string;
+  longitude: string;
+  latitude: string;
 }
 
 export interface DeliveryTimeSlot {

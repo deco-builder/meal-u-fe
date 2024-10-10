@@ -28,11 +28,6 @@ const RecipeIngredientRowCard: React.FC<RecipeIngredientRowCardProps> = ({ data 
       item_id: data.id,
       quantity: newQuantity,
     });
-    // console.log("DARI AZRA", {
-    //   item_type: "product",
-    //   item_id: data.id,
-    //   quantity: newQuantity,
-    // })
   };
 
   const handleDecrement = () => {

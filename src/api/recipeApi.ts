@@ -6,6 +6,14 @@ interface Creator {
   profile_picture: string;
 }
 
+export interface PreparationType {
+  id: number;
+  name: string;
+  additional_price: string;
+}
+
+// IngredientRecipe[] maybe can be deleted
+
 export interface Ingredient {
   id: number;
   ingredient: {
@@ -16,11 +24,7 @@ export interface Ingredient {
     unit_size: string;
     price_per_unit: string;
   };
-  preparation_type: {
-    id: number;
-    name: string;
-    additional_price: string;
-  } | null;
+  preparation_type: PreparationType | null;
   quantity: number;
   price: number;
 }
@@ -249,9 +253,9 @@ export interface CreateRecipePayload {
     meal_type: number;
     instructions: string[];
   };
-  ingredients: IngredientRecipe[];
+  ingredients: Ingredient[]; // prev: Ingredient[]
   dietary_details: string[];
-  image: File | null;
+  image: string | null;
 }
 
 interface RecipeCreationResponse {
