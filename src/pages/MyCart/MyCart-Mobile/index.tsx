@@ -33,9 +33,6 @@ const MyCartMobile: React.FC = () => {
 
   const createOrderFromCart = async () => {
     const data = await handleOrderCreation()
-    //navigate('/payment-options', {state: (taro sini)})
-    //router.push("/payment-options");
-    //console.log(data);
     history.replace(`/payment-options/${data?.data.order_id}`)
   }
   

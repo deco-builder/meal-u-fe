@@ -17,15 +17,18 @@ import {
 import { addOutline, chevronForward } from 'ionicons/icons';
 import styles from './PaymentOptions.module.css';
 import { useUpdateOrderStatusToPaid, useGetUserOrders } from '../../api/orderApi';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
 const PaymentOptions: React.FC = () => {
     const { id } = useParams<{ id: string }>();
-    // const params = useParams();
-    // console.log(params);
-    const { mutate } = useUpdateOrderStatusToPaid();
-    console.log(window.location.pathname); 
-    console.log(id);
+    const history = useHistory();
+    const { mutate } = useUpdateOrderStatusToPaid({
+        onSuccess: () => {
+          setTimeout(() => {
+            history.replace('/tab4'); 
+          }, 100);
+        }
+      });
 
     const changeStatusToPaid = () => {
         mutate(parseInt(id));
