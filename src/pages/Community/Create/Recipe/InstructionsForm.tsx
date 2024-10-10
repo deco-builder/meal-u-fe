@@ -81,13 +81,13 @@ const InstructionsForm: React.FC<InstructionsFormProps> = ({ state, dispatch }) 
           <IonText><i>Swipe left on an instruction to delete</i></IonText>
         </div>
         <div className="w-full flex justify-center">
-          <button
-            className={`mt-4 px-4 py-2 rounded bg-blue-500 text-white ${!instructions.every(instruction => instruction.trim() !== "") ? "opacity-50 cursor-not-allowed" : ""}`}
+          <IonButton
+            expand="block"
             disabled={!instructions.every(instruction => instruction.trim() !== "")}
             onClick={addNewInstruction}
           >
             Add Instruction
-          </button>
+          </IonButton>
         </div>
       </div>
     </div>
