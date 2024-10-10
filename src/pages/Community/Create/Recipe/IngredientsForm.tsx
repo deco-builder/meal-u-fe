@@ -13,6 +13,7 @@ import {
   IonInput,
   IonChip,
   IonLabel,
+  IonText,
 } from "@ionic/react";
 import { RecipeAction } from "./index";
 import { ProductData, useProductList } from "../../../../api/productApi";
@@ -21,6 +22,7 @@ import IconInput from "../../../../components/icon-input";
 import SearchIcon from "../../../../../public/icon/search-icon";
 import { CreateRecipePayload, IngredientRecipe } from "../../../../api/recipeApi"
 import { useUnitList } from '../../../../api/productApi';
+import { useOrder } from '../../../../contexts/orderContext'
 
 interface IngredientsFormProps {
   state: CreateRecipePayload;
@@ -34,7 +36,8 @@ const IngredientsForm: React.FC<IngredientsFormProps> = ({
   const [searchValue, setSearchValue] = useState("");
   const { category } = useParams<{ category: string }>();
   const { data: products = [], isFetching: isProductFetching } = useProductList({ search: category });
-  const {data: units} = useUnitList();
+  const { data: units } = useUnitList();
+  const { getUnitFromId } = useOrder();
 
   const [selectedIngredients, setSelectedIngredients] = useState<IngredientRecipe[]>( state.ingredients || [] );
   const [showResults, setShowResults] = useState(false);
@@ -139,12 +142,11 @@ const IngredientsForm: React.FC<IngredientsFormProps> = ({
     <div className="w-full max-w-md mx-auto">
       <div className="flex flex-col space-y-4 justify-between items-center mb-4">
         <div className="w-full" ref={searchContainerRef}>
-          <label
+          <IonLabel
             className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="ingredients"
           >
             Recipe Ingredients
-          </label>
+          </IonLabel>
           <div style={{ position: "relative" }}>
             <IconInput
               onInputHandleChange={handleSearchChange}
@@ -181,23 +183,31 @@ const IngredientsForm: React.FC<IngredientsFormProps> = ({
                   <IonCardSubtitle>{ingredient.ingredient.name}</IonCardSubtitle>
                 </IonCardHeader>
                 <IonCardContent>
-                  <div className="flex items-center space-x-2">
-                    <IonInput
-                      type="number"
-                      value={ingredient.ingredient.unit_size}
-                      placeholder="Amount"
-                      onIonChange={(e) =>
-                        handleAmountChange(ingredient.ingredient.product_id, e.detail.value!)
-                      }
-                    />
-                    Unit:{ingredient.ingredient.product_id}
-                    
-                    <IonChip
-                      onClick={() => handleIngredientRemove(ingredient.ingredient.product_id)}
-                      color="danger"
-                    >
-                      <IonLabel>Remove</IonLabel>
-                    </IonChip>
+                  <div className="flex items-center gap-x-3">
+                    <div className="flex-auto">
+                      <IonInput
+                        type="number"
+                        value={ingredient.ingredient.unit_size}
+                        placeholder="Amount"
+                        onIonChange={(e) =>
+                          handleAmountChange(ingredient.ingredient.product_id, e.detail.value!)
+                        }
+                        fill="outline"
+                      />
+                    </div>
+                    <div className="flex-none">
+                      <IonText>
+                        Unit: {getUnitFromId(ingredient.ingredient.unit_id)}
+                      </IonText>
+                    </div>
+                    <div className="flex-none">
+                      <IonChip
+                        onClick={() => handleIngredientRemove(ingredient.ingredient.product_id)}
+                        color="danger"
+                      >
+                        <IonLabel>Remove</IonLabel>
+                      </IonChip>
+                    </div>
                   </div>
                 </IonCardContent>
               </IonCard>

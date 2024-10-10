@@ -28,6 +28,7 @@ interface OrderContextProps {
   fillDeliveryTimeSlotDetails: (id: number) => void;
   units: UnitData[] | undefined;
   getUnitId: (product: ProductData) => number;
+  getUnitFromId: (id: number) => string | undefined;
   meal_types: MealType[] | undefined;
   getMealTypeFromId: (id: number) => string | undefined;
 }
@@ -135,6 +136,11 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const data = units!.find(unit => unit.name === product.unit_id);
     return data!.id;
   }
+  // get unit from unit_id
+  const getUnitFromId = (id: number) => {
+    const data = units?.find((unit) => unit.id === id);
+    return data?.name;
+  }
 
   const { data: meal_types } = useMealTypeList();
 
@@ -160,6 +166,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         fillDeliveryTimeSlotDetails,
         units,
         getUnitId,
+        getUnitFromId,
         meal_types,
         getMealTypeFromId,
       }

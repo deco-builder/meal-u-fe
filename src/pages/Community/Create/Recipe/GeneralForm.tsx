@@ -44,6 +44,7 @@ const GeneralForm: React.FC<GeneralFormProps> = ({ state, dispatch }) => {
           value={state.recipe.name}
           placeholder="Recipe Name"
           onIonInput={(e) => handleChange('name')}
+          fill="outline"
         />
       </div>
   
@@ -57,6 +58,7 @@ const GeneralForm: React.FC<GeneralFormProps> = ({ state, dispatch }) => {
           value={state.recipe.description}
           placeholder="Description"
           onIonInput={(e) => handleChange('description')}
+          fill="outline"
         />
       </div>
   
@@ -73,25 +75,13 @@ const GeneralForm: React.FC<GeneralFormProps> = ({ state, dispatch }) => {
               placeholder="Cooking Time"
               onIonInput={(e) => handleChange('cooking_time')}
               min={0}
+              fill="outline"
               >
               </IonInput>
-            {/* <input
-              className="border border-gray-300 rounded-lg p-2 w-full"
-              id="cooking_time"
-              type="number"
-              value={state.recipe.cooking_time}
-              onChange={handleChange('cooking_time')}
-              placeholder="Cooking Time"
-              min={0}
-            /> */}
             <IonSelect value="minutes">
               <IonSelectOption value="minutes">Minute(s)</IonSelectOption>
               <IonSelectOption value="hours">Hour(s)</IonSelectOption>
             </IonSelect>
-            {/* <select className="border border-gray-300 rounded-lg p-2">
-              <option>Minutes</option>
-              <option>Hours</option>
-            </select> */}
           </div>
         </div>
       </div>
@@ -107,17 +97,9 @@ const GeneralForm: React.FC<GeneralFormProps> = ({ state, dispatch }) => {
           placeholder="Number of Servings"
           onIonInput={(e) => handleChange('serving_size')}
           min={0}
+          fill="outline"
         >
         </IonInput>
-        {/* <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="serving_size"
-          type="number"
-          value={state.recipe.serving_size}
-          onChange={handleChange('serving_size')}
-          placeholder="Number of Servings"
-          min={0}
-        /> */}
       </div>
   
       <div className="w-full">
@@ -128,12 +110,6 @@ const GeneralForm: React.FC<GeneralFormProps> = ({ state, dispatch }) => {
           {meal_types?.map((meal) => (
             <IonSelectOption key={meal.id} value={meal.id}>{meal.name}</IonSelectOption>
           ))}
-          {/* <option value="" disabled>Select a meal type</option>
-          {meal_types?.map((meal) => (
-            <option key={meal.id} value={meal.id}>
-              {meal.name}
-            </option>
-          ))} */}
         </IonSelect>
       </div>
     </div>
