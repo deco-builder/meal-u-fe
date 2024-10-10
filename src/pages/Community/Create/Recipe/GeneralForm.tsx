@@ -1,9 +1,11 @@
-import { IonInput, IonLabel, IonSelect, IonSelectOption } from "@ionic/react";
-import React from "react";
+import { IonButton, IonIcon, IonImg, IonInput, IonLabel, IonSelect, IonSelectOption } from "@ionic/react";
+import React, { useState } from "react";
 import { CreateRecipePayload } from "../../../../api/recipeApi";
 import ImageInput from "../../../../components/image-input";
 import { useOrder } from "../../../../contexts/orderContext";
 import { RecipeAction } from './index';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { cloudUploadOutline } from 'ionicons/icons';
 
 interface GeneralFormProps {
   state: CreateRecipePayload;
@@ -22,15 +24,47 @@ const GeneralForm: React.FC<GeneralFormProps> = ({ state, dispatch }) => {
     dispatch({ type: 'SET_FIELD', field, value });
   };
 
+  const [photo, setPhoto] = useState<string | null>(null);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const uploadPhoto = async () => {
+    try {
+      const image = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: false,
+        resultType: CameraResultType.DataUrl,
+        source: CameraSource.Photos
+      });
+      
+      setPhoto(image.dataUrl || null);
+    } catch (error) {
+      console.error('Error uploading photo:', error);
+      setToastMessage('Failed to upload photo');
+      setShowToast(true);
+    }
+  };
+
   return (
     <div className="w-full max-w-md mx-auto">
     <div className="grid grid-cols-1 gap-4 justify-between items-start mb-4">
       <div className="w-full col-span-1">
-        <IonLabel className="block text-gray-700 text-sm font-bold mb-2">
-          Recipe Photo
-        </IonLabel>
+        <div className="flex flex-row gap-4 items-center justify-items-stretch">
+          <IonLabel className="grow block text-gray-700 text-sm font-bold mb-2">
+            Recipe Photo
+          </IonLabel>
+          <IonButton size="small" onClick={uploadPhoto}>
+            <IonIcon slot="icon-only" ios={cloudUploadOutline} md={cloudUploadOutline}></IonIcon>
+          </IonButton>
+        </div>
         <div className="flex justify-center">
-          <ImageInput />
+          <div className="w-full max-w-md rounded-lg mb-4 border-4 border-dashed border-[#7862FC] p-2">
+            {photo ? (
+                <IonImg src={photo} alt="Recipe Photo" className="w-full rounded-lg shadow-lg" />
+              ) : (
+                <ImageInput />
+              )
+            }
+          </div>
         </div>
       </div>
   
