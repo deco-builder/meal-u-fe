@@ -8,6 +8,7 @@ import PaymentDetailsCard from "../Checkout/payment-details-card";
 import { cartContents } from "../Cart";
 import { useIonRouter } from "@ionic/react";
 import { useOrder } from '../../../contexts/orderContext';
+import { useHistory } from "react-router-dom";
 
 
 export const formatDate = (date: Date) => {
@@ -21,18 +22,21 @@ const MyCartMobile: React.FC = () => {
   const [isPickerShown, setIsPickerShown] = useState(false);
   const { cartNotEmpty } = cartContents();
   const { handleOrderCreation } = useOrder();
-  const router = useIonRouter();
+  //const router = useIonRouter();
   //const navigate = useNavigate();
+  const history = useHistory();
 
 
   const handleSetLocation = () => {
     setIsPickerShown(!isPickerShown);
   };
 
-  const createOrderFromCart = () => {
-    handleOrderCreation();
+  const createOrderFromCart = async () => {
+    const data = await handleOrderCreation()
     //navigate('/payment-options', {state: (taro sini)})
-    router.push("/payment-options");
+    //router.push("/payment-options");
+    //console.log(data);
+    history.replace(`/payment-options/${data?.data.order_id}`)
   }
   
   return (

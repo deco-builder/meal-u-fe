@@ -17,14 +17,18 @@ import {
 import { addOutline, chevronForward } from 'ionicons/icons';
 import styles from './PaymentOptions.module.css';
 import { useUpdateOrderStatusToPaid, useGetUserOrders } from '../../api/orderApi';
+import { useParams } from 'react-router-dom';
 
 const PaymentOptions: React.FC = () => {
-    const {data: orders} = useGetUserOrders();
-    const mostRecentOrder = orders && orders.length > 0 ? orders[0] : null;
+    const { id } = useParams<{ id: string }>();
+    // const params = useParams();
+    // console.log(params);
     const { mutate } = useUpdateOrderStatusToPaid();
+    console.log(window.location.pathname); 
+    console.log(id);
 
     const changeStatusToPaid = () => {
-        mostRecentOrder && (mutate(mostRecentOrder.id));
+        mutate(parseInt(id));
     }
     
     return (
@@ -73,11 +77,13 @@ const PaymentOptions: React.FC = () => {
                         details="Pay in Cash"
                     />
                 </div>
-                <div className={styles.bottom_button}>
-                  <IonButton expand="block" className={styles.checkout_button} onClick={changeStatusToPaid} >
-                  Pay
-                  </IonButton>
-                </div>
+                {/* { id ? ( */}
+                    <div className={styles.bottom_button}>
+                        <IonButton expand="block" className={styles.checkout_button} onClick={changeStatusToPaid} >
+                            Pay
+                        </IonButton>
+                  </div>
+                {/* ) : null } */}
             </IonContent>
         </IonPage>
     );

@@ -1,12 +1,12 @@
 import React, { createContext, useContext, useState } from 'react';
-import { DeliveryLocation, DeliveryTimeSlot, useCreateOrder, useDeliveryLocations, useDeliveryTimeSlots } from "../api/deliveryApi";
+import { DeliveryLocation, DeliveryTimeSlot, OrderCreationResponse, useCreateOrder, useDeliveryLocations, useDeliveryTimeSlots } from "../api/deliveryApi";
 import { useCreateRecipe, CreateRecipePayload } from '../api/recipeApi';
 import { formatDate } from '../pages/MyCart/MyCart-Mobile';
 import { UnitData, useUnitList, ProductData, MealType, useMealTypeList } from '../api/productApi';
 
 // Define the shape of the order context
 interface OrderContextProps {
-  handleOrderCreation: () => void;
+  handleOrderCreation: () => Promise<OrderCreationResponse | undefined>;
   handleRecipeCreation: (payload: CreateRecipePayload) => void;
   deliveryDetails: {
     deliveryLocation: number;
@@ -43,7 +43,8 @@ export const useOrder = () => {
 };
 
 export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { mutate: createOrder } = useCreateOrder();
+  // const { mutate: createOrder } = useCreateOrder();
+  const createOrderMutation = useCreateOrder();
   const { mutate: createRecipe} = useCreateRecipe();
   const { data: allDeliveryLocations } = useDeliveryLocations();
   const { data: allDeliveryTimeSlots } = useDeliveryTimeSlots();
@@ -105,13 +106,18 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }
 
 
-  const handleOrderCreation = () => {
+  const handleOrderCreation = async () => {
     const { deliveryLocation, deliveryTime, deliveryDate } = deliveryDetails;
-    createOrder({
-        delivery_location: deliveryLocation,
-        delivery_time: deliveryTime,
-        delivery_date: formatDate(deliveryDate), 
-      });
+    try {
+      const result = await createOrderMutation.mutateAsync({
+            delivery_location: deliveryLocation,
+            delivery_time: deliveryTime,
+            delivery_date: formatDate(deliveryDate), 
+          });
+      return result;
+    } catch (error) {
+      console.error('Error creating order:', error);
+    };
   };
 
   const handleRecipeCreation = (payload: CreateRecipePayload) => {
