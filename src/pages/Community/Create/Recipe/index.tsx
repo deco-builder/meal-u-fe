@@ -75,6 +75,23 @@ const CreateRecipe: React.FC = () => {
     const response = handleRecipeCreation(state);
   }
 
+  const renderSection = (currentStep: number) => {
+    switch (currentStep) {
+      case 1:
+        return <GeneralForm state={state} dispatch={dispatch} />
+      case 2:
+        return <InstructionsForm state={state} dispatch={dispatch} />
+      case 3:
+        return <IngredientsForm state={state} dispatch={dispatch}/>
+      case 4:
+        return <DietaryDetailsForm state={state} dispatch={dispatch} />
+      case 5:
+        return <Overview state={state} />
+      default:
+        return null;
+    }
+  }
+
   useEffect(() => {
     if (currentStep == 1) {
       setIsGeneralForm(true);
@@ -115,11 +132,7 @@ const CreateRecipe: React.FC = () => {
       <IonContent className="ion-padding">
         <div className="w-full max-w-md mx-auto mb-[80px]">
           <ProgressBar currentStep={currentStep} />
-          {currentStep === 1 && <GeneralForm state={state} dispatch={dispatch} />}
-          {currentStep === 2 && <InstructionsForm state={state} dispatch={dispatch} />}
-          {currentStep === 3 && <IngredientsForm state={state} dispatch={dispatch}/>}
-          {currentStep === 4 && <DietaryDetailsForm state={state} dispatch={dispatch} />}
-          {currentStep === 5 && <Overview state={state} /> }
+          {renderSection(currentStep)}
           {currentStep === 5 ? (
             <NavigationButtons
               currentStep={currentStep}
