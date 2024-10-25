@@ -27,11 +27,12 @@ import {
   useUpdateUserProfile,
   useUpdateDietaryRequirements,
 } from "../../api/userApi";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import "./EditProfile.css";
 import { Camera, CameraResultType, CameraSource } from "@capacitor/camera";
 import { DietaryDetail, useDietaryDetails } from "../../api/productApi";
 import imageCompression from 'browser-image-compression';
+import {EditProfileLocationState} from "../../api/userApi"
 
 type FormData = {
   dietary_requirements: number[];
@@ -54,7 +55,9 @@ interface PhotoState {
 const DEFAULT_IMAGE = "/img/no-photo.png";
 
 function EditProfile() {
+  const location = useLocation<EditProfileLocationState>();
   const history = useHistory();
+  const refetchUserRecipes = location.state?.refetchUserRecipes;
   const { data: user, isLoading, error } = useUserProfile();
   const [dietaryRequirements, setDietaryRequirements] = useState<string[]>([]);
   const { data: dietaryOptions, isLoading: isLoadingDietary } =
@@ -78,12 +81,15 @@ function EditProfile() {
 
   useEffect(() => {
     if (user) {
+      const dietaryRequirementIds = user.dietary_requirements ? 
+      user.dietary_requirements.map((dr: any) => dr.id) : [];
+
       setFormData({
         firstName: user.first_name,
         lastName: user.last_name,
         email: user.email,
         gender: user.gender,
-        dietary_requirements: user.dietary_requirements || [],
+        dietary_requirements: dietaryRequirementIds,
       });
       setPhoto({ dataUrl: user.image || null, file: null });
     }
@@ -147,6 +153,15 @@ function EditProfile() {
           dietary_requirements: formData.dietary_requirements,
         });
       }
+
+      if (refetchUserRecipes) {
+        try {
+          await refetchUserRecipes();
+        } catch (error) {
+          console.error('Error refetching user recipes:', error);
+        }
+      }
+
       setToastMessage("Profile updated successfully");
       setShowToast(true);
       history.push("/user");
