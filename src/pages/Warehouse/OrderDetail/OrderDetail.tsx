@@ -22,53 +22,58 @@ const OrderDetail: React.FC = () => {
         history.back();
       };
 
-    const printReceipt = () => {
-      if (!orderDetails) return;
-  
-      const printWindow = window.open('', '_blank');
-      if (!printWindow) return;
-  
-      const htmlContent = ReactDOMServer.renderToString(<Receipt orderDetails={orderDetails} />);
-  
-      printWindow.document.write(`
-        <html>
-          <head>
-            <title>Print Receipt</title>
-            <style>
-              body { font-family: Arial, sans-serif; }
-              .bg-white { background-color: white; }
-              .p-4 { padding: 1rem; }
-              .w-80 { width: 20rem; }
-              .text-sm { font-size: 0.875rem; }
-              .text-center { text-align: center; }
-              .mb-4 { margin-bottom: 1rem; }
-              .text-xl { font-size: 1.25rem; }
-              .font-bold { font-weight: bold; }
-              .list-disc { list-style-type: disc; }
-              .list-inside { list-style-position: inside; }
-              .pl-4 { padding-left: 1rem; }
-              .text-xs { font-size: 0.75rem; }
-              .border-t { border-top-width: 1px; }
-              .pt-2 { padding-top: 0.5rem; }
-              .mt-4 { margin-top: 1rem; }
-              .mx-auto { margin-left: auto; margin-right: auto; }
-              .mt-2 { margin-top: 0.5rem; }
-            </style>
-          </head>
-          <body>
-            ${htmlContent}
-          </body>
-        </html>
-      `);
-  
-      printWindow.document.close();
-      printWindow.focus();
-  
-      setTimeout(() => {
-        printWindow.print();
-        printWindow.close();
-      }, 250);
-    };
+      const printReceipt = () => {
+        if (!orderDetails) return;
+      
+        const printWindow = window.open('', '_blank');
+        if (!printWindow) return;
+      
+        const htmlContent = ReactDOMServer.renderToString(<Receipt orderDetails={orderDetails} />);
+      
+        printWindow.document.write(`
+          <html>
+            <head>
+              <title>Print Receipt</title>
+              <style>
+                body { font-family: Arial, sans-serif; }
+                .bg-white { background-color: white; }
+                .p-4 { padding: 1rem; }
+                .w-80 { width: 20rem; }
+                .text-sm { font-size: 0.875rem; }
+                .text-center { text-align: center; }
+                .mb-2 { margin-bottom: 1rem; }
+                .mb-2 { margin-bottom: 0.5rem; }
+                .text-xl { font-size: 1.25rem; }
+                .text-3xl { font-size: 1.875rem; }
+                .font-bold { font-weight: bold; }
+                .list-disc { list-style-type: disc; }
+                .list-inside { list-style-position: inside; }
+                .pl-4 { padding-left: 1rem; }
+                .text-xs { font-size: 0.75rem; }
+                .border-t { border-top-width: 1px; }
+                .pt-2 { padding-top: 0.5rem; }
+                .mt-2 { margin-top: 1rem; }
+                .mx-auto { margin-left: auto; margin-right: auto; }
+                .mt-2 { margin-top: 0.5rem; }
+                .tracking-widest { letter-spacing: 0.2em; }
+                .flex { display: flex; }
+                .flex-col { flex-direction: column; }
+              </style>
+            </head>
+            <body>
+              ${htmlContent}
+            </body>
+          </html>
+        `);
+      
+        printWindow.document.close();
+        printWindow.focus();
+      
+        setTimeout(() => {
+          printWindow.print();
+          printWindow.close();
+        }, 250);
+      };
   
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>Error: {error.message}</div>;
