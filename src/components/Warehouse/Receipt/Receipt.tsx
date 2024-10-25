@@ -47,7 +47,7 @@ interface OrderDetails {
 }
 
 const Receipt: React.FC<{ orderDetails: OrderDetails }> = ({ orderDetails }) => (
-    <div className="bg-white p-4 w-80 text-sm">
+    <div className="bg-white flex flex-col p-4 w-80 text-sm">
       <div className="text-center mb-4">
         <h2 className="text-xl font-bold">Meal.U</h2>
         <p>Order Receipt</p>
@@ -82,8 +82,9 @@ const Receipt: React.FC<{ orderDetails: OrderDetails }> = ({ orderDetails }) => 
       <div className="border-t pt-2">
         <p className="font-bold">Total: ${orderDetails.total}</p>
       </div>
-      <div className="border-t pt-2">
-        <p className="font-bold">Passcode: {orderDetails.passcode}</p>
+      <div className="border-t pt-2 text-center">
+        <p className="font-bold mb-2">Passcode:</p>
+        <p className="text-3xl font-bold tracking-widest">{orderDetails.passcode}</p>
       </div>
       <div className="mt-4 text-center">
         <p>Thank you for ordering from Meal.U!</p>
@@ -92,6 +93,6 @@ const Receipt: React.FC<{ orderDetails: OrderDetails }> = ({ orderDetails }) => 
         )}
       </div>
     </div>
-  );
+);
 
-  export default Receipt
+export default Receipt
